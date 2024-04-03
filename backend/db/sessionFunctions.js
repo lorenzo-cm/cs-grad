@@ -29,3 +29,11 @@ export const deleteInvalidSessions = async (sessionId) => {
         [sessionId]
     );
 }
+
+
+export const deleteSessionById = async (sessionId) => {
+    await pool.query(
+        'DELETE FROM tp_es.user_sessions WHERE session_token = $1',
+        [sessionId]
+    )
+}

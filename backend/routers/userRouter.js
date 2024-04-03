@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 
 // Importing user and session management functions
 import { createUser, getUserByUsername_, getUserById_ } from '../db/userFunctions.js';
-import { createSession, authSessionMiddlewareRedirect, authSessionMiddleware } from '../session/sessionManager.js';
+import { createSession, authSessionMiddlewareRedirect, authSessionMiddleware, deleteSessionMiddleware } from '../session/sessionManager.js';
 import { sendConfirmationEmail } from '../services/emailService.js';
 
 const router = express.Router();
@@ -85,9 +85,15 @@ const authenticateUser = async (req, res, next) => {
     }
 };
 
+
+const logout = async (req, res) => {
+    return res.status(200).send('logged out')
+}
+
 // Router setup
 router.get('/', authSessionMiddleware, getUserById);
 router.post('/register', registerUser);
 router.post('/login', authSessionMiddlewareRedirect, authenticateUser, createSession);
+router.post('/logout', deleteSessionMiddleware, logout)
 
 export default router;

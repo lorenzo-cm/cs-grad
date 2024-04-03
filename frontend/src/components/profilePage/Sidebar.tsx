@@ -7,30 +7,42 @@ import UserIcon from '../../../assets/user.svg';
 import UploadIcon from '../../../assets/upload.svg';
 
 interface SidebarProps {
-  changeSection: (section: string) => void;
+  handleSectionSelect: (section: string) => void;
+  toggleSidebar: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ changeSection }) => {
+const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect }) => {
   return (
     <aside className="w-64 h-full" aria-label="Sidebar">
       <div className="flex flex-col h-full overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
         
         {/* Main content area - allow it to grow and fill available space */}
         <div className="flex-1">
-          <div className='font-bold text-xl mb-5 mx-2'>
-            Alia chat 
+
+          {/* upper */}
+          <div className='flex flex-row text-center content-center mb-5'>
+
+            <button className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded focus:outline-none" onClick={toggleSidebar}>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </button>
+
+            <div className='font-bold text-xl mx-2 text-center content-center'>
+              Alia chat 
+            </div>
           </div>
 
           <div className="flex flex-col space-y-2">
             <SidebarButton 
               icon={UserIcon} 
               label="Configurações" 
-              changeSection={() => changeSection('user')} 
+              changeSection={() => handleSectionSelect('user')} 
             />
             <SidebarButton 
               icon={UploadIcon} 
               label="Upload PDF" 
-              changeSection={() => changeSection('upload')} 
+              changeSection={() => handleSectionSelect('upload')} 
             />
             {/* More buttons as needed */}
           </div>

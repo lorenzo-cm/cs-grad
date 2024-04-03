@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { isLoggedIn, getUser } from '../utils/utils.ts';
 import { User } from '../utils/model/user.ts';
-
-
 import Sidebar from '../components/profilePage/Sidebar.tsx';
-import {MainContent} from '../components/profilePage/MainContent.tsx';
-
+import { MainContent } from '../components/profilePage/MainContent.tsx';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState<User> ();
-
+  const [user, setUser] = useState<User>();
   const [currentSection, setCurrentSection] = useState<string>("user");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar visibility
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await getUser(); // Aguarda pela resolução da promise.
-        setUser(userData); // userData agora é do tipo User, não Promise<User>.
+        const userData = await getUser();
+        setUser(userData);
       } catch (error) {
         console.error('Failed to load user data:', error);
       }
@@ -28,33 +25,75 @@ const ProfilePage: React.FC = () => {
 
     isLoggedIn().then((loggedIn) => {
       if(loggedIn){
-        fetchUser()
+        fetchUser();
       } else{
-        navigate('/login')
+        navigate('/login');
       }
-    })
+    });
   }, [navigate]);
 
+  // Function to toggle the sidebar
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleSectionSelect = (section:string) => {
+    setIsSidebarOpen(!isSidebarOpen);
+    setCurrentSection(section);
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="sidebar w-64 h-full bg-gray-800 text-white fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
-        <Sidebar changeSection={setCurrentSection}/>
-      </div>
-      <main className="flex-grow overflow-auto">
-        <div>
-          {user ? (
-            <div className="p-4">
-              <h1 className="font-bold text-xl mb-2">User Profile</h1>
-              <p><strong>Name:</strong> {user.username}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Profissão:</strong> {user.role}</p>
-            </div>
-          ) : (
-            <p className="p-4">Loading user data...</p>
-          )}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex h-screen overflow-hidden">
+
+        <div className={`sidebar w-64 h-full bg-gray-800 text-white fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition duration-200 ease-in-out`}>
+          <Sidebar handleSectionSelect={handleSectionSelect} toggleSidebar={toggleSidebar}/>
         </div>
-      </main>
-    </div>
+
+        <main className="flex-grow overflow-auto">
+
+          {/* Header */}
+
+          <div className='flex mt-4 mx-3 bg-slate-300 lg:bg-white md:bg-white rounded'>
+
+            <button className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded focus:outline-none" onClick={toggleSidebar}>
+              <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
+              <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
+              <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
+            </button>
+
+            <div className='font-bold text-2xl mx-2 text-center content-center'>
+                Alia chat 
+            </div>
+            
+          </div>
+
+
+          {/* Main page */}
+
+          <div>
+            {user ? (
+              <div className="p-4">
+                <h1 className="font-bold text-xl mb-2">User Profile</h1>
+                <p><strong>Name:</strong> {user.username}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Profissão:</strong> {user.role}</p>
+              </div>
+            ) : (
+              <p className="p-4">Loading user data...</p>
+            )}
+          </div>
+
+          {currentSection}
+
+        </main>
+      </div>
+    </motion.div>
   );
 
 };

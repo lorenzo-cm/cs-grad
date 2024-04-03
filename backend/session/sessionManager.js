@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import pool from '../db/db.js';
 
-import { findSessionById, checkValidSession, deleteInvalidSessions } from '../db/sessionFunctions.js';
+import { findSessionById, checkValidSession, deleteInvalidSessions, deleteSessionById } from '../db/sessionFunctions.js';
 
 
 export const createSession = async (req, res) => {
@@ -49,7 +49,7 @@ async function baseAuth(req, res) {
         if (!userId) {
             deleteInvalidSessions(sessionToken)
         
-            res.clearCookie('session', {
+            res.clearCookie('session_id', {
                 httpOnly: true,
                 secure: true, // Note: Set to false if you're not using https in development
                 sameSite: 'lax', // Adjust according to your requirements
@@ -113,4 +113,31 @@ export const authSessionMiddlewareRedirect = async (req, res, next) => {
     }
 
     next()
+};
+
+
+export const deleteSessionMiddleware = async (req, res, next) => {
+
+    try {
+        const sessionToken = req.cookies['session_id'];
+
+        if (!sessionToken) {
+            return {status: 401, message: 'User not logged in'}
+        }
+
+        res.clearCookie('session_id', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+            domain: 'localhost',
+        });
+
+        deleteSessionById(sessionToken)
+
+        next()
+    } 
+    
+    catch (error) {
+        return {status: 500, message: 'Internal server error'}
+    }
 };
