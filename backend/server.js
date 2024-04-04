@@ -7,7 +7,7 @@ import cors from 'cors';
 
 import userRouter from './routers/userRouter.js';
 import sessionRouter from './routers/sessionRouter.js';
-
+import messagesRouter from './routers/messagesRouter.js';
 
 const app = express();
 
@@ -32,6 +32,7 @@ app.use(express.json());
 
 app.use('/api/session', sessionRouter);
 app.use('/api/users', userRouter);
+app.use('/api/messages', messagesRouter)
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

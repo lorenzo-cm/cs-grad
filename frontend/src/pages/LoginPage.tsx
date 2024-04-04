@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
     >
       <div className="flex justify-center items-center h-screen">
         <div className="absolute top-5 left-5"> {/* Position the back button */}
-          <button onClick={() => navigate(-1)} className="text-2xl">
+          <button onClick={() => navigate('/')} className="text-2xl">
             ← {/* Stylish left arrow as a back button */}
           </button>
         </div>
@@ -59,7 +59,7 @@ const LoginPage: React.FC = () => {
               Sign In
             </button>
 
-            <button onClick={() => navigate('/register')} className="bg-blue-950 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button onClick={() => navigate('/register')} type='button' className="bg-blue-950 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Sign Up
             </button>
           </div>

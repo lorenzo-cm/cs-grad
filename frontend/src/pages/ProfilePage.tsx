@@ -59,7 +59,7 @@ const ProfilePage: React.FC = () => {
 
           {/* Header */}
 
-          <div className='flex mt-4 mx-3 bg-slate-300 lg:bg-white md:bg-white rounded'>
+          <header className='flex mt-4 mx-3 bg-slate-300 lg:bg-white md:bg-white rounded'>
 
             <button className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded focus:outline-none" onClick={toggleSidebar}>
               <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
@@ -67,11 +67,11 @@ const ProfilePage: React.FC = () => {
               <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
             </button>
 
-            <div className='font-bold text-2xl mx-2 text-center content-center'>
+            <div className='flex items-center font-bold text-2xl mx-2 text-center content-center'>
                 Alia chat 
             </div>
-            
-          </div>
+
+          </header>
 
 
           {/* Main page */}

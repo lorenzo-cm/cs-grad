@@ -28,9 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect }) 
               <span className="hamburger-line"></span>
             </button>
 
-            <div className='font-bold text-xl mx-2 text-center content-center'>
+            <div className='flex items-center font-bold text-2xl mx-2 text-center content-center'>
               Alia chat 
             </div>
+            
           </div>
 
           <div className="flex flex-col space-y-2">
