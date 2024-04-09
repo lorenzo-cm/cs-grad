@@ -2,9 +2,11 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
 load_dotenv()
+
+
+client = OpenAI(api_key=os.getenv('OPEN_AI_KEY'))
+
 
 ### A Classe BaseGPT é a classe mãe que segura todos os métodos e atributos comuns entre os modelos de GPT-3
 class BaseGPT():

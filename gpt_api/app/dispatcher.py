@@ -14,7 +14,7 @@ from modules.responser.miss.responser import *
 from modules.responser.answer.responser import *
 from modules.responser.info.responserEmbeddings import *
 # from whatsApp.whatsappServer import *
-from whatsApp.chatwootUtils import *
+# from whatsApp.chatwootUtils import *
 from modules.utils.dates import *
 from database.dbHandler import *
 from modules.utils.forms import *
