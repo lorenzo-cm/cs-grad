@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import pool from '../db/db.js';
 
-import { findSessionById, checkValidSession, deleteInvalidSessions, deleteSessionById } from '../db/sessionFunctions.js';
+import { getUserIdBySessionId, checkValidSession, deleteInvalidSessions, deleteSessionById } from '../db/sessionFunctions.js';
 
 
 export const createSession = async (req, res) => {

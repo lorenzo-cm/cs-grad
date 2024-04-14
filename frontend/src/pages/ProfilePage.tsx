@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import { isLoggedIn, getUser } from '../utils/utils.ts';
-import { User } from '../utils/model/user.ts';
+import { User } from '../models/user.ts';
 import Sidebar from '../components/profilePage/Sidebar.tsx';
-import { MainContent } from '../components/profilePage/MainContent.tsx';
+// import { MainContent } from '../components/profilePage/MainContent.tsx';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const ProfilePage: React.FC = () => {
       <div className="flex h-screen overflow-hidden">
 
         <div className={`sidebar w-64 h-full bg-gray-800 text-white fixed inset-y-0 left-0 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition duration-200 ease-in-out`}>
-          <Sidebar handleSectionSelect={handleSectionSelect} toggleSidebar={toggleSidebar}/>
+          <Sidebar handleSectionSelect={handleSectionSelect} toggleSidebar={toggleSidebar} user={user!}/>
         </div>
 
         <main className="flex-grow overflow-auto">

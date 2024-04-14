@@ -5,13 +5,15 @@ import SidebarButton from './SidebarButton';
 
 import UserIcon from '../../../assets/user.svg';
 import UploadIcon from '../../../assets/upload.svg';
+import { User } from '../../models/user';
 
 interface SidebarProps {
   handleSectionSelect: (section: string) => void;
   toggleSidebar: () => void;
+  user: User;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect }) => {
+const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect, user }) => {
   return (
     <aside className="w-64 h-full" aria-label="Sidebar">
       <div className="flex flex-col h-full overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
@@ -51,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect }) 
         
         {/* Footer - It will not grow but stay at the bottom */}
         <div>
-          <FooterSidebar />
+          <FooterSidebar user={user} />
         </div>
 
       </div>

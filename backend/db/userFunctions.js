@@ -24,3 +24,12 @@ export const getUserById_ = async (id) => {
     );
     return result.rows[0];
 };
+
+
+export const getUserIdByUsername = async (username) => {
+    const result = await pool.query(
+        'SELECT id FROM tp_es.users WHERE username = $1',
+        [username]
+    );
+    return result.rows[0].id;
+}

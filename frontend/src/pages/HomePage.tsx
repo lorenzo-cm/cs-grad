@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import React from 'react';
 import TopBar from '../components/TopBar';
 import ChatArea from '../components/ChatArea';

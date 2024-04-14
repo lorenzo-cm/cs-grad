@@ -4,7 +4,6 @@ import { v4 } from 'uuid';
 // Importing user and session management functions
 import { createUser, getUserByUsername_, getUserById_ } from '../db/userFunctions.js';
 import { createSession, authSessionMiddlewareRedirect, authSessionMiddleware, deleteSessionMiddleware } from '../session/sessionManager.js';
-import { sendConfirmationEmail } from '../services/emailService.js';
 
 const router = express.Router();
 
@@ -86,12 +85,29 @@ const authenticateUser = async (req, res, next) => {
 };
 
 
+const getUserByUsername = async (req, res) => {
+    const username = req.params.username;
+
+    try {
+        const user = await getUserByUsername_(username); // Assuming this function is async and returns user data
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).json(user);
+        
+    } catch (error) {
+        console.error(`Error getting user by username: ${error}`);
+        res.status(500).send('Internal server error');
+    }
+};
+
 const logout = async (req, res) => {
     return res.status(200).send('logged out')
 }
 
 // Router setup
 router.get('/', authSessionMiddleware, getUserById);
+router.get('/:{username}', getUserByUsername);
 router.post('/register', registerUser);
 router.post('/login', authSessionMiddlewareRedirect, authenticateUser, createSession);
 router.post('/logout', deleteSessionMiddleware, logout)

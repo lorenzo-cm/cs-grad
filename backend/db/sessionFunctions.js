@@ -1,6 +1,6 @@
 import pool from './db.js';
 
-export const findSessionById = async (sessionId) => {
+export const getUserIdBySessionId = async (sessionId) => {
     const result = await pool.query(
         'SELECT user_id FROM tp_es.user_sessions WHERE session_token = $1',
         [sessionId]

@@ -24,6 +24,7 @@ const RouteRenderer: React.FC = () => {
   return (
     <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
+        <Route path="/chat/:username" element={<HomePage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />

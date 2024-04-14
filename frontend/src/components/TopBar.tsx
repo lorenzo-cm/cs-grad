@@ -1,74 +1,76 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import logo from '../../assets/logo.svg'; // Adjust the path according to your project structure
+import { useNavigate, useParams } from 'react-router-dom';
+
+import logo from '../../assets/logo.svg';
 
 import { isLoggedIn, getUser } from '../utils/utils.ts';
-import { User } from '../utils/model/user.ts';
+import { User } from '../models/user.ts';
 
 const TopBar: React.FC = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
-  const [user, setUser] = useState<User>();
+  const navigate = useNavigate();
 
+  let { username } = useParams(); 
+
+  const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const checkAndFetchUser = async () => {
-      setLoading(true); // Start loading before the async operations
+      setLoading(true);
   
       try {
         const loggedIn = await isLoggedIn();
         if (loggedIn) {
           const userData = await getUser();
-          setUser(userData); // Set user data if loggedIn is true
+          setUser(userData);
         }
       } catch (error) {
         console.error('Failed to load user data:', error);
       } finally {
-        setLoading(false); // Stop loading after all async operations are complete
+        setLoading(false);
       }
     };
   
     checkAndFetchUser();
   }, [navigate]);
-  
+
   const handleLoginClick = () => {
-    navigate('/login'); // Navigate to login page on button click
+    navigate('/login');
   };
 
   return (
     <div className="flex items-center justify-between p-4 shadow-md bg-blue-950">
-      {/* Logo Section */}
       <div className="flex justify-start flex-grow">
         <img src={logo} alt="Logo" className="h-8" />
       </div>
 
-      {/* brand name section */}
-      <div className='font-bold text-2xl text-center text-white'>
-        Alia chat
+      
+
+      <div className='font-bold text-2xl text-center text-white'> 
+        {username ? <div> <span className='text-green-500'>{username}</span> chat</div> : <div>Alia Chat</div>}
       </div>
   
-      {/* Login Button/Spacer Section */}
       <div className="flex justify-end flex-grow">
-        {!isLoggedIn ? (
+
+        {loading ? (
+          <div className='text-white mx-4 my-2'>Loading...</div>
+        ) : !user ? (
           <button
             onClick={handleLoginClick}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-30">
             Login
           </button>
         ) : (
-          loading ? (
-            <div className='text-white mx-2'>Loading...</div>
-          ) : (
-            <button className="py-2 px-4 text-white bg-indigo-700 rounded" onClick={() => navigate('/profile')}>
+            <button className="py-2 px-4 text-white bg-blue-700 rounded" onClick={() => navigate('/profile')}>
               Olá, {user?.name}
             </button>
           )
-        )}
+        }
+
       </div>
 
     </div>
   );
-  
 };
 
 export default TopBar;

@@ -1,35 +1,112 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-interface Message {
-  id: number;
-  text: string;
-  sender: 'bot' | 'user';
-  timestamp: string;
+import Message from '../models/message';
+
+import { createMessage, getMessages } from '../utils/messageHandler';
+
+
+function formatTime() {
+  var now = new Date();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+
+  var formattedHours = hours < 10 ? "0" + hours : hours;
+  var formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return formattedHours + ':' + formattedMinutes;
 }
 
+function formatMessagesTimes(messages: Message[]): Message[] {
+  return messages.map(message => {
+    const date = new Date(message.sent_at);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`;
+    return {
+      ...message,
+      sent_at: formattedTime
+    };
+  });
+}
+
+
+
 const ChatArea: React.FC = () => {
+
+  let { username } = useParams<{ username: string }>();
+
+  if(!username){
+    username = 'test'
+  }
+
+  const [idFake, setIdFake] = useState(1);
+
+
+  const firstBotMessage: Message = {
+    id: 0,
+    text: "Olá, como posso te ajudar?",
+    is_bot: true,
+    sent_at: String(formatTime())
+  }
+
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hello, how can I help you?", sender: "bot", timestamp: "10:00 AM" },
-    { id: 2, text: "I have a question about your service.", sender: "user", timestamp: "10:01 AM" },
+    firstBotMessage,
   ]);
-  const [newMessage, setNewMessage] = useState('');
+  
+  const [newText, setnewText] = useState('');
+
+  const [errorMessageStatus, seterrorMessageStatus] = useState('');
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getMessages(username)
+      .then(data => {
+        setMessages(formatMessagesTimes(data));
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch messages:', err);
+        seterrorMessageStatus(err);
+        setLoading(false);
+      });
+  }, [username]);
+
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newText.trim()) return;
+    
+    let newMessage: Message = {
+      id: idFake + 1,
+      text: newText,
+      is_bot: false,
+      sent_at: String(formatTime()),
+      status: 'pending'
+    }
+
+    setIdFake(idFake + 1);
+
+    setMessages([...messages, newMessage]);
+
+    setnewText('');
+
+    const response_bool = await createMessage(newText, false, username)
+
+    if(response_bool){
+      newMessage.status = 'sent'
+      setMessages([...messages, newMessage]);
+    }
+
+    else{
+      seterrorMessageStatus('Failed to send the message, try again')
+      newMessage.status = 'failed'
+    }
+    
+  };
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-
-    const newMessageObj: Message = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    };
-
-    setMessages([...messages, newMessageObj]);
-    setNewMessage('');
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -41,33 +118,74 @@ const ChatArea: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
+
+      {/* Outermost container with flex layout centered */}
       <div className="w-full max-w-4xl h-full max-h-[80vh] my-4 p-4 border rounded-lg shadow-lg bg-white flex flex-col">
-        <div className="flex-grow overflow-auto custom-scrollbar pr-4"> {/* Add padding to the right */}
-          <div className="space-y-2 mb-4">
+
+
+      {loading ? (
+        <div className='flex-grow overflow-auto custom-scrollbar pr-4 font-bold text-xl'> . . . </div>
+      ) : (
+        <>
+          {/* Container for messages with a custom scrollbar */}
+          <div className="flex-grow overflow-auto custom-scrollbar pr-4">
+    
+            {/* Container for the individual messages */}
+            <div className="space-y-2 mb-4">
               {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[75%] px-4 py-2 rounded-lg break-words ${message.sender === 'bot' ? 'bg-blue-950 text-white' : 'bg-green-500 text-white'}`}>
-                      <p>{message.text}</p>
-                      <p className="text-xs opacity-75 mt-2 text-white">{message.timestamp}</p>
+
+                <div key={message.id} className={`flex ${message.is_bot ? 'justify-start' : 'justify-end'}`}>
+
+                  {/* Message bubble with dynamic background based on message status */}
+                  <div className={`max-w-[75%] px-4 py-2 rounded-lg break-words ${
+                    message.is_bot ? 'bg-blue-950 text-white' :
+                    message.status === 'pending' ? 'bg-green-300 text-white' :
+                    message.status === 'sent' ? 'bg-green-500 text-white' :
+                    message.status === 'failed' ? 'bg-red-500 text-white' :
+                    'bg-green-500 text-white' // Default to green if no status is recognized
+                    }`}>
+
+                    {/* content that is going to be showed */}
+                    <p>{message.text}</p>
+                    <p className="text-xs opacity-75 mt-2 text-white">{message.sent_at}</p>
+
                   </div>
+
                 </div>
               ))}
             </div>
-          <div ref={messagesEndRef} /> {/* Invisible div for scrolling reference */}
-        </div>
+    
+            {/* Invisible div for automatic scrolling reference */}
+            <div ref={messagesEndRef} />
+          </div>
+        </>
+      )}
+
+        
+        
+  
+        {/* Form for sending a message */}
         <form onSubmit={handleSendMessage} className="flex mt-4">
           <input
             type="text"
             className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Type your message here..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            value={newText}
+            onChange={(e) => setnewText(e.target.value)}
           />
           <button type="submit" className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600">Send</button>
         </form>
       </div>
+  
+      {/* Error message display, if there is an error */}
+      {errorMessageStatus && (
+        <span className='p-2 bg-red-300 rounded min-w-40 flex justify-center content-center text-center'>
+          {errorMessageStatus}
+        </span>
+      )}
     </div>
   );
+  
 };
 
 export default ChatArea;

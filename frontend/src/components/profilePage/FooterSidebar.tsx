@@ -2,8 +2,13 @@
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { User } from '../../models/user';
 
-const FooterSidebar: React.FC = () => {
+interface FooterSidebarProps {
+  user: User;
+}
+
+const FooterSidebar: React.FC<FooterSidebarProps> = ({ user }) => {
   const navigate = useNavigate();
 
 
@@ -29,6 +34,11 @@ const FooterSidebar: React.FC = () => {
 
   return (
     <div className="bottom w-full text-white p-0 m-0 ">
+
+      <button className='font-bold mb-4 p-2 w-full text-green-500 hover:bg-gray-700 rounded-md border border-transparent hover:border-gray-700'
+              onClick={() => navigate(`/chat/${user.username}`)}>
+        Chat Area
+      </button>
 
       <button onClick={handleLogout} className='font-bold mb-4 p-2 w-full
                                                hover:bg-gray-900 rounded-md border border-transparent hover:border-gray-700'>Logout</button>

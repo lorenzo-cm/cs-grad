@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { User } from "./model/user";
+import { User } from "../models/user";
 
 export async function isLoggedIn() {
     try {
@@ -31,7 +31,6 @@ export async function isLoggedIn() {
 export async function getUser(): Promise<User> {
     try {
         const response = await axios.get('http://localhost:3001/api/users/', { withCredentials: true, headers: { 'Content-Type': 'application/json' }});
-        console.log(response.data)
         return response.data as User;
 
     } 
@@ -42,4 +41,3 @@ export async function getUser(): Promise<User> {
     }
 
 }
-  
