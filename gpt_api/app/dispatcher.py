@@ -15,7 +15,7 @@ from modules.responser.answer.responser import *
 from modules.responser.info.responserEmbeddings import *
 # from whatsApp.whatsappServer import *
 # from whatsApp.chatwootUtils import *
-from modules.utils.dates import *
+from modules.utils.dates2 import *
 from database.dbHandler import *
 from modules.utils.forms import *
 
@@ -119,7 +119,7 @@ def dispatcher(business_id, prompt, id, conversation_id):
     # Human
     elif intention_key == "human":
         print("\n-------------------HUMAN HANDOFF---------------------\n")
-        hand_over_human(business_id, conversation_id)
+        # hand_over_human(business_id, conversation_id)
         response = 'Ok, você será transferido para um humano'
 
     # Miss
