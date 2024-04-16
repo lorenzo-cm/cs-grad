@@ -34,14 +34,9 @@ function formatMessagesTimes(messages: Message[]): Message[] {
 
 const ChatArea: React.FC = () => {
 
-  let { username } = useParams<{ username: string }>();
-
-  if(!username){
-    username = 'test'
-  }
+  let { username = 'test' } = useParams<{ username?: string }>();
 
   const [idFake, setIdFake] = useState(1);
-
 
   const firstBotMessage: Message = {
     id: 0,
@@ -61,7 +56,9 @@ const ChatArea: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getMessages(username)
+
+    if(username != 'test'){
+      getMessages(username)
       .then(data => {
         setMessages(formatMessagesTimes(data));
         setLoading(false);
@@ -71,6 +68,15 @@ const ChatArea: React.FC = () => {
         seterrorMessageStatus(err);
         setLoading(false);
       });
+    }
+
+    else {
+
+      setMessages([firstBotMessage]);
+      setLoading(false);
+
+    }
+    
   }, [username]);
 
 
