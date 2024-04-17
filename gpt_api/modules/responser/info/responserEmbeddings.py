@@ -10,7 +10,7 @@ class ResponserEmbeddings(BaseGPT):
         self.site_name = site_name
 
 
-    def run(self, prompt:str, last_messages:str='', context:str='', force_saving=False):
+    def run(self, id, prompt:str, last_messages:str='', context:str='', force_saving=False):
         """Runs the responser
 
         Args:
@@ -31,7 +31,7 @@ class ResponserEmbeddings(BaseGPT):
             additional_context['context'] = context
         
         if force_saving:
-            return run_embeddings(prompt, self.site_name, additional_context, force_saving=True)
+            return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=True)
         
         else:
-            return run_embeddings(prompt, self.site_name, additional_context, force_saving=False)
+            return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=False)
