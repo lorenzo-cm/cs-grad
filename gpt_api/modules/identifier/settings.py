@@ -71,6 +71,10 @@ Saída: {'miss': 1}
 Prompt: Qual seu suco favorito?
 Pensamento: O usuário está querendo explorar os limites da IA
 Saída: {'resp': 1}
+                       
+Prompt: Bom dia, qual é o seu nome?
+Pensamento: O usuário está querendo explorar os limites da IA
+Saída: {'resp': 1}
 
          '''}
 

@@ -20,7 +20,7 @@ from database.dbHandler import *
 from modules.utils.forms import *
 
 
-company_name = "Iara"
+company_name = "Alia"
 
 def dispatcher(business_id, prompt, id, conversation_id):
 
@@ -119,8 +119,7 @@ def dispatcher(business_id, prompt, id, conversation_id):
     # Human
     elif intention_key == "human":
         print("\n-------------------HUMAN HANDOFF---------------------\n")
-        # hand_over_human(business_id, conversation_id)
-        response = 'Ok, você será transferido para um humano'
+        response = 'Para falar com um humano você pode entrar em contato com o número (31) 995302070'
 
     # Miss
     elif intention_key == "miss":
@@ -153,6 +152,6 @@ if __name__ == '__main__':
     prompt = input("$$ ")
     id = "+553190843066"
     response = dispatcher('+553172525392', prompt, id, 'qualquer coisa')
-    print ("-------------------------------------------\n--------- RESPOSTA FINAL DA IARA ----------\n-------------------------------------------\n")
+    print ("-------------------------------------------\n--------- RESPOSTA FINAL DA ALIA ----------\n-------------------------------------------\n")
     print(response)
     print ("-------------------------------------------\n-------------------------------------------\n-------------------------------------------\n")
