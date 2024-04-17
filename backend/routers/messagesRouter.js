@@ -12,7 +12,7 @@ async function getMessagesRouter(req, res){
         const chatSessionId = req.cookies['chat_session_id'];
 
         if(!chatSessionId){
-            return res.send('No chat session found');
+            return res.json([])
         }
 
         const username = req.params.username;

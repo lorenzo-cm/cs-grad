@@ -33,11 +33,15 @@ export async function createMessage(text_: string, isBot_: boolean, username: st
 
 
 
-export async function getMessages(username: string): Promise<any[]> {
+export async function getMessages(username: string): Promise<Message[]> {
     try {
         const response = await axios.get(`http://localhost:3001/api/messages/${username}`, 
                         { withCredentials: true, headers: { 'Content-Type': 'application/json' }});
-        console.log(response.data)
+
+        if(response.status >= 400){
+            return []
+        }
+
         return response.data as Message[]
     } 
     

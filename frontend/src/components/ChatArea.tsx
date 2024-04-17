@@ -60,7 +60,15 @@ const ChatArea: React.FC = () => {
     if(username != 'test'){
       getMessages(username)
       .then(data => {
-        setMessages(formatMessagesTimes(data));
+
+        if(data.length === 0){
+          setMessages([firstBotMessage])
+        }
+
+        else{
+          setMessages(formatMessagesTimes(data));
+          
+        }
         setLoading(false);
       })
       .catch(err => {

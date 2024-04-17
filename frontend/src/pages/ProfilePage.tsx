@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { isLoggedIn, getUser } from '../utils/utils.ts';
 import { User } from '../models/user.ts';
 import Sidebar from '../components/profilePage/Sidebar.tsx';
-// import { MainContent } from '../components/profilePage/MainContent.tsx';
+import { MainContent } from '../components/profilePage/MainContent.tsx';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ const ProfilePage: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar visibility
 
   useEffect(() => {
+    
     const fetchUser = async () => {
       try {
         const userData = await getUser();
@@ -76,20 +77,7 @@ const ProfilePage: React.FC = () => {
 
           {/* Main page */}
 
-          <div>
-            {user ? (
-              <div className="p-4">
-                <h1 className="font-bold text-xl mb-2">User Profile</h1>
-                <p><strong>Name:</strong> {user.username}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Profissão:</strong> {user.role}</p>
-              </div>
-            ) : (
-              <p className="p-4">Loading user data...</p>
-            )}
-          </div>
-
-          {currentSection}
+          <MainContent section={currentSection} user={user} />
 
         </main>
       </div>
