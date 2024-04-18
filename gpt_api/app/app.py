@@ -1,22 +1,29 @@
-# app.py
 import sys
 sys.path.append('../')
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from dispatcher import *
-
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
-def home():
-    # Extract parameters from the query string
-    business_id = request.args.get('business_id')
-    prompt = request.args.get('prompt')
-    id = request.args.get('id')
-    conversation_id = request.args.get('conversation_id')
-    
-    # Call the dispatcher function with the parameters
-    response = dispatcher(business_id, prompt, id, conversation_id)
+@app.route('/upload/<user_id>', methods=['POST'])
+def upload_file(user_id):
+    # Retrieve file from the request
+    file = request.files['file']
+    if file:
+        # Create a directory for the user if it doesn't exist
+        user_directory = f"../data/pdf/{user_id}"
+        os.makedirs(user_directory, exist_ok=True)
+
+        # Save the file in the user's directory
+        file.save(os.path.join(user_directory, file.filename))
+        return 'File uploaded successfully', 200
+    return 'No file found', 400
+
+
+@app.route('/api/<prompt>+<id>', methods=['GET'])
+def api_call(prompt, id):
+    # Call the dispatcher function with the URL parameters
+    response = dispatcher(prompt, id)
     
     # Return the JSON response
     return jsonify(response)

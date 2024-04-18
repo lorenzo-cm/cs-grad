@@ -22,7 +22,7 @@ from modules.utils.forms import *
 
 company_name = "Alia"
 
-def dispatcher(business_id, prompt, id, conversation_id):
+def dispatcher(prompt, id):
 
     print("\n---------------------PROMPT---------------------\n")
     print(prompt)
@@ -109,7 +109,7 @@ def dispatcher(business_id, prompt, id, conversation_id):
     # Info
     if intention_key == "info":
         print("\n---------------------INFORMATION---------------------\n")
-        response, docs = info.run(prompt, last_messages, context, force_saving=False) # force saving True para quando mudar o pdf ele atualizar
+        response, docs = info.run(id, prompt, last_messages, context, force_saving=False) # force saving True para quando mudar o pdf ele atualizar
 
     # Resp
     elif intention_key == "resp":
