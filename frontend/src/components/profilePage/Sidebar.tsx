@@ -16,7 +16,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({toggleSidebar, handleSectionSelect, user }) => {
   return (
     <aside className="w-64 h-full" aria-label="Sidebar">
-      <div className="flex flex-col h-full overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
+      <div className="flex flex-col h-full overflow-y-auto py-4 px-3 rounded bg-gray-800">
         
         {/* Main content area - allow it to grow and fill available space */}
         <div className="flex-1">

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { User } from "../../models/user";
 
-import UploadSection from "./uploadSection";
+import UploadSection from "./UploadSection";
 
 interface MainContentProps {
   section: string;

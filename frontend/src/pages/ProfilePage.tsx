@@ -11,7 +11,7 @@ const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>();
   const [currentSection, setCurrentSection] = useState<string>("user");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     
@@ -60,7 +60,7 @@ const ProfilePage: React.FC = () => {
 
           {/* Header */}
 
-          <header className='flex mt-4 mx-3 bg-slate-300 lg:bg-white md:bg-white rounded'>
+          <header className='flex mt-4 mx-3 bg-indigo-200 lg:bg-white md:bg-white rounded'>
 
             <button className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded focus:outline-none" onClick={toggleSidebar}>
               <span className="hamburger-line" style={{ backgroundColor: 'rgb(31 41 55)' }}></span>
