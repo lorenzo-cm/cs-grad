@@ -50,3 +50,22 @@ export async function getMessages(username: string): Promise<Message[]> {
     }
 
 }
+
+
+export const sendMessageAPI = async (prompt: string, username: string): Promise<any> => {
+    // Encode the parameters to ensure they are safe for URL usage
+    const encodedPrompt = encodeURIComponent(prompt);
+    const encodedUsername = encodeURIComponent(username);
+
+    // Construct the URL with the encoded parameters
+    const url = `http://localhost:3003/api/prompt=${encodedPrompt}+username=${encodedUsername}`;
+
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return []
+        }
+    }
+};

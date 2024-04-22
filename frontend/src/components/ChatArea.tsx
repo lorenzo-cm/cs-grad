@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 
 import Message from '../models/message';
 
-import { createMessage, getMessages } from '../utils/messageHandler';
+import { createMessage, getMessages, sendMessageAPI } from '../utils/messageHandler';
 
+let idFake = 0;
 
 function formatTime() {
   var now = new Date();
@@ -30,13 +31,28 @@ function formatMessagesTimes(messages: Message[]): Message[] {
   });
 }
 
+function resetMessagesId(messages: Message[]): Message[] {
+  const ret = messages.map(message => {
+
+    idFake = idFake + 1;
+
+    return {
+      ...message,
+      id: idFake
+    };
+  });
+
+  idFake = idFake + 1;
+
+  return ret;
+}
 
 
 const ChatArea: React.FC = () => {
 
   let { username = 'test' } = useParams<{ username?: string }>();
 
-  const [idFake, setIdFake] = useState(1);
+  // const [idFake, setIdFake] = useState(1);
 
   const firstBotMessage: Message = {
     id: 0,
@@ -66,13 +82,11 @@ const ChatArea: React.FC = () => {
         }
 
         else{
-          setMessages(formatMessagesTimes(data));
-          
+          setMessages(resetMessagesId(formatMessagesTimes(data)));
         }
         setLoading(false);
       })
       .catch(err => {
-        console.error('Failed to fetch messages:', err);
         seterrorMessageStatus(err);
         setLoading(false);
       });
@@ -93,14 +107,14 @@ const ChatArea: React.FC = () => {
     if (!newText.trim()) return;
     
     let newMessage: Message = {
-      id: idFake + 1,
+      id: idFake,
       text: newText,
       is_bot: false,
       sent_at: String(formatTime()),
       status: 'pending'
     }
 
-    setIdFake(idFake + 1);
+    idFake = idFake + 1;
 
     setMessages([...messages, newMessage]);
 
@@ -117,7 +131,27 @@ const ChatArea: React.FC = () => {
       seterrorMessageStatus('Failed to send the message, try again')
       newMessage.status = 'failed'
     }
+
+    const responseApi  = await sendMessageAPI(newMessage.text, username)
+
+    const newBotMessage : Message = {
+      id: idFake,
+      text: responseApi['response'],
+      is_bot: true,
+      sent_at: String(formatTime()),
+      status: 'sent'
+    }
+
+    idFake = idFake + 1;
+
+    setMessages([...messages, newMessage, newBotMessage]);
+
+    const response_bool_bot = await createMessage(responseApi['response'], true, username)
     
+    if(!response_bool_bot){
+      seterrorMessageStatus('Failed to retrieve bot message, send your message again')
+    }
+
   };
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
