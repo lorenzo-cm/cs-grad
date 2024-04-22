@@ -109,8 +109,11 @@ def dispatcher(prompt, id):
     # Info
     if intention_key == "info":
         print("\n---------------------INFORMATION---------------------\n")
-        response, docs = info.run(id, prompt, last_messages, context, force_saving=False) # force saving True para quando mudar o pdf ele atualizar
-
+        try:
+            response, docs = info.run(id, prompt, last_messages, context, force_saving=False) # force saving True para quando mudar o pdf ele atualizar
+        except:
+            response = "Desculpe, algo deu errado. Por favor, tente novamente mais tarde."
+            docs = []
     # Resp
     elif intention_key == "resp":
         print("\n--------------------RESPOSTA---------------------\n")

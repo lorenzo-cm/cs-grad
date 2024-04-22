@@ -29,9 +29,11 @@ class ResponserEmbeddings(BaseGPT):
             
         if context:
             additional_context['context'] = context
-        
-        if force_saving:
-            return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=True)
-        
-        else:
-            return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=False)
+        try:
+            if force_saving:
+                return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=True)
+            
+            else:
+                return run_embeddings(id, prompt, self.site_name, additional_context, force_saving=False)
+        except:
+            return "Garanta que você possui um pdf funcional para fazer perguntas sobre ele! Você pode inserir um pdf na área do usuário", []
