@@ -41,3 +41,18 @@ export async function getUser(): Promise<User> {
     }
 
 }
+
+
+export async function getUsernameBySession(): Promise<string> {
+    try {
+        const response = await axios.get('http://localhost:3001/api/users/', { withCredentials: true, headers: { 'Content-Type': 'application/json' }});
+        return response.data['username'];
+
+    } 
+    
+    catch (error) {
+        console.error('Error fetching user:', error);
+        return '';
+    }
+
+}

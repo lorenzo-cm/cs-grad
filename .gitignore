@@ -30,3 +30,7 @@ dist-ssr
 # pycache
 __pycache__
 *.pyc
+
+
+# pdf files
+*.pdf

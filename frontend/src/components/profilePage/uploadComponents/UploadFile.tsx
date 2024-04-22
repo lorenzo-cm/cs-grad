@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import axios from 'axios';
+import { getUsernameBySession } from '../../../utils/utils';
 
 type UploadFileComponentProps = {
     file: File;
@@ -20,8 +21,10 @@ const UploadFileComponent: React.FC<UploadFileComponentProps> = ({
             const formData = new FormData();
             formData.append('file', file);
 
+            const username = await getUsernameBySession()
+
             try {
-                await axios.post('/upload', formData, {
+                await axios.post(`http://localhost:3003/upload/${username}`, formData, {
                     onUploadProgress: (progressEvent) => {
                         if (progressEvent.total) {
                             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -36,6 +39,7 @@ const UploadFileComponent: React.FC<UploadFileComponentProps> = ({
             } catch (error) {
                 onError(error);
             }
+
         };
 
         if (file) {
