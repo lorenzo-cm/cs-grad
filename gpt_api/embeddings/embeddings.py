@@ -182,10 +182,11 @@ def run_embeddings(id, prompt:str, additional_context={}, force_saving=False) ->
     Returns:
         A tuple containing the generated response string and a list of source documents.
     """
+    print("1")
     df = load_save_embedding(id, force_saving)
-    
+    print("2")
     useful_data, _ = strings_ranked_by_relatedness(prompt, df)
-    
+    print("3")
     answer = get_answer_embedding(prompt, useful_data, additional_context)
-    
+    print("4")
     return answer, useful_data

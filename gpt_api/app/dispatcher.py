@@ -153,8 +153,8 @@ def dispatcher(prompt, id):
 
 if __name__ == '__main__':
     prompt = input("$$ ")
-    id = "+553190843066"
-    response = dispatcher('+553172525392', prompt, id, 'qualquer coisa')
+    id = "lulu"
+    response = dispatcher(prompt, id)
     print ("-------------------------------------------\n--------- RESPOSTA FINAL DA ALIA ----------\n-------------------------------------------\n")
     print(response)
     print ("-------------------------------------------\n-------------------------------------------\n-------------------------------------------\n")

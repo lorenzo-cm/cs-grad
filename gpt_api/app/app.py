@@ -20,9 +20,24 @@ def upload_file(user_id):
     if file:
         user_directory = f"../data/pdf/{user_id}"
         os.makedirs(user_directory, exist_ok=True)
-        file.save(os.path.join(user_directory, file.filename))
-        return 'File uploaded successfully', 200
+        
+        # Define the new filename using the user_id
+        new_filename = f"{user_id}.pdf"
+        
+        # Save the file with the new filename
+        file.save(os.path.join(user_directory, new_filename))
+        
+        # Path to the .parquet file to be deleted
+        parquet_file_path = f"../data/embeddings/{user_id}.parquet"
+        
+        # Check if the .parquet file exists and then delete it
+        if os.path.exists(parquet_file_path):
+            os.remove(parquet_file_path)
+            return 'File uploaded and old embedding deleted successfully', 200
+        else:
+            return 'File uploaded but no old embedding found to delete', 200
     return 'No file found', 400
+
 
 @app.route('/api/prompt=<prompt>+username=<username>', methods=['GET'])
 def api_call(prompt, username):
