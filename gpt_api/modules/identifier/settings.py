@@ -76,7 +76,11 @@ Prompt: Bom dia, qual é o seu nome?
 Pensamento: O usuário está querendo explorar os limites da IA
 Saída: {'resp': 1}
 
-         '''}
+                       
+Prompt: Bom dia
+Pensamento: O usuário quer conversa
+Saída: {'resp': 1}
+'''}
 
 
 forward_settings = {

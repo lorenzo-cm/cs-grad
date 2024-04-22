@@ -20,10 +20,10 @@ def upload_file(user_id):
     return 'No file found', 400
 
 
-@app.route('/api/<prompt>+<id>', methods=['GET'])
-def api_call(prompt, id):
+@app.route('/api/prompt=<prompt>+username=<username>', methods=['GET'])
+def api_call(prompt, username):
     # Call the dispatcher function with the URL parameters
-    response = dispatcher(prompt, id)
+    response = dispatcher(prompt, username)
     
     # Return the JSON response
     return jsonify(response)
