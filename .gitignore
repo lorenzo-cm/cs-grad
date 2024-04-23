@@ -34,3 +34,7 @@ __pycache__
 
 # pdf files
 *.pdf
+
+# embedding files
+
+*.parquet

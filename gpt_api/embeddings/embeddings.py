@@ -39,9 +39,8 @@ def get_embbeding(client, input:str) -> list[int]:
 def get_df_embedding(path:str) -> pd.DataFrame:
     df = get_pdf_from_path(path)
     client = OpenAI()
-    
+
     df['embedding'] = df['text'].apply(lambda x: get_embbeding(client, x))
-    
     return df
 
 
@@ -122,7 +121,14 @@ def save_embedding(id:str) -> pd.DataFrame:
     
     df = get_df_embedding(path)
     
-    df.to_parquet(f'../data/embeddings/{id}.parquet')
+
+    if not os.path.exists('../data/embeddings'):
+        os.makedirs('../data/embeddings')
+        
+    try:
+        df.to_parquet(f'../data/embeddings/{id}.parquet')
+    except Exception as e:
+        print(f"Error saving file: {e}")
     
     return df
 
@@ -182,11 +188,7 @@ def run_embeddings(id, prompt:str, additional_context={}, force_saving=False) ->
     Returns:
         A tuple containing the generated response string and a list of source documents.
     """
-    print("1")
     df = load_save_embedding(id, force_saving)
-    print("2")
     useful_data, _ = strings_ranked_by_relatedness(prompt, df)
-    print("3")
     answer = get_answer_embedding(prompt, useful_data, additional_context)
-    print("4")
     return answer, useful_data
