@@ -39,9 +39,6 @@ const registerUser = async (req, res) => {
 
         // Assuming createUser function now also receives the confirmation code
         const newUser = await createUser(username, email, password, name, role, confirmationCode);
-        
-        // Send the confirmation email
-        await sendConfirmationEmail(email, confirmationCode);
 
         // Respond with success, might want to strip out sensitive information
         res.json({ user: newUser, message: "Please check your email to confirm your account." });

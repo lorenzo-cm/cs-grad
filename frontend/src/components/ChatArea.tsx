@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import Message from '../models/message';
 
-import { createMessage, getMessages, sendMessageAPI } from '../utils/messageHandler';
+import { createMessage, getMessages, sendMessageAPI, sendMessageAPINoUsername } from '../utils/messageHandler';
 
 let idFake = 0;
 
@@ -120,37 +120,67 @@ const ChatArea: React.FC = () => {
 
     setnewText('');
 
-    const response_bool = await createMessage(newText, false, username)
+    if(username != 'test'){
 
-    if(response_bool){
-      newMessage.status = 'sent'
-      setMessages([...messages, newMessage]);
+      const response_bool = await createMessage(newText, false, username)
+
+      if(response_bool){
+        newMessage.status = 'sent'
+        setMessages([...messages, newMessage]);
+      }
+
+      else{
+        seterrorMessageStatus('Failed to send the message, try again')
+        newMessage.status = 'failed'
+      }
+
+      const responseApi  = await sendMessageAPI(newMessage.text, username)
+
+      const newBotMessage : Message = {
+        id: idFake,
+        text: responseApi['response'],
+        is_bot: true,
+        sent_at: String(formatTime()),
+        status: 'sent'
+      }
+
+      idFake = idFake + 1;
+
+      setMessages([...messages, newMessage, newBotMessage]);
+
+      const response_bool_bot = await createMessage(responseApi['response'], true, username)
+      
+      if(!response_bool_bot){
+        seterrorMessageStatus('Failed to retrieve bot message, send your message again')
+      }
+
     }
 
     else{
-      seterrorMessageStatus('Failed to send the message, try again')
-      newMessage.status = 'failed'
+      newMessage.status = 'sent'
+      setMessages([...messages, newMessage]);
+
+      const responseApi  = await sendMessageAPINoUsername(newMessage.text)
+
+      // have to check the error bot msg to make it
+      // if(!response_bool_bot){
+      //   seterrorMessageStatus('Failed to retrieve bot message, send your message again')
+      // }
+      // exit funct
+
+      const newBotMessage : Message = {
+        id: idFake,
+        text: responseApi['response'],
+        is_bot: true,
+        sent_at: String(formatTime()),
+        status: 'sent'
+      }
+
+      idFake = idFake + 1;
+
+      setMessages([...messages, newMessage, newBotMessage]);
     }
 
-    const responseApi  = await sendMessageAPI(newMessage.text, username)
-
-    const newBotMessage : Message = {
-      id: idFake,
-      text: responseApi['response'],
-      is_bot: true,
-      sent_at: String(formatTime()),
-      status: 'sent'
-    }
-
-    idFake = idFake + 1;
-
-    setMessages([...messages, newMessage, newBotMessage]);
-
-    const response_bool_bot = await createMessage(responseApi['response'], true, username)
-    
-    if(!response_bool_bot){
-      seterrorMessageStatus('Failed to retrieve bot message, send your message again')
-    }
 
   };
 

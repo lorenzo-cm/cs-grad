@@ -18,7 +18,8 @@ const RegisterPage: React.FC = () => {
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    const newValue = value.replace(/\s+/g, '');
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
@@ -27,8 +28,8 @@ const RegisterPage: React.FC = () => {
 
     try {
       // Adapte a URL conforme necessário para apontar para seu back-end
-      await axios.post('http://localhost:3000/api/users/register', formData);
-      navigate('/success'); // Modifique conforme a rota de sucesso desejada
+      await axios.post('http://localhost:3001/api/users/register', formData);
+      navigate('/profile');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setErrorMessage(error.response.data.message || 'Something went wrong. Please try again.');

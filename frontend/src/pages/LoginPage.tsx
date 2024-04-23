@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="w-full max-w-xs">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
-            <input type="text" id="email" value={username} onChange={(e) => setUsername(e.target.value)}
+            <input type="text" id="email" value={username} onChange={(e) => setUsername(e.target.value.replace(/\s+/g, ''))}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
           </div>
           <div className="mb-6">

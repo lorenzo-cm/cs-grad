@@ -47,7 +47,7 @@ const TopBar: React.FC = () => {
       
 
       <div className='font-bold text-2xl text-center text-white'> 
-        {username ? <div> <span className='text-green-500'>{username}</span> chat</div> : <div>Alia Chat</div>}
+        {username ? <div> <span className='text-green-500'>{username}</span> Chat</div> : <div>Alia Chat</div>}
       </div>
   
       <div className="flex justify-end flex-grow">

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import Message from "../models/message";
-
+import { generateUrlSafeRandomString } from "./utils";
 
 export async function createMessage(text_: string, isBot_: boolean, username: string): Promise<boolean> {
     const url = `http://localhost:3001/api/messages/`;
@@ -59,6 +59,25 @@ export const sendMessageAPI = async (prompt: string, username: string): Promise<
 
     // Construct the URL with the encoded parameters
     const url = `http://localhost:3003/api/prompt=${encodedPrompt}+username=${encodedUsername}`;
+
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return []
+        }
+    }
+};
+
+
+export const sendMessageAPINoUsername = async (prompt: string): Promise<any> => {
+    // Encode the parameters to ensure they are safe for URL usage
+    const encodedPrompt = encodeURIComponent(prompt);
+    const randomUsername = encodeURIComponent(generateUrlSafeRandomString(36));
+
+    // Construct the URL with the encoded parameters
+    const url = `http://localhost:3003/api/prompt=${encodedPrompt}+username=~~~~${randomUsername}`;
 
     try {
         const response = await axios.get(url);

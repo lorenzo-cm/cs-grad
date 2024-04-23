@@ -56,3 +56,19 @@ export async function getUsernameBySession(): Promise<string> {
     }
 
 }
+
+
+export function generateUrlSafeRandomString(length: number): string {
+    // Define a set of characters that are safe for URL usage
+    const urlSafeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    const charArray = new Uint8Array(length);
+    window.crypto.getRandomValues(charArray); // Generate random values
+    let randomString = '';
+
+    // Convert each byte into a character from the URL-safe characters
+    for (let i = 0; i < length; i++) {
+        randomString += urlSafeChars.charAt(charArray[i] % urlSafeChars.length);
+    }
+
+    return randomString;
+}
