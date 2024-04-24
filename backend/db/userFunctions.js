@@ -33,3 +33,16 @@ export const getUserIdByUsername = async (username) => {
     );
     return result.rows[0].id;
 }
+
+
+export const alterUserDB_ = async (userId, name, role) => {
+    try {
+        const result = await pool.query(
+            'UPDATE tp_es.users SET name = $1, role = $2 WHERE id = $3 RETURNING *',
+            [name, role, userId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Failed to update user:', error);
+    }
+};

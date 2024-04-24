@@ -2,7 +2,7 @@ import express from 'express';
 import { v4 } from 'uuid';
 
 // Importing user and session management functions
-import { createUser, getUserByUsername_, getUserById_ } from '../db/userFunctions.js';
+import { createUser, getUserByUsername_, getUserById_, alterUserDB_ } from '../db/userFunctions.js';
 import { createSession, authSessionMiddlewareRedirect, authSessionMiddleware, deleteSessionMiddleware } from '../session/sessionManager.js';
 
 const router = express.Router();
@@ -102,11 +102,38 @@ const logout = async (req, res) => {
     return res.status(200).send('logged out')
 }
 
+
+const alterUserDB = async (req, res) => {
+    try {
+        const { username, name, email, role } = req.body;
+
+        if (!username || !name || !email || !role) {
+            return res.status(400).send('Missing required user parameters');
+        }
+
+        const userId = req.data.user_id;
+
+        // Correctly declare user and fetch data
+        const user = await alterUserDB_(userId, name, role);
+
+        if (user) {
+            return res.json(user);  // Corrected line to properly send JSON response
+        } else {
+            return res.status(400).send('Something gone wrong');
+        }
+
+    } catch (error) {
+        console.error(`Error getting user by username: ${error}`);
+        res.status(500).send('Internal server error');
+    }
+};
+
 // Router setup
 router.get('/', authSessionMiddleware, getUserById);
 router.get('/:{username}', getUserByUsername);
 router.post('/register', registerUser);
 router.post('/login', authSessionMiddlewareRedirect, authenticateUser, createSession);
 router.post('/logout', deleteSessionMiddleware, logout)
+router.post('/alter', authSessionMiddleware, alterUserDB)
 
 export default router;

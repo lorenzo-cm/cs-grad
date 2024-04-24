@@ -58,6 +58,20 @@ export async function getUsernameBySession(): Promise<string> {
 }
 
 
+export async function alterUserDB(user: User): Promise<User> {
+    try {
+        const response = await axios.post('http://localhost:3001/api/users/alter', user, {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return response.data as User;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        return user
+    }
+}
+
+
 export function generateUrlSafeRandomString(length: number): string {
     // Define a set of characters that are safe for URL usage
     const urlSafeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -72,3 +86,5 @@ export function generateUrlSafeRandomString(length: number): string {
 
     return randomString;
 }
+
+

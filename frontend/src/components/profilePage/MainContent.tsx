@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { User } from "../../models/user";
 
 import UploadSection from "./UploadSection";
+import { alterUserDB } from "../../utils/utils";
 
 interface MainContentProps {
   section: string;
@@ -12,16 +13,78 @@ interface UserProfileProps {
   user: User;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ user }) => (
-  <div>
-    <h1 className="font-bold text-xl mb-2">User Profile</h1>
-    <p><strong>Name:</strong> {user.username}</p>
-    <p><strong>Email:</strong> {user.email}</p>
-    <p><strong>Role:</strong> {user.role}</p>
-  </div>
-);
+const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+  // State for form inputs
+  const [name, setName] = useState<string>(user.name);
+  const [role, setRole] = useState<string>(user.role ?? '');
+  const [okMsg, setOkMsg] = useState<string>('');
 
-// const UploadSection = () => <div>Upload Section</div>;
+  // Handle form submission
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    event.preventDefault();
+    try {
+      // Assuming alterUserDB is defined elsewhere and accepts a User object
+      await alterUserDB({ ...user, name, role });
+      setOkMsg('Profile updated successfully!');
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      setOkMsg('Oh, oh, something went wrong')
+    }
+  };
+
+  // Function to clear the okMsg
+  const handleCloseMsg = () => {
+    setOkMsg('');
+  };
+
+  return (
+    <div>
+      <h1 className="font-bold text-xl mb-2">User Profile</h1>
+      <p><strong>Username:</strong> {user.username}</p>
+      <p><strong>Name:</strong> 
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="ml-2 border rounded p-1"
+        />
+      </p>
+      <p><strong>Email:</strong> {user.email}</p>
+      <p><strong>Role:</strong>
+        <input
+          type="text"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="ml-2 border rounded p-1"
+        />
+      </p>
+      <button
+        onClick={handleSubmit}
+        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Update Profile
+      </button>
+
+      {okMsg && (
+        <div className="mt-10 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <span className="block sm:inline">{okMsg}</span>
+          <span
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={handleCloseMsg}
+            style={{ cursor: 'pointer' }}
+          >
+            <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <title>Close</title>
+              <path d="M14.348 14.849a1.2 1.2 0 01-1.697 0L10 11.196 7.349 14.849a1.2 1.2 0 01-1.697-1.697L8.196 10 5.652 7.349a1.2 1.2 0 111.697-1.697L10 8.804l2.651-3.152a1.2 1.2 0 111.697 1.697L11.804 10l2.544 2.651a1.2 1.2 0 010 1.698z"/>
+            </svg>
+          </span>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
 
 export const MainContent: React.FC<MainContentProps> = ({ section, user }) => {
   let content;
