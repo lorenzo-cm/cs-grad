@@ -67,3 +67,10 @@ Como usuário final, gostaria de poder mandar imagens e audios
 - Como usuário final, gostaria de poder mandar imagens e audios
 	- integracao front e back para integracao de fotos e audios na interface [Lorenzo]
 	- integracao com API da openAi [Tomas]
+
+
+# VERSÃO REVISADA DO BACKLOG DA SPRINT
+
+conseuimos cumprir praticamente tudo, então listarei apenas o que não foi cumprido
+
+1. Envio de fotos e áudios
