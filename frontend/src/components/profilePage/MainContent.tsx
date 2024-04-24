@@ -13,11 +13,16 @@ interface UserProfileProps {
   user: User;
 }
 
+interface OkMsg {
+  text: string;
+  suc: boolean;
+}
+
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   // State for form inputs
   const [name, setName] = useState<string>(user.name);
   const [role, setRole] = useState<string>(user.role ?? '');
-  const [okMsg, setOkMsg] = useState<string>('');
+  const [okMsg, setOkMsg] = useState<OkMsg>({ text: '', suc: true });
 
   // Handle form submission
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
@@ -25,16 +30,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
     try {
       // Assuming alterUserDB is defined elsewhere and accepts a User object
       await alterUserDB({ ...user, name, role });
-      setOkMsg('Profile updated successfully!');
+      setOkMsg({ text: 'Profile updated successfully!', suc: true});
     } catch (error) {
       console.error('Failed to update user:', error);
-      setOkMsg('Oh, oh, something went wrong')
+      setOkMsg({text: 'Oh, oh, something went wrong', suc: false})
     }
   };
 
   // Function to clear the okMsg
   const handleCloseMsg = () => {
-    setOkMsg('');
+    setOkMsg({ text: '', suc: true });
   };
 
   return (
@@ -65,15 +70,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         Update Profile
       </button>
 
-      {okMsg && (
-        <div className="mt-10 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-          <span className="block sm:inline">{okMsg}</span>
+      {okMsg.text && (
+        <div className={`mt-8 w-72 px-4 py-3 rounded relative ${okMsg.suc ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'}`} role="alert">
+          <span className="block sm:inline">{okMsg.text}</span>
           <span
             className="absolute top-0 bottom-0 right-0 px-4 py-3"
             onClick={handleCloseMsg}
             style={{ cursor: 'pointer' }}
           >
-            <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg className={`fill-current h-6 w-6 ${okMsg.suc ? 'text-green-500' : 'text-red-600'} text-center`} role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Close</title>
               <path d="M14.348 14.849a1.2 1.2 0 01-1.697 0L10 11.196 7.349 14.849a1.2 1.2 0 01-1.697-1.697L8.196 10 5.652 7.349a1.2 1.2 0 111.697-1.697L10 8.804l2.651-3.152a1.2 1.2 0 111.697 1.697L11.804 10l2.544 2.651a1.2 1.2 0 010 1.698z"/>
             </svg>

@@ -67,7 +67,7 @@ export async function alterUserDB(user: User): Promise<User> {
         return response.data as User;
     } catch (error) {
         console.error('Error updating user:', error);
-        return user
+        throw error;
     }
 }
 
