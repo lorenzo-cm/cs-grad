@@ -71,6 +71,6 @@ Como usuário final, gostaria de poder mandar imagens e audios
 
 # VERSÃO REVISADA DO BACKLOG DA SPRINT
 
-conseuimos cumprir praticamente tudo, então listarei apenas o que não foi cumprido
+conseguimos cumprir praticamente tudo, então listarei apenas o que não foi cumprido
 
 1. Envio de fotos e áudios
