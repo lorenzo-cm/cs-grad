@@ -19,15 +19,29 @@ MODEL = "text-embedding-3-small"
 # Core functions
 # ------------------------------
 
-def get_pdf_from_path(path:str) -> pd.DataFrame:
-    # Extrair texto do PDF
+def extract_text_chunks(text, chunk_size, overlap):
+    chunks = []
+    start = 0
+    while start + chunk_size < len(text):
+        end = start + chunk_size
+        chunks.append(text[start:end])
+        start += chunk_size - overlap  # Move start up by chunk size minus overlap
+    chunks.append(text[start:])  # Add the last chunk
+    return chunks
+
+
+def get_pdf_from_path(path: str) -> pd.DataFrame:
+    # Extract text from PDF
     text = extract_text(path)
 
-    # Quebrar o texto nos parágrafos
-    paragraphs = text.split('\n\n')
+    # Remove any isolated '\n' characters that might be interpreted as new lines
+    cleaned_text = text.replace('\n', ' ')
 
-    # Criar o df com os parágrafos e tirar \n nos fins de linha que são confundidos com new line
-    df = pd.DataFrame(paragraphs, columns=['text']).replace('\n', ' ', regex=True)
+    # Break the text into 500-letter chunks with 100-letter overlap
+    chunks = extract_text_chunks(cleaned_text, 500, 100)
+
+    # Create a DataFrame from the chunks
+    df = pd.DataFrame(chunks, columns=['text'])
 
     return df
 
@@ -65,6 +79,8 @@ def strings_ranked_by_relatedness(query: str, df: pd.DataFrame, top_n: int = 5) 
 def format_prompt(useful_data:list, additional_context:dict={}):
     pdf_useful_data_formatted = f"""
     Use os textos abaixos sobre o hotel e as informações adicionais para responder de maneira direta e sem prolixidade à pergunta sequente. Se a resposta não for encontrada, responda que não sabe de uma maneira formal e criativa.
+    
+    Caso o prompt/requisição peça para resumir, sumarizar ou pergunte o conteúdo do texto ou do pdf, sumarize os textos obtidos.
 
     Textos:
     \"\"\"
@@ -190,5 +206,6 @@ def run_embeddings(id, prompt:str, additional_context={}, force_saving=False) ->
     """
     df = load_save_embedding(id, force_saving)
     useful_data, _ = strings_ranked_by_relatedness(prompt, df)
+    print(useful_data)
     answer = get_answer_embedding(prompt, useful_data, additional_context)
     return answer, useful_data
