@@ -6,7 +6,7 @@ import { generateUrlSafeRandomString } from "./utils";
 export async function createMessage(text_: string, isBot_: boolean, username: string): Promise<boolean> {
     const url = `http://localhost:3001/api/messages/`;
     const postData = {
-        text: text_,
+        text: text_.replace(/\//g, ' '),
         is_bot: isBot_,
         username: username
     };
@@ -54,7 +54,7 @@ export async function getMessages(username: string): Promise<Message[]> {
 
 export const sendMessageAPI = async (prompt: string, username: string): Promise<any> => {
     // Encode the parameters to ensure they are safe for URL usage
-    const encodedPrompt = encodeURIComponent(prompt);
+    const encodedPrompt = encodeURIComponent(prompt.replace(/\//g, ' '));
     const encodedUsername = encodeURIComponent(username);
 
     // Construct the URL with the encoded parameters
@@ -73,7 +73,7 @@ export const sendMessageAPI = async (prompt: string, username: string): Promise<
 
 export const sendMessageAPINoUsername = async (prompt: string): Promise<any> => {
     // Encode the parameters to ensure they are safe for URL usage
-    const encodedPrompt = encodeURIComponent(prompt);
+    const encodedPrompt = encodeURIComponent(prompt.replace(/\//g, ' '));
     const randomUsername = encodeURIComponent(generateUrlSafeRandomString(36));
 
     // Construct the URL with the encoded parameters
