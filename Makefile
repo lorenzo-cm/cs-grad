@@ -171,16 +171,3 @@ qemu: $K/kernel fs.img
 qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
-
-
-# GPT CODE TO COMPILE AND EXECUTE THE GETCNT ONLY
-
-# # Compile getcnt.c into getcnt.o
-# $U/getcnt.o: $U/getcnt.c $U/user.h $U/usys.S
-# 	$(CC) $(CFLAGS) -c -o $U/getcnt.o $U/getcnt.c
-
-# # Build the getcnt executable and place it in the root directory
-# getcnt: $U/getcnt.o $(ULIB)
-# 	$(LD) $(LDFLAGS) -T $U/user.ld -o ./getcnt $U/getcnt.o $(ULIB)
-# 	$(OBJDUMP) -S ./getcnt > getcnt.asm
-# 	$(OBJDUMP) -t ./getcnt | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > getcnt.sym

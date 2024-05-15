@@ -135,7 +135,7 @@ static uint64 (*syscalls[])(void) = {
 
 // Definido aqui pois deve ser definido depois da definicao de sycalls
 // NELEM é Number of Elements, no caso o num de elementos de um vetor
-// Nesse caso temos que o número seria 23 com a nova adição
+// Nesse caso temos que o número seria 22 com a nova adição
 int syscall_counts[NELEM(syscalls)] = {0};
 
 void
