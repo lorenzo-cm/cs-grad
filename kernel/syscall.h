@@ -20,3 +20,8 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+
+#define SYS_getcnt 22
+
+// harcoded to make it easier to import later
+#define NUM_SYSCALLS 22

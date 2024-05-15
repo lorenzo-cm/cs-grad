@@ -15,6 +15,7 @@
 #include "sleeplock.h"
 #include "file.h"
 #include "fcntl.h"
+#include "syscall.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -502,4 +503,22 @@ sys_pipe(void)
     return -1;
   }
   return 0;
+}
+
+
+// Usando variável global NUM_SYSCALLS para facilitar os imports
+
+extern int syscall_counts[NUM_SYSCALLS];
+
+uint64
+sys_getcnt(void)
+{
+  int num;
+  argint(0, &num);
+
+  // Check if the fetched argument is a valid syscall number
+  if (num < 0 || num >= NUM_SYSCALLS)
+    return -1;
+
+  return syscall_counts[num];
 }
