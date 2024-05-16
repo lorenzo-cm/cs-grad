@@ -517,7 +517,7 @@ sys_getcnt(void)
   argint(0, &num);
 
   // Check if the fetched argument is a valid syscall number
-  if (num < 0 || num >= NUM_SYSCALLS)
+  if (num < 0 || num > NUM_SYSCALLS)
     return -1;
 
   return syscall_counts[num];
