@@ -8,9 +8,10 @@ $ ./getcnt 1
 syscall 1 has been called 4 times
 ```
 
-
-
-
+### Trabalho 2
+- Implementação de um escalonador de processor por loteria (Lottery Scheduler)
+- Implementação de uma chamada de sistema que retorna informações relacionadas ao escalonamento para cada processo
+- Visualização gráfica do desempenho e corretude da implementação
 
 ---------------------------------------------------------------------------
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
