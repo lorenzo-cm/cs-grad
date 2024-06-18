@@ -89,3 +89,28 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// TP2
+
+uint64
+sys_settickets(void)
+{
+  int num;
+  argint(0, &num);
+  
+  // Caso passe um número de syscall menor do que 1 (1 é a primeira)
+  if(num < 1)
+    return -1;
+
+  struct proc *currproc = myproc();
+  currproc->tickets = num;
+  return 0;
+
+}
+
+uint64
+sys_getpinfo(void)
+{
+  return 0;
+}

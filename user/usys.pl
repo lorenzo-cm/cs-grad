@@ -36,4 +36,10 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
+
+# TP1
 entry("getcnt");
+
+# TP2
+entry("settickets");
+entry("getpinfo");

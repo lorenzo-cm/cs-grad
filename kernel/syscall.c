@@ -102,7 +102,14 @@ extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 
+
+// OBS: parameters are not passed through functions, but through stack (as showed in class)
+// TP1
 extern uint64 sys_getcnt(void);
+
+// TP2
+extern uint64 sys_settickets(void); 
+extern uint64 sys_getpinfo(void);
 
 
 // An array mapping syscall numbers from syscall.h
@@ -130,12 +137,18 @@ static uint64 (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 
+// TP1
 [SYS_getcnt]  sys_getcnt,
+
+// TP2
+[SYS_settickets] sys_settickets,
+[SYS_getpinfo] sys_getpinfo,
 };
 
 // Definido aqui pois deve ser definido depois da definicao de sycalls
 // NELEM é Number of Elements, no caso o num de elementos de um vetor
 // Nesse caso temos que o número seria 22 com a nova adição
+// Update: número será 24
 int syscall_counts[NELEM(syscalls)] = {0};
 
 void

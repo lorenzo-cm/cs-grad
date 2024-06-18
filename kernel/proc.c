@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "rand.h"
 
 struct cpu cpus[NCPU];
 
@@ -124,7 +125,10 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
-
+  
+  // TP2 - set default tickets to 1 when allocated
+  p->tickets = 1;
+  
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
     freeproc(p);
@@ -318,8 +322,15 @@ fork(void)
   np->parent = p;
   release(&wait_lock);
 
+
   acquire(&np->lock);
   np->state = RUNNABLE;
+
+  // TP2
+  acquire(&p->lock);
+  np->tickets = p->tickets;
+  release(&p->lock);
+
   release(&np->lock);
 
   return pid;
@@ -452,24 +463,79 @@ scheduler(void)
     // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
 
+    // Have to know the number of tickets to generate the random number
+    int total_tickets = 0;
     for(p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if(p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
+        total_tickets += p->tickets;
       }
       release(&p->lock);
     }
+
+    // Generate random number between 0 and total_tickets
+    if(total_tickets > 0) {
+      int winning_ticket = rand() % total_tickets;
+      int count = 0;
+
+      for(p = proc; p < &proc[NPROC]; p++) {
+        acquire(&p->lock);
+        if(p->state == RUNNABLE){
+          count += p->tickets;
+
+          if(count > winning_ticket){
+            p->state = RUNNING;
+            c->proc = p;
+            swtch(&c->context, &p->context);
+            c->proc = 0;
+            release(&p->lock);
+            break;
+          }
+
+        }
+
+        release(&p->lock);
+      }
+    }
   }
 }
+
+// Per-CPU process scheduler.
+// Each CPU calls scheduler() after setting itself up.
+// Scheduler never returns.  It loops, doing:
+//  - choose a process to run.
+//  - swtch to start running that process.
+//  - eventually that process transfers control
+//    via swtch back to the scheduler.
+// void
+// scheduler_old(void)
+// {
+//   struct proc *p;
+//   struct cpu *c = mycpu();
+  
+//   c->proc = 0;
+//   for(;;){
+//     // Avoid deadlock by ensuring that devices can interrupt.
+//     intr_on();
+
+//     for(p = proc; p < &proc[NPROC]; p++) {
+//       acquire(&p->lock);
+//       if(p->state == RUNNABLE) {
+//         // Switch to chosen process.  It is the process's job
+//         // to release its lock and then reacquire it
+//         // before jumping back to us.
+//         p->state = RUNNING;
+//         c->proc = p;
+//         swtch(&c->context, &p->context);
+
+//         // Process is done running for now.
+//         // It should have changed its p->state before coming back.
+//         c->proc = 0;
+//       }
+//       release(&p->lock);
+//     }
+//   }
+// }
 
 // Switch to scheduler.  Must hold only p->lock
 // and have changed proc->state. Saves and restores

@@ -21,7 +21,12 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 
+// TP1
 #define SYS_getcnt 22
 
-// harcoded to make it easier to import later
-#define NUM_SYSCALLS 22
+// TP2
+#define SYS_settickets 23
+#define SYS_getpinfo 24
+
+// harcoded to make it easier to import later (can be moved to defs.h)
+#define NUM_SYSCALLS 24

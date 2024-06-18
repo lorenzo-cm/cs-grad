@@ -133,6 +133,8 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_getcnt\
+	$U/_settickets\
+	$U/_getpinfo\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
