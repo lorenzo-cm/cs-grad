@@ -103,3 +103,32 @@ OBS: colocando a implementação das duas funções aqui pois aparentemente esse
 - Obtive erros de memória durante a implementação do getpinfo, provavelmente devido ao compartilhamento de ponteiros entre kernel e usuário. Por isso, procuramos soluções para tal problema e achamos
 
 - No entanto, ao testar, tem-se um problema: ao setar o ticket, o processo do ticket morre sem ser testado. Devido a isso, foi implementada uma syscall de testes.
+
+
+## Section 3
+
+### 19- Testes
+
+- Devido ao problema de testes passados, procurei por soluções e um colega aconselhou fazermos um teste no próprio espaço de usuário, o que pareceu promissor.
+
+- Implementamos uma função de teste no espaço de usuário: test_lottery
+
+- Resultado: escalonador estava escalando erroneamente. Está dando o mesmo peso para número de tickets maior do que 1
+
+- Descoberta: na realidade o escalonador estava correto, mas como o teste era feito com 3 processos e o número de CPUs rodando o programa eram 3, então parecia que o escalonador estava dando o mesmo peso para cada, mas na realidade ele estava rodando os 3 em pararelo. Isso foi verificado pois coloquei para printar o número de tickets e percebi que eles estavam variando entre 51, 61, 151, etc. Isso indica que alguns dos processos não estavam com o status RUNNABLE, o que era esperado previamente, o que foi uma pista crucial para a clarificação do que estava ocorrendo.
+
+- Resultados: 
+
+```
+$ test_lottery 10 50 100
+PID     Tickets     Ticks
+-------------------------
+1       1           14
+2       1           13
+3       1           10
+4       10           27
+5       50           183
+6       100           345
+```
+
+- Resultados corretos!

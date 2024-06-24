@@ -135,6 +135,7 @@ UPROGS=\
 	$U/_getcnt\
 	$U/_settickets\
 	$U/_getpinfo\
+	$U/_test_lottery\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
@@ -156,7 +157,7 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 	then echo "-gdb tcp::$(GDBPORT)"; \
 	else echo "-s -p $(GDBPORT)"; fi)
 ifndef CPUS
-CPUS := 3
+CPUS := 1
 endif
 
 QEMUOPTS = -machine virt -bios none -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
@@ -173,3 +174,9 @@ qemu: $K/kernel fs.img
 qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
+
+
+$U/_test_lottery: $U/test_lottery.o $(ULIB)
+	$(LD) $(LDFLAGS) -T $U/user.ld -o $U/_test_lottery $U/test_lottery.o $(ULIB)
+	$(OBJDUMP) -S $U/_test_lottery > $U/test_lottery.asm
+	$(OBJDUMP) -t $U/_test_lottery | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $U/test_lottery.sym
