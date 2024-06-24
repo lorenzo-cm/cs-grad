@@ -6,6 +6,7 @@
 #include "proc.h"
 #include "defs.h"
 #include "rand.h"
+#include "pstat.h"
 
 struct cpu cpus[NCPU];
 
@@ -485,6 +486,7 @@ scheduler(void)
 
           if(count > winning_ticket){
             p->state = RUNNING;
+            p->ticks += 1;
             c->proc = p;
             swtch(&c->context, &p->context);
             c->proc = 0;
@@ -746,4 +748,33 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+void
+fill_pstat(struct pstat *pstat_ptr)
+{
+  struct pstat pstat;
+
+  struct proc *p;
+  int i = 0;
+
+  // Iterar sobre todos os processos
+  for (p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if (p->state != UNUSED) {
+        pstat.inuse[i] = 1;
+        pstat.tickets[i] = p->tickets;
+        pstat.pid[i] = p->pid;
+        pstat.ticks[i] = p->ticks;
+    } else {
+        pstat.inuse[i] = 0;
+        pstat.tickets[i] = 0;
+        pstat.pid[i] = 0;
+        pstat.ticks[i] = 0;
+    }
+    release(&p->lock);
+    i++;
+  }
+
+  copyout(myproc()->pagetable, (uint64)pstat_ptr, (char*)&pstat, sizeof(pstat));
 }

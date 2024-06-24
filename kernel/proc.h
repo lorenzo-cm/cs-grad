@@ -106,4 +106,5 @@ struct proc {
   char name[16];               // Process name (debugging)
   
   int tickets;                 // Number of tickets in lotter scheduler (TP2)
+  int ticks;                   // Number of CPU ticks (TP2)
 };

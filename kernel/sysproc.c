@@ -112,5 +112,18 @@ sys_settickets(void)
 uint64
 sys_getpinfo(void)
 {
+  struct pstat *upstat;
+
+  // Obtenha o ponteiro do espaço do usuário
+  argaddr(0, (uint64*)&upstat);
+
+  if (upstat < 0)
+      return -1;
+
+  if (upstat == 0)
+      return -1;
+
+  fill_pstat(upstat);
+
   return 0;
 }
