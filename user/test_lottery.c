@@ -41,20 +41,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Let the processes run for a while
-    sleep(500);
 
     struct pstat pinfo;
-    if (getpinfo(&pinfo) < 0) {
-        printf("Error: getpinfo failed\n");
-        exit(1);
-    }
+    printf("step,pid,tickets,ticks\n");
+    for(int t = 0; t<100; t++){
+        sleep(100);
 
-    printf("PID     Tickets     Ticks\n");
-    printf("-------------------------\n");
-    for (int i = 0; i < NPROC; i++) {
-        if (pinfo.inuse[i]) {
-            printf("%d       %d           %d\n", pinfo.pid[i], pinfo.tickets[i], pinfo.ticks[i]);
+        if (getpinfo(&pinfo) < 0) {
+            printf("Error: getpinfo failed\n");
+            exit(1);
+        }
+        for (int i = 0; i < NPROC; i++) {
+            if (pinfo.inuse[i] && pinfo.tickets[i] > 1) {
+                printf("%d,%d,%d,%d\n", t, pinfo.pid[i], pinfo.tickets[i], pinfo.ticks[i]);
+            }
         }
     }
 
