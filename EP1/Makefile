@@ -1,41 +1,39 @@
-# Variables
-CC = g++
-CFLAGS = -Wall -Wextra -Iinclude
-SRCDIR = src
-BUILDDIR = build
-INCLUDEDIR = include
-TARGET = program
+# Compilador
+CXX = g++
 
-# Source and Object Files
-SOURCES = $(SRCDIR)/main.cpp $(SRCDIR)/thread_class.cpp $(SRCDIR)/thread_functions.cpp $(SRCDIR)/passa_tempo.cpp
-OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SOURCES))
+# Flags de compilação
+CXXFLAGS = -Iinclude -Wall -Wextra -std=c++17
 
-# Default Target
-all: $(TARGET)
+# Arquivos fonte
+SRCS = src/main.cpp src/passa_tempo.cpp src/thread_class.cpp src/thread_functions.cpp
 
-# Build Target
-$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
+# Arquivos objeto
+OBJS = $(SRCS:.cpp=.o)
 
-# Ensure Build Directory Exists
-$(OBJECTS): | $(BUILDDIR)
+# Nome do executável
+EXEC = EP1
 
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+# Regra padrão: build
+all: build
 
-# Compile Object Files with Dependencies
-$(BUILDDIR)/main.o: $(SRCDIR)/main.cpp $(INCLUDEDIR)/thread_functions.hpp $(INCLUDEDIR)/thread_class.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+# Regra de build: compila e gera o executável
+build: $(EXEC)
 
-$(BUILDDIR)/thread_class.o: $(SRCDIR)/thread_class.cpp $(INCLUDEDIR)/thread_class.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+# Linka os arquivos objeto para criar o executável
+$(EXEC): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-$(BUILDDIR)/thread_functions.o: $(SRCDIR)/thread_functions.cpp $(INCLUDEDIR)/thread_functions.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+# Compila os arquivos fonte em objetos
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILDDIR)/passa_tempo.o: $(SRCDIR)/passa_tempo.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+# Regra para rodar o programa
+run: build
+	./$(EXEC)
 
-# Clean Target
+# Regra para limpar os arquivos gerados
 clean:
-	rm -f $(BUILDDIR)/*.o $(TARGET)
+	rm -f $(EXEC) $(OBJS)
+
+# Declaração de targets que não correspondem a arquivos
+.PHONY: all build run clean
