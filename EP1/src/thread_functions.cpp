@@ -10,21 +10,23 @@ void* thread_function(void* arg){
 
     if(verbose) std::cout<<"fim espera inicial "<< t_id << "\n";
 
+    int last_room = -1; 
     for (size_t i = 0; i < data->trajetoria.size(); ++i) {
         int current_room = data->trajetoria[i].id_sala;
         int time_in_room = data->trajetoria[i].time_min;
 
-        entra(current_room, t_id);
+        entra(current_room, t_id, last_room);
+        last_room = current_room;
 
         passa_tempo(t_id, current_room, time_in_room);
-
-        sai(current_room, t_id);
     }
+
+    sai(last_room, t_id);
 
     pthread_exit(nullptr);
 }
 
-void entra(int id_sala, int t_id){
+void entra(int id_sala, int t_id, int last_room){
     pthread_mutex_lock(&salas[id_sala].mutex);
 
     while(salas[id_sala].count_dentro > 0){
@@ -45,6 +47,10 @@ void entra(int id_sala, int t_id){
         if(verbose) std::cout << "entrou aqui" << "\n";
         salas[id_sala].count_dentro = 3;
         pthread_cond_broadcast(&salas[id_sala].cond_trio);
+    }
+
+    if (last_room != -1){
+        sai(last_room, t_id);
     }
 
     if(verbose) std::cout << "entrou " << t_id <<" na sala " << id_sala << " \n";

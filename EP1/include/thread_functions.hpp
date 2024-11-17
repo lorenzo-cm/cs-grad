@@ -13,7 +13,7 @@
 extern std::vector<Sala> salas;
 
 void* thread_function(void* arg);
-void entra(int id_sala, int t_id);
+void entra(int id_sala, int t_id, int last_room);
 void sai(int id_sala, int t_id);
 
 #endif
