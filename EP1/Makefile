@@ -7,7 +7,7 @@ INCLUDE_DIR = include
 BUILD_DIR = build
 
 # Flags de compilação
-CXXFLAGS = -I$(INCLUDE_DIR) -Wall -Wextra -std=c++17
+CXXFLAGS = -I$(INCLUDE_DIR) -Wall -Wextra -pthread -std=c++17
 
 # Lista de arquivos fonte
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
