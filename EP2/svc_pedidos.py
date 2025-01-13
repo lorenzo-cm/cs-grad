@@ -18,14 +18,15 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
         
         channel = grpc.insecure_channel(server_estoque_addr)
         self.stub = estoque_pb2_grpc.EstoqueServiceStub(channel)
-        
-        
 
     def CriaPedido(self, request, context):
+        # Recebe lista de produtos e suas respectivas quantidades
         list_prod_id = request.list_prod_id
         list_quantidade = request.list_quantidade
         
         # Reduzir quantidade dos itens
+        # Caso o servidor de estoque me retorne >= 0, quer dizer que deu certo e retorno zero
+        # Caso contrario retorno o mesmo que o servidor de estoque
         list_status = []
         for prod_id, quant in zip(list_prod_id, list_quantidade):
             request = estoque_pb2.AlteraQuantidadeRequest(
@@ -44,8 +45,10 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
                 list_status.append(-1)
             elif status == -2:
                 list_status.append(-2)
-                
-        # Crio o pedido apenas se algum status representa sucesso
+        
+        # Conforme descrito no fórum, implementarei o caso em que todos
+        # os itens são inálidos, de maneira que o pedido é criado somente quando
+        # existe pelo menos algum produto válido
         if 0 in list_status:
             self.pedidos[self.next_id] = {
                 'list_prod_id': list_prod_id,
@@ -62,11 +65,14 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
     
     def CancelaPedido(self, request, context):
         pedido_id = request.pedido_id
+        
+        # se o pedido não existe
         try:
             pedido = self.pedidos[pedido_id]
         except Exception:
             return pedidos_pb2.CancelaPedidoResponse(status=-1)
         
+        # se o pedido já foi cancelado anteriormente
         if pedido['cancelado']:
             return pedidos_pb2.CancelaPedidoResponse(status=-1)
         
@@ -75,6 +81,7 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
         list_status = pedido['list_status']
         zip_lists = zip(list_prod_id, list_quantidade, list_status)
         
+        # Dar rollback nas quantidades
         for prod_id, quant, status in zip_lists:
             if status == 0:
                 request = estoque_pb2.AlteraQuantidadeRequest(
@@ -82,7 +89,7 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
                     valor=quant
                 )
                 
-                # has only status
+                # Retorna os status, mas não preciso
                 response = self.stub.AlteraQuantidadeProduto(request)
                 
         pedido['cancelado'] = True
@@ -109,8 +116,9 @@ class PedidosServiceServicer(pedidos_pb2_grpc.PedidosServiceServicer):
         
         return return_value
     
-    
+
 def serve(port, estoque_server_addr):
+    # Mesmo esquema de finalização do servidor
     stop_event = threading.Event()
     
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

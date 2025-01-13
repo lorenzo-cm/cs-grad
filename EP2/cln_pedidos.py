@@ -15,6 +15,7 @@ def main():
     _estoque_addr = sys.argv[1]
     _pedidos_addr = sys.argv[2]
     
+    # Conexão com os servidores
     _estoque_channel = grpc.insecure_channel(_estoque_addr)
     _pedidos_channel = grpc.insecure_channel(_pedidos_addr)
     
@@ -48,6 +49,9 @@ def main():
             if len(parts) % 2 == 0:
                 continue
             
+            # adicionar os produtos e quantidades nas listas
+            # para isso itero de 2 em 2 visto que são pares produto e quantidade
+            # assim, o par tem o mesmo indice nas duas listas
             try:
                 list_prod_id = []
                 list_quantidade = []

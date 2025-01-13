@@ -16,6 +16,7 @@ class EstoqueServiceServicer(estoque_pb2_grpc.EstoqueServiceServicer):
         self._stop_event = stop_event
 
     def AdicionaProduto(self, request, context):
+        # Descricao e quantidade são inteiros
         descricao = request.descricao
         quantidade = request.quantidade
 
@@ -87,6 +88,7 @@ class EstoqueServiceServicer(estoque_pb2_grpc.EstoqueServiceServicer):
 
 def serve(port):
     
+    # Criar thread para parar o servidor através de comando
     stop_event = threading.Event()
     
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
@@ -101,6 +103,7 @@ def serve(port):
     server.add_insecure_port(f'[::]:{port}')
     server.start()
 
+    # Aguardar pelo evento de finalização
     stop_event.wait()
     
     server.stop(1)
