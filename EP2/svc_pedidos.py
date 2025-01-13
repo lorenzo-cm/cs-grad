@@ -132,7 +132,7 @@ def serve(port, estoque_server_addr):
    
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Uso: python svc_pedidos.py <porta> <estoque_server_addr>")
+        print("Uso: python3 svc_pedidos.py <porta> <estoque_server_addr>")
         sys.exit(1)
 
     port = int(sys.argv[1])

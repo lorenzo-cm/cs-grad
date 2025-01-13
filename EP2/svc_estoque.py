@@ -108,7 +108,7 @@ def serve(port):
    
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print("Uso: python servidor.py <porta>")
+        print("Uso: python3 svc_estoque.py <porta>")
         sys.exit(1)
 
     port = int(sys.argv[1])

@@ -15,11 +15,11 @@ stubs: $(STUB_FILES)
 
 # Gera os stubs do estoque.proto, caso estejam desatualizados ou não existam
 $(ESTOQUE_STUBS): $(PROTO_ESTOQUE)
-	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. $<
+	python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. $<
 
 # Gera os stubs do pedidos.proto, caso estejam desatualizados ou não existam
 $(PEDIDOS_STUBS): $(PROTO_PEDIDOS)
-	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. $<
+	python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. $<
 
 
 run_serv_estoque: stubs
