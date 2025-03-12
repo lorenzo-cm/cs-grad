@@ -1,0 +1,7 @@
+CXX = g++
+CXXFLAGS = -O1 -fno-omit-frame-pointer -g -Wall -Wshadow -std=c++17 -Wno-unused-result -Wno-sign-compare -Wno-char-subscripts #-fsanitize=address,undefined #-fuse-ld=gold
+
+.PHONY: all clean
+
+%: %.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@
