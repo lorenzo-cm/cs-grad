@@ -3,8 +3,11 @@ CXXFLAGS = -O1 -fno-omit-frame-pointer -g -Wall -Wshadow -std=c++17 -Wno-unused-
 
 .PHONY: all clean
 
-%: %.cpp
+bin:
+	mkdir bin
+
+%: %.cpp bin
 	$(CXX) $(CXXFLAGS) $< -o bin/$(notdir $@)
 
 clean:
-	rm bin/*
+	rm bin -r
