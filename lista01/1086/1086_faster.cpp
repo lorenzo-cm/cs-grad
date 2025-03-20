@@ -57,7 +57,8 @@ int check_orientation(int tam1, int tam2, int l, unordered_map<int, int> freq){
 
         if(a < b) {
             pares_count += min(freq[a], freq[b]); // aproveitar o par que deu certo
-        } else { // caso em que sao iguais
+        } else { 
+            // caso em que sao iguais
             pares_count += freq[a] / 2;
         }
     }
