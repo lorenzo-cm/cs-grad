@@ -10,4 +10,4 @@ bin:
 	$(CXX) $(CXXFLAGS) $< -o bin/$(notdir $@)
 
 clean:
-	rm bin -r
+	rm bin ent.txt out.txt -r
