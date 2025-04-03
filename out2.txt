@@ -1,0 +1,1464 @@
+Divisao
+1 21 100 131 
+
+Divisao
+12 1 100 131 
+
+Divisao
+12 110 0 131 
+
+Divisao
+121 10 0 131 
+
+Divisao
+5 1 4 1772 
+
+Divisao
+5 1 41 772 
+
+Divisao
+5 1 417 72 
+
+Divisao
+5 14 1 772 
+
+Divisao
+5 14 17 72 
+
+Divisao
+5 14 177 2 
+
+Divisao
+5 141 7 72 
+
+Divisao
+5 141 77 2 
+
+Divisao
+51 4 1 772 
+
+Divisao
+51 4 17 72 
+
+Divisao
+1 4 12 1238 
+
+Divisao
+1 4 121 238 
+
+Divisao
+1 41 2 1238 
+
+Divisao
+1 41 21 238 
+
+Divisao
+1 41 212 38 
+
+Divisao
+1 412 1 238 
+
+Divisao
+1 412 12 38 
+
+Divisao
+1 412 123 8 
+
+Divisao
+14 1 2 1238 
+
+Divisao
+14 1 21 238 
+
+Divisao
+14 1 212 38 
+
+Divisao
+14 12 1 238 
+
+Divisao
+14 12 12 38 
+
+Divisao
+1 86 262 9241 
+
+Divisao
+1 862 62 9241 
+
+Divisao
+1 862 629 241 
+
+Divisao
+18 6 262 9241 
+
+Divisao
+18 62 62 9241 
+
+Divisao
+18 62 629 241 
+
+Divisao
+18 626 2 9241 
+
+Divisao
+18 626 29 241 
+
+Divisao
+18 626 292 41 
+
+Divisao
+186 2 62 9241 
+
+Divisao
+186 2 629 241 
+
+Divisao
+186 26 2 9241 
+
+Divisao
+186 26 29 241 
+
+P1 P2 P3 Totals 
+Amanda 121 10 0 131 
+Charles 51 4 17 72 
+Monique 14 12 12 38 
+TP 186 26 29 241 
+Divisao
+951 985 1936 
+
+Divisao
+4 921 2504 
+
+Divisao
+49 21 2504 
+
+Divisao
+49 212 504 
+
+Divisao
+492 1 2504 
+
+Divisao
+492 12 504 
+
+Divisao
+1 0 313 
+
+Divisao
+10 3 13 
+
+Divisao
+0 0 0 
+
+P1 P2 Totals 
+Ingrid 951 985 1936 
+Candid 492 12 504 
+Peter 10 3 13 
+Camila 0 0 0 
+TP 0 0 0 
+Divisao
+1 1 111 111 1234 
+
+Divisao
+1 11 11 111 1234 
+
+Divisao
+1 11 111 11 1234 
+
+Divisao
+1 11 111 111 234 
+
+Divisao
+1 1 111 111 1234 
+
+Divisao
+1 11 11 111 1234 
+
+Divisao
+1 11 111 11 1234 
+
+Divisao
+1 11 111 111 234 
+
+Divisao
+1 1 111 111 1234 
+
+Divisao
+1 11 11 111 1234 
+
+Divisao
+1 11 111 11 1234 
+
+Divisao
+1 11 111 111 234 
+
+Divisao
+1 1 111 111 1234 
+
+Divisao
+1 11 11 111 1234 
+
+Divisao
+1 11 111 11 1234 
+
+Divisao
+1 11 111 111 234 
+
+Divisao
+23 423 423 423 4936 
+
+Divisao
+234 23 423 423 4936 
+
+Divisao
+234 234 23 423 4936 
+
+Divisao
+234 234 234 23 4936 
+
+Divisao
+234 234 234 234 936 
+
+P1 P2 P3 P4 Totals 
+A 1 11 111 111 234 
+B 1 11 111 111 234 
+C 1 11 111 111 234 
+D 1 11 111 111 234 
+TP 234 234 234 234 936 
+Divisao
+1 1 1 1 1 1125 
+
+Divisao
+1 1 1 1 11 125 
+
+Divisao
+1 1 1 1 111 25 
+
+Divisao
+1 1 1 11 1 125 
+
+Divisao
+1 1 1 11 11 25 
+
+Divisao
+1 1 1 1 111 1145 
+
+Divisao
+1 1 1 11 11 1145 
+
+Divisao
+1 1 1 11 111 145 
+
+Divisao
+1 1 1 111 1 1145 
+
+Divisao
+1 1 1 111 11 145 
+
+Divisao
+1 1 1 111 111 45 
+
+Divisao
+1 1 11 1 11 1145 
+
+Divisao
+1 1 11 1 111 145 
+
+Divisao
+1 1 11 11 1 1145 
+
+Divisao
+1 1 11 11 11 145 
+
+Divisao
+1 1 11 11 111 45 
+
+Divisao
+1 1 11 111 1 145 
+
+Divisao
+1 1 11 111 11 45 
+
+Divisao
+1 1 11 111 114 5 
+
+Divisao
+1 1 111 1 1 1145 
+
+Divisao
+1 1 111 1 11 145 
+
+Divisao
+1 1 111 1 111 45 
+
+Divisao
+1 1 111 11 1 145 
+
+Divisao
+1 1 111 11 11 45 
+
+Divisao
+1 1 111 11 114 5 
+
+Divisao
+1 1 111 111 1 45 
+
+Divisao
+1 1 111 111 14 5 
+
+Divisao
+1 11 1 1 11 1145 
+
+Divisao
+1 11 1 1 111 145 
+
+Divisao
+1 11 1 11 1 1145 
+
+Divisao
+1 11 1 11 11 145 
+
+Divisao
+1 11 1 11 111 45 
+
+Divisao
+1 11 1 111 1 145 
+
+Divisao
+1 11 1 111 11 45 
+
+Divisao
+1 11 1 111 114 5 
+
+Divisao
+1 11 11 1 1 1145 
+
+Divisao
+1 11 11 1 11 145 
+
+Divisao
+1 11 11 1 111 45 
+
+Divisao
+1 11 11 11 1 145 
+
+Divisao
+1 11 11 11 11 45 
+
+Divisao
+1 1 1 1 111 1145 
+
+Divisao
+1 1 1 11 11 1145 
+
+Divisao
+1 1 1 11 111 145 
+
+Divisao
+1 1 1 111 1 1145 
+
+Divisao
+1 1 1 111 11 145 
+
+Divisao
+1 1 1 111 111 45 
+
+Divisao
+1 1 11 1 11 1145 
+
+Divisao
+1 1 11 1 111 145 
+
+Divisao
+1 1 11 11 1 1145 
+
+Divisao
+1 1 11 11 11 145 
+
+Divisao
+1 1 11 11 111 45 
+
+Divisao
+1 1 11 111 1 145 
+
+Divisao
+1 1 11 111 11 45 
+
+Divisao
+1 1 11 111 114 5 
+
+Divisao
+1 1 111 1 1 1145 
+
+Divisao
+1 1 111 1 11 145 
+
+Divisao
+1 1 111 1 111 45 
+
+Divisao
+1 1 111 11 1 145 
+
+Divisao
+1 1 111 11 11 45 
+
+Divisao
+1 1 111 11 114 5 
+
+Divisao
+1 1 111 111 1 45 
+
+Divisao
+1 1 111 111 14 5 
+
+Divisao
+1 11 1 1 11 1145 
+
+Divisao
+1 11 1 1 111 145 
+
+Divisao
+1 11 1 11 1 1145 
+
+Divisao
+1 11 1 11 11 145 
+
+Divisao
+1 11 1 11 111 45 
+
+Divisao
+1 11 1 111 1 145 
+
+Divisao
+1 11 1 111 11 45 
+
+Divisao
+1 11 1 111 114 5 
+
+Divisao
+1 11 11 1 1 1145 
+
+Divisao
+1 11 11 1 11 145 
+
+Divisao
+1 11 11 1 111 45 
+
+Divisao
+1 11 11 11 1 145 
+
+Divisao
+1 11 11 11 11 45 
+
+Divisao
+11 111 111 111 111 1555 
+
+Divisao
+111 11 111 111 111 1555 
+
+Divisao
+111 111 11 111 111 1555 
+
+Divisao
+111 111 111 11 111 1555 
+
+Divisao
+111 111 111 111 11 1555 
+
+Divisao
+111 111 111 111 111 555 
+
+Divisao
+13 413 413 413 413 4670 
+
+Divisao
+134 13 413 413 413 4670 
+
+Divisao
+134 134 13 413 413 4670 
+
+Divisao
+134 134 134 13 413 4670 
+
+Divisao
+134 134 134 134 13 4670 
+
+Divisao
+134 134 134 134 134 670 
+
+P1 P2 P3 P4 P5 Totals 
+A 1 1 1 11 11 25 
+B 1 11 11 11 11 45 
+C 1 11 11 11 11 45 
+D 111 111 111 111 111 555 
+TP 134 134 134 134 134 670 
+Divisao
+11 111 111 111 111 1555 
+
+Divisao
+111 11 111 111 111 1555 
+
+Divisao
+111 111 11 111 111 1555 
+
+Divisao
+111 111 111 11 111 1555 
+
+Divisao
+111 111 111 111 11 1555 
+
+Divisao
+111 111 111 111 111 555 
+
+Divisao
+1 1 1 1 111 1145 
+
+Divisao
+1 1 1 11 11 1145 
+
+Divisao
+1 1 1 11 111 145 
+
+Divisao
+1 1 1 111 1 1145 
+
+Divisao
+1 1 1 111 11 145 
+
+Divisao
+1 1 1 111 111 45 
+
+Divisao
+1 1 11 1 11 1145 
+
+Divisao
+1 1 11 1 111 145 
+
+Divisao
+1 1 11 11 1 1145 
+
+Divisao
+1 1 11 11 11 145 
+
+Divisao
+1 1 11 11 111 45 
+
+Divisao
+1 1 11 111 1 145 
+
+Divisao
+1 1 11 111 11 45 
+
+Divisao
+1 1 11 111 114 5 
+
+Divisao
+1 1 111 1 1 1145 
+
+Divisao
+1 1 111 1 11 145 
+
+Divisao
+1 1 111 1 111 45 
+
+Divisao
+1 1 111 11 1 145 
+
+Divisao
+1 1 111 11 11 45 
+
+Divisao
+1 1 111 11 114 5 
+
+Divisao
+1 1 111 111 1 45 
+
+Divisao
+1 1 111 111 14 5 
+
+Divisao
+1 11 1 1 11 1145 
+
+Divisao
+1 11 1 1 111 145 
+
+Divisao
+1 11 1 11 1 1145 
+
+Divisao
+1 11 1 11 11 145 
+
+Divisao
+1 11 1 11 111 45 
+
+Divisao
+1 11 1 111 1 145 
+
+Divisao
+1 11 1 111 11 45 
+
+Divisao
+1 11 1 111 114 5 
+
+Divisao
+1 11 11 1 1 1145 
+
+Divisao
+1 11 11 1 11 145 
+
+Divisao
+1 11 11 1 111 45 
+
+Divisao
+1 11 11 11 1 145 
+
+Divisao
+1 11 11 11 11 45 
+
+Divisao
+1 1 1 1 111 1145 
+
+Divisao
+1 1 1 11 11 1145 
+
+Divisao
+1 1 1 11 111 145 
+
+Divisao
+1 1 1 111 1 1145 
+
+Divisao
+1 1 1 111 11 145 
+
+Divisao
+1 1 1 111 111 45 
+
+Divisao
+1 1 11 1 11 1145 
+
+Divisao
+1 1 11 1 111 145 
+
+Divisao
+1 1 11 11 1 1145 
+
+Divisao
+1 1 11 11 11 145 
+
+Divisao
+1 1 11 11 111 45 
+
+Divisao
+1 1 11 111 1 145 
+
+Divisao
+1 1 11 111 11 45 
+
+Divisao
+1 1 11 111 114 5 
+
+Divisao
+1 1 111 1 1 1145 
+
+Divisao
+1 1 111 1 11 145 
+
+Divisao
+1 1 111 1 111 45 
+
+Divisao
+1 1 111 11 1 145 
+
+Divisao
+1 1 111 11 11 45 
+
+Divisao
+1 1 111 11 114 5 
+
+Divisao
+1 1 111 111 1 45 
+
+Divisao
+1 1 111 111 14 5 
+
+Divisao
+1 11 1 1 11 1145 
+
+Divisao
+1 11 1 1 111 145 
+
+Divisao
+1 11 1 11 1 1145 
+
+Divisao
+1 11 1 11 11 145 
+
+Divisao
+1 11 1 11 111 45 
+
+Divisao
+1 11 1 111 1 145 
+
+Divisao
+1 11 1 111 11 45 
+
+Divisao
+1 11 1 111 114 5 
+
+Divisao
+1 11 11 1 1 1145 
+
+Divisao
+1 11 11 1 11 145 
+
+Divisao
+1 11 11 1 111 45 
+
+Divisao
+1 11 11 11 1 145 
+
+Divisao
+1 11 11 11 11 45 
+
+Divisao
+1 1 1 1 1 1125 
+
+Divisao
+1 1 1 1 11 125 
+
+Divisao
+1 1 1 1 111 25 
+
+Divisao
+1 1 1 11 1 125 
+
+Divisao
+1 1 1 11 11 25 
+
+Divisao
+13 413 413 413 413 4670 
+
+Divisao
+134 13 413 413 413 4670 
+
+Divisao
+134 134 13 413 413 4670 
+
+Divisao
+134 134 134 13 413 4670 
+
+Divisao
+134 134 134 134 13 4670 
+
+Divisao
+134 134 134 134 134 670 
+
+P1 P2 P3 P4 P5 Totals 
+D 111 111 111 111 111 555 
+C 1 11 11 11 11 45 
+B 1 11 11 11 11 45 
+A 1 1 1 11 11 25 
+TP 134 134 134 134 134 670 
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+2 4 343 444 444 4980 
+
+Divisao
+2 43 43 444 444 4980 
+
+Divisao
+2 43 434 44 444 4980 
+
+Divisao
+2 43 434 444 44 4980 
+
+Divisao
+2 43 434 444 444 980 
+
+Divisao
+2 434 3 444 444 4980 
+
+Divisao
+2 434 34 44 444 4980 
+
+Divisao
+2 434 34 444 44 4980 
+
+Divisao
+2 434 34 444 444 980 
+
+Divisao
+2 434 344 4 444 4980 
+
+Divisao
+2 434 344 44 44 4980 
+
+Divisao
+2 434 344 44 444 980 
+
+Divisao
+2 434 344 444 4 4980 
+
+Divisao
+2 434 344 444 44 980 
+
+Divisao
+2 434 344 444 449 80 
+
+Divisao
+24 3 43 444 444 4980 
+
+Divisao
+24 3 434 44 444 4980 
+
+Divisao
+24 3 434 444 44 4980 
+
+Divisao
+24 3 434 444 444 980 
+
+Divisao
+24 34 3 444 444 4980 
+
+Divisao
+24 34 34 44 444 4980 
+
+Divisao
+24 34 34 444 44 4980 
+
+Divisao
+24 34 34 444 444 980 
+
+P1 P2 P3 P4 P5 Totals 
+A 1 11 11 111 111 245 
+B 1 11 11 111 111 245 
+C 1 11 11 111 111 245 
+D 1 11 11 111 111 245 
+TP 24 34 34 444 444 980 
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+1 1 11 111 111 1245 
+
+Divisao
+1 1 111 11 111 1245 
+
+Divisao
+1 1 111 111 11 1245 
+
+Divisao
+1 1 111 111 111 245 
+
+Divisao
+1 11 1 111 111 1245 
+
+Divisao
+1 11 11 11 111 1245 
+
+Divisao
+1 11 11 111 11 1245 
+
+Divisao
+1 11 11 111 111 245 
+
+Divisao
+4 4 444 434 342 4980 
+
+Divisao
+4 44 44 434 342 4980 
+
+Divisao
+4 44 444 34 342 4980 
+
+Divisao
+4 44 444 343 42 4980 
+
+Divisao
+4 44 444 343 424 980 
+
+Divisao
+4 444 4 434 342 4980 
+
+Divisao
+4 444 44 34 342 4980 
+
+Divisao
+4 444 44 343 42 4980 
+
+Divisao
+4 444 44 343 424 980 
+
+Divisao
+4 444 443 4 342 4980 
+
+Divisao
+4 444 443 43 42 4980 
+
+Divisao
+4 444 443 43 424 980 
+
+Divisao
+4 444 443 434 2 4980 
+
+Divisao
+4 444 443 434 24 980 
+
+Divisao
+4 444 443 434 249 80 
+
+Divisao
+44 4 44 434 342 4980 
+
+Divisao
+44 4 444 34 342 4980 
+
+Divisao
+44 4 444 343 42 4980 
+
+Divisao
+44 4 444 343 424 980 
+
+Divisao
+44 44 4 434 342 4980 
+
+Divisao
+44 44 44 34 342 4980 
+
+Divisao
+44 44 44 343 42 4980 
+
+Divisao
+44 44 44 343 424 980 
+
+Divisao
+44 44 443 4 342 4980 
+
+Divisao
+44 44 443 43 42 4980 
+
+Divisao
+44 44 443 43 424 980 
+
+Divisao
+44 44 443 434 2 4980 
+
+Divisao
+44 44 443 434 24 980 
+
+Divisao
+44 44 443 434 249 80 
+
+Divisao
+44 444 4 34 342 4980 
+
+Divisao
+44 444 4 343 42 4980 
+
+Divisao
+44 444 4 343 424 980 
+
+Divisao
+44 444 43 4 342 4980 
+
+Divisao
+44 444 43 43 42 4980 
+
+Divisao
+44 444 43 43 424 980 
+
+Divisao
+44 444 43 434 2 4980 
+
+Divisao
+44 444 43 434 24 980 
+
+Divisao
+44 444 43 434 249 80 
+
+Divisao
+44 444 434 3 42 4980 
+
+Divisao
+44 444 434 3 424 980 
+
+Divisao
+44 444 434 34 2 4980 
+
+Divisao
+44 444 434 34 24 980 
+
+P1 P2 P3 P4 P5 Totals 
+A 1 11 11 111 111 245 
+B 1 11 11 111 111 245 
+C 1 11 11 111 111 245 
+DlongnameD 1 11 11 111 111 245 
+TP 44 444 434 34 24 980 
+Divisao
+5 0 50 100 110 
+
+Divisao
+50 5 0 100 110 
+
+Divisao
+50 50 10 0 110 
+
+Divisao
+5 0 50 100 110 
+
+Divisao
+50 5 0 100 110 
+
+Divisao
+50 50 10 0 110 
+
+P1 P2 P3 P4 Totals 
+A 50 50 10 0 110 
+TP 50 50 10 0 110 
+Divisao
+10 0 50 50 110 
+
+Divisao
+10 0 50 50 110 
+
+P1 P2 P3 P4 Totals 
+A 10 0 50 50 110 
+TP 10 0 50 50 110 
+Divisao
+5 105 100 0 1020 
+
+Divisao
+510 5 100 0 1020 
+
+Divisao
+510 510 0 0 1020 
+
+Divisao
+5 105 100 0 1020 
+
+Divisao
+510 5 100 0 1020 
+
+Divisao
+510 510 0 0 1020 
+
+P1 P2 P3 P4 Totals 
+A 510 510 0 0 1020 
+B 510 510 0 0 1020 
+TP 0 0 0 0 0 
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 0 0 0 0 0 
+
+P1 P2 P3 P4 P5 Totals 
+A 0 0 0 0 0 0 
+B 0 0 0 0 0 0 
+C 0 0 0 0 0 0 
+D 0 0 0 0 0 0 
+TP 0 0 0 0 0 0 
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 0 0 0 0 0 
+
+P1 P2 P3 P4 P5 Totals 
+A 0 0 0 0 0 0 
+TP 0 0 0 0 0 0 
+Divisao
+0 0 0 0 0 0 
+
+Divisao
+0 1 0 0 0 1 
+
+Divisao
+0 0 1 0 0 1 
+
+Divisao
+0 0 0 1 0 1 
+
+Divisao
+0 1 1 1 0 3 
+
+P1 P2 P3 P4 P5 Totals 
+A 0 0 0 0 0 0 
+B 0 1 0 0 0 1 
+C 0 0 1 0 0 1 
+LONGNAMEEE 0 0 0 1 0 1 
+TP 0 1 1 1 0 3 
+Divisao
+0 0 
+
+Divisao
+0 0 
+
+P1 Totals 
+A 0 0 
+TP 0 0 
+Divisao
+99 9999 
+
+Divisao
+999 999 
+
+Divisao
+99 9999 
+
+Divisao
+999 999 
+
+P1 Totals 
+A 999 999 
+TP 999 999 
+Divisao
+0 0 
+
+Divisao
+0 0 
+
+Divisao
+0 0 
+
+Divisao
+0 0 
+
+Divisao
+0 0 
+
+P1 Totals 
+A 0 0 
+B 0 0 
+C 0 0 
+D 0 0 
+TP 0 0 
+Divisao
+11 1111 
+
+Divisao
+111 111 
+
+Divisao
+11 1111 
+
+Divisao
+111 111 
+
+Divisao
+11 1111 
+
+Divisao
+111 111 
+
+Divisao
+11 1111 
+
+Divisao
+111 111 
+
+Divisao
+44 4444 
+
+Divisao
+444 444 
+
+P1 Totals 
+A 111 111 
+B 111 111 
+C 111 111 
+D 111 111 
+TP 444 444 
+Divisao
+1 1 1122 
+
+Divisao
+1 11 122 
+
+Divisao
+1 111 22 
+
+Divisao
+11 1 122 
+
+Divisao
+11 11 22 
+
+Divisao
+1 1 1122 
+
+Divisao
+1 11 122 
+
+Divisao
+1 111 22 
+
+Divisao
+11 1 122 
+
+Divisao
+11 11 22 
+
+Divisao
+1 1 1122 
+
+Divisao
+1 11 122 
+
+Divisao
+1 111 22 
+
+Divisao
+11 1 122 
+
+Divisao
+11 11 22 
+
+Divisao
+1 1 1122 
+
+Divisao
+1 11 122 
+
+Divisao
+1 111 22 
+
+Divisao
+11 1 122 
+
+Divisao
+11 11 22 
+
+Divisao
+4 4 4488 
+
+Divisao
+4 44 488 
+
+Divisao
+4 444 88 
+
+Divisao
+44 4 488 
+
+Divisao
+44 44 88 
+
+P1 P2 Totals 
+A 11 11 22 
+B 11 11 22 
+C 11 11 22 
+D 11 11 22 
+TP 44 44 88 
+Divisao
+1 1 1 1 1 5 
+
+Divisao
+1 1 1 1 1 5 
+
+Divisao
+1 1 1 1 1 5 
+
+Divisao
+1 1 1 1 1 5 
+
+Divisao
+4 4 4 4 4 20 
+
+P1 P2 P3 P4 P5 Totals 
+A 1 1 1 1 1 5 
+B 1 1 1 1 1 5 
+C 1 1 1 1 1 5 
+D 1 1 1 1 1 5 
+TP 4 4 4 4 4 20 
+Divisao
+999 999 999 999 999 4995 
+
+Divisao
+999 999 999 999 999 4995 
+
+Divisao
+999 999 999 999 999 4995 
+
+Divisao
+999 999 999 999 999 4995 
+
+P1 P2 P3 P4 P5 Totals 
+A 999 999 999 999 999 4995 
+B 999 999 999 999 999 4995 
+C 999 999 999 999 999 4995 
+D 999 999 999 999 999 4995 
+TP 0 0 0 0 0 0 
