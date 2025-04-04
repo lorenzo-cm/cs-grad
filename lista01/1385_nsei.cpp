@@ -24,32 +24,28 @@ bool valida_divisao(vector<string> linha, int qtd_produtos){
 bool valida_string(string str) {
     if(str.empty()) return false;
     if(str.size() > 1 && str[0] == '0') return false;
-    if(str.size() > 4) return false;
+    if(str.size() > 8) return false;
     return true;
 }
 
-bool rec(string& numbers, int qtd_produtos, int idx_fator, vector<string>& divisao, int idx_restante_numbers) {
-    
+bool rec(string& numbers, int qtd_produtos, int idx_fator, vector<string>& divisao, int idx_restante_numbers, vector<vector<string>> &solutions) {
 
     if(idx_fator == qtd_produtos){
-        if(idx_restante_numbers >= (int)numbers.size()) return false;
+
+        // cout << "Divisao" << endl;
+        // for(string str : divisao){
+        //     cout << str << " ";
+        // }
+        // cout << endl << endl;
+
+        if(idx_restante_numbers >= numbers.size()) return false;
         if(!valida_string(numbers.substr(idx_restante_numbers, numbers.length()))) return false;
 
         divisao.pb(numbers.substr(idx_restante_numbers, numbers.length()));
-
-        vector<string> temp = {"1020", "1020", "0", "0", "2040"};
-        if(divisao == temp){
-            
-        }
-
-        cout << "Divisao" << endl;
-            for(string str : divisao){
-                cout << str << " ";
-            }
-            cout << endl << endl;
         
-
-        if(valida_divisao(divisao, qtd_produtos)) return true;
+        if(valida_divisao(divisao, qtd_produtos)){
+            solutions.pb(divisao);
+        }
         else{
             divisao.pop_back();
             return false;
@@ -58,7 +54,7 @@ bool rec(string& numbers, int qtd_produtos, int idx_fator, vector<string>& divis
 
     int remaining_needed = qtd_produtos - idx_fator;
 
-    for(int i=1; i<=3; i++){
+    for(int i=1; i<=numbers.length(); i++){
         if(idx_restante_numbers + i <= numbers.length() - remaining_needed){
             string substring = numbers.substr(idx_restante_numbers, i);
             if(valida_string(substring)){
@@ -75,7 +71,7 @@ bool rec(string& numbers, int qtd_produtos, int idx_fator, vector<string>& divis
     return false;
 }
 
-vector<string> processar_linha(string linha, int qtd_produtos){
+vector<string> processar_linha(string linha, int qtd_produtos, vector<vector<vector<string>>> possible_solutions){
     vector<string> vetor;
 
     int idx_final_nome = 0;
@@ -85,7 +81,10 @@ vector<string> processar_linha(string linha, int qtd_produtos){
     string numbers = linha.substr(idx_final_nome, linha.length()-idx_final_nome);
     vector<string> divisao;
 
-    rec(numbers, qtd_produtos, 0, divisao, 0);
+    vector<vector<string>> solutions;
+    rec(numbers, qtd_produtos, 0, divisao, 0, solutions);
+
+    possible_solutions.pb(solutions);
 
     if(divisao.empty()) divisao = vector<string>(qtd_produtos+1, "0");
 
@@ -111,6 +110,23 @@ vector<string> parse_cabecalho(string linha, int qtd_produtos){
     return vetor;
 }
 
+
+vector<vector<string>> verificar_solucoes(vector<vector<vector<string>>>& possible_solutions){
+    vector<vector<string>> ans;
+    int ci, cj, ck;
+    int acertos = 0;
+    int ult_linha = possible_solutions.size()-1;
+    for(int col = 0; col < possible_solutions[0].size(); col++){
+        int soma = 0;
+        for(int linha = 0; linha < possible_solutions.size()-1; linha++){
+            soma += stoi(possible_solutions[linha][col][acertos]);
+        }
+        if(soma == stoi(possible_solutions[ult_linha][col][acertos]));
+    }
+
+}
+
+
 int count_ps(string str){
     int count = 0;
     for(int i=0; i<str.length();i++){
@@ -127,6 +143,8 @@ int main(){
 
     for(int abc=0; abc<c; abc++){
         vector<vector<string>> relatorio;
+        vector<vector<vector<string>>> possible_solutions;
+        vector<string> nomes;
 
         string cabecalho;
         getline(cin, cabecalho);
@@ -138,14 +156,23 @@ int main(){
         string linha;
         string name = "";
 
+        vector<string> linhas;
+
         while(name != "TP"){
             getline(cin, linha);
-            
-            vector<string> parsed = processar_linha(linha, qtd_produtos);
-            relatorio.pb(parsed);
+            linhas.pb(linha);
+            name = linha.substr(0, 2);
+        }
 
+        for(int i=0; i<linhas.size(); i++){
+            getline(cin, linha);
+            
+            vector<string> parsed = processar_linha(linha, qtd_produtos, possible_solutions);
+            nomes.pb(parsed[0]);
             name = parsed[0];
         }
+
+
 
         for(vector<string> line : relatorio){
             for(string str : line){
