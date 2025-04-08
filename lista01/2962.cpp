@@ -20,15 +20,12 @@ class Sensor{
     public:
         int r, x, y;
 
-        Sensor(int r_, int x_, int y_){
+        Sensor(int x_, int y_, int r_){
             this->r = r_;
             this->x = x_;
             this->y = y_;
         }
 };
-
-vector<pair<int, Sensor>> union_find;
-set<int> left, top, right, bottom;
 
 int find(vector<int> &union_find, int x){
     if(union_find[x] != x) union_find[x] = find(union_find, union_find[x]);
@@ -75,12 +72,22 @@ int main(){ _
     cin >> m >> n >> k;
     int tx, ty, tr;
 
+    vector<int> union_find(k+4, -1);
+    vector<Sensor> sensors(k);
+
      
     for(int i = 0; i < k; i++){
         cin >> tx >> ty >> tr;
-        union_find.push_back({i, Sensor(tr, tx, ty)});
 
-        if(left_border(tx, ty, tr)) left.insert(i);
+        sensors[i] = Sensor(tx, ty, tr);
+
+        if(left_border(tx, ty, tr))  union_func(union_find, 0, i+4);
+        if(top_border(tx, ty, tr))  union_func(union_find, 1, i+4);
+        if(right_border(tx, ty, tr))  union_func(union_find, 2, i+4);
+        if(bottom_border(tx, ty, tr))  union_func(union_find, 3, i+4);
+
+        union_find.push_back({i, });
+
 
     }
 
