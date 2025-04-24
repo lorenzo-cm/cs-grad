@@ -7,6 +7,7 @@ using namespace std;
 #define f first
 #define s second
 #define pb push_back
+#define vecint vector<int>
 
 typedef long long ll;
 
