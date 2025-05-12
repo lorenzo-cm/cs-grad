@@ -1,0 +1,8 @@
+*.warc.gz
+*.warc
+.vscode
+__pycache__
+.mypy_cache
+pa1_env
+*.zip
+*.out
