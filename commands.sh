@@ -1,4 +1,4 @@
-# tp-ml
-git remote add tp-ml git@github.com:lorenzo-cm/tp-ml.git
-git fetch tp-ml
-git subtree add --prefix=machine-learning/tp-final tp-ml main --squash
+# ml-tp1
+git remote add ml-tp1 git@github.com:lorenzo-cm/ml-tp1.git
+git fetch ml-tp1
+git subtree add --prefix=machine-learning/tp1 ml-tp1 main --squash
