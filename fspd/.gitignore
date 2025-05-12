@@ -1,0 +1,6 @@
+.vscode
+*.o
+build/
+Questionários FSPD
+.vscode
+__pycache__

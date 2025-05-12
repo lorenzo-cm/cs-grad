@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package estoque;
+
+service EstoqueService {
+  rpc AdicionaProduto (AdicionaProdutoRequest) returns (AdicionaProdutoResponse);
+  rpc AlteraQuantidadeProduto (AlteraQuantidadeRequest) returns (AlteraQuantidadeResponse);
+  rpc ListaProdutos (ListaProdutosRequest) returns (ListaProdutosResponse);
+  rpc FimExecucao (FimExecucaoRequest) returns (FimExecucaoResponse);
+}
+
+
+// Adiciona produto
+message AdicionaProdutoRequest {
+  string descricao = 1;
+  int32 quantidade = 2;
+}
+
+message AdicionaProdutoResponse {
+  int32 prod_id = 1;  // Identificador retornado
+}
+
+
+// Alterar quantidade
+message AlteraQuantidadeRequest {
+  int32 prod_id = 1;
+  int32 valor = 2;
+}
+
+message AlteraQuantidadeResponse {
+  int32 status = 1;
+  // status = -1 => quantidade final não pode ser < 0
+  // status = -2 => prod_id inválido
+  // status >= 0 => nova quantidade do produto
+}
+
+
+// Listar produtos
+message ListaProdutosRequest {
+  // sem parâmetros
+}
+
+message Produto {
+  int32 prod_id = 1;
+  string descricao = 2;
+  int32 quantidade = 3;
+}
+
+message ListaProdutosResponse {
+  repeated Produto produtos = 1;
+}
+
+
+// Finalizar exec
+message FimExecucaoRequest {}
+
+message FimExecucaoResponse {
+  int32 n_prod = 1; // número de produtos existentes
+}

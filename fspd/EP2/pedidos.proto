@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package pedidos;
+
+service PedidosService {
+    rpc CriaPedido(CriaPedidoRequest) returns (CriaPedidoResponse);
+    rpc CancelaPedido(CancelaPedidoRequest) returns (CancelaPedidoResponse);
+    rpc FimExecucao(FimExecucaoRequest) returns (FimExecucaoResponse);
+}
+
+
+// Cria pedido
+
+message CriaPedidoRequest {
+    repeated int32 list_prod_id = 1;
+    repeated int32 list_quantidade = 2;
+    // id do pedido deve crescer a partir de 1
+}
+
+message CriaPedidoResponse {
+    repeated int32 list_prod_id = 1;
+    repeated int32 list_status = 2;
+    // deve retornar na mesma ordem dos params
+    // status = 0 --> produto disponivel em qtd suficiente
+    // status = -1 -> produto disponivel em qtd INsuficiente
+    // status = -2 -> produto indicado não encontrado
+}
+
+
+// Cancelar pedido
+
+message CancelaPedidoRequest {
+    int32 pedido_id = 1;
+}
+
+message CancelaPedidoResponse {
+    int32 status = 1;
+    // 0 --> sucesso
+    // -1 identificador n corresponde a um pedido valido
+}
+
+
+// Fim da execucao
+
+message FimExecucaoRequest {}
+
+message FimExecucaoResponse {
+    int32 num_produtos = 1;
+    int32 num_pedidos = 2;
+}
