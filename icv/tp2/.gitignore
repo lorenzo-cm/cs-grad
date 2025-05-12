@@ -1,0 +1,13 @@
+# arquivos gerados
+.vscode
+__pycache__
+
+# dados
+dados/
+*.jpg
+*.txt
+*.png
+
+# models
+*.pth
+*.pkl
