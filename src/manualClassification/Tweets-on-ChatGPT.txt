@@ -1,0 +1,101 @@
+Tweed ID,valor ,sentimentos
+0,negativo,medo
+6,negativo,raiva
+13,positivo,felicidade
+16,positivo,surpresa
+25,negativo,raiva
+31,positivo,felicidade
+49,positivo,alivio
+54,positivo,otimista
+59,negativo,"medo, desprezo"
+65,positivo,felicidade
+68,positivo,"felicidade, satisfacao"
+72,positivo,felicidade
+76,positivo,felicidade
+79,negativo,medo
+87,negativo,ansiedade
+91,positivo,"felicidade, surpresa"
+96,positivo,felicidade
+102,positivo,surpresa
+108,negativo,"medo, raiva"
+113,positivo,felicidade
+119,positivo,surpresa
+126,positivo,felicidade
+135,positivo,"felicidade, otimismo"
+140,positivo,felicidade
+144,negativo,raiva
+147,negativo,medo
+161,positivo,felicidade
+163,negativo,raiva
+168,positivo,felicidade
+178,positivo,felicidade
+183,negativo,raiva
+187,negativo,preocupacao
+192,positivo,felicidade
+193,negativo,"raiva, preocupacao"
+203,positivo,otimismo
+208,negativo,raiva
+212,positivo,felicidade
+216,negativo,medo
+230,positivo,alivio
+244,negativo,raiva
+247,positivo,entusiasmo
+252,negativo,raiva
+259,positivo,surpresa
+268,positivo,entusiasmo
+276,positivo,surpresa
+281,negativo,medo
+288,positivo,felicidade
+291,negativo,frustracao
+296,positivo,entusiasmo
+304,positivo,felicidade
+307,positivo,felicidade
+316,negativo,medo
+321,positivo,entusiasmo
+337,negativo,raiva
+341,positivo,entusiasmo
+352,negativo,medo
+426,positivo,entusiasmo
+432,negativo,medo
+437,negativo,medo
+451,negativo,raiva
+453,positivo,felicidade
+462,positivo,felicidade
+480,negativo,medo
+484,negativo,medo
+491,negativo,preocupacao
+517,negativo,medo
+521,positivo,surpresa
+525,positivo,entusiasmo
+534,positivo,alivio
+559,positivo,entusiasmo
+574,negativo,raiva
+616,negativo,raiva
+634,positivo,"felicidade, entusiasmo"
+653,positivo,felicidade
+662,negativo,tristeza
+673,positivo,entusiasmo
+707,positivo,felicidade
+720,positivo,felicidade
+735,positivo,entusiasmo
+744,positivo,felicidade
+764,positivo,felicidade
+774,positivo,felicidade
+782,negativo,medo
+799,positivo,entusiasmo
+811,positivo,entusiasmo
+821,positivo,felicidade
+847,positivo,entusiasmo
+852,negativo,medo
+868,positivo,"felicidade, satisfacao"
+881,positivo,felicidade
+927,negativo,medo
+932,negativo,medo
+950,negativo,"medo, raiva, tristeza"
+979,positivo,felicidade
+990,positivo,felicidade
+1001,negativo,medo
+1019,positivo,felicidade
+1023,positivo,entusiasmo
+1027,positivo,"felicidade, entusiasmo"
+1042,positivo,felicidade
