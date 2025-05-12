@@ -1,0 +1,17 @@
+# dataset in csv
+*.csv
+
+# folders
+data
+translationsLorenzo
+
+# folders generated automatically
+__pycache__ 
+
+# files generated automatically
+.DS_Store
+.vscode
+
+# zip files
+*.zip
+src/classification/botLabels.xlsx
