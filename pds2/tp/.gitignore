@@ -1,0 +1,6 @@
+.vscode
+*.pdf
+.idea
+.exe
+.DS_Store
+.gcno
