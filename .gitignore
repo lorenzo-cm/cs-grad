@@ -1,0 +1,7 @@
+data/
+
+# Rstudio files
+.RData
+.Rhistory
+.Rproj.user/
+*.Rproj
