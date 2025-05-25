@@ -3,7 +3,7 @@ from threading import Lock
 import json
 import gc
 
-from src.utils import current_mem
+from src.utils import current_mem, debug_logger, progress_logger
 
 class MemHandler:
     def __init__(self, mem_limit, corpus_path, index_dir,
@@ -65,6 +65,8 @@ class MemHandler:
         
         # 1000 docs a mais -> upper bound = 24 mb
         self.len_to_save = 1000 * (self.PERCENT_ALLOCATED * 0.9) * mem_limit / 24
+        self.increase_len_to_save = 500 # upper bound = 12 mb
+        debug_logger.debug(f'INIT - Len to save: {self.len_to_save}')
 
         # Locks
         self.io_lock = Lock()
@@ -97,7 +99,7 @@ class MemHandler:
             self.count_lines += 1
             
             if self.count_lines % 50000 == 0:
-                print(f'Progress: {self.count_lines} - Memory: {current_mem() / (1024*1024)}')
+                progress_logger.info(f'Progress: {self.count_lines} - Memory: {current_mem() / (1024*1024)}')
             
             if len(self.inv_idx) >= self.len_to_save:
                 self._flush_and_save()
@@ -116,18 +118,19 @@ class MemHandler:
         - Term lexicon não é tão grande e daria trabalho p ser guardado
         """
         with self.access_structures_lock:
-            # print(f'FLUSH --- current_mem: {current_mem() / (1024*1024)} mb --- count_lines: {self.count_lines}')
+            debug_logger.debug(f'FLUSH - Current_mem: {current_mem() / (1024*1024)} mb --- Count lines: {self.count_lines}')
             
             # Se tiver muita memoria sobrando, ir aumentando
             # Isso não parece funcionar pq o current_mem() nao consegue pegar as desalocacoes
             # Se tem memoria disponivel do que memoria usada
             if (self.PERCENT_ALLOCATED * self.mem_limit) - (self.MEM_SAFEGUARD) > current_mem():
-                self.len_to_save += 500 # upper bound = 12 mb
-                # print('AUMENTOU')
+                self.len_to_save += max(self.increase_len_to_save, 0) # prevent negative values of increase len to save
+                debug_logger.debug(f'UPDATE - UP - Len to save: {self.len_to_save}, Increase len to save: {self.increase_len_to_save}')
             
             else:
                 self.len_to_save -= 100 # upper bound = 2.4 mb
-                # print('ABAIXOU')
+                self.increase_len_to_save -= 50
+                debug_logger.debug(f'UPDATE - UP - Len to save: {self.len_to_save}, Increase len to save: {self.increase_len_to_save}')
                         
             self._flush_inv_idx()
             self._flush_doc_idx()
@@ -137,16 +140,24 @@ class MemHandler:
             
             gc.collect()
 
-            # print(f'AFTER FLUSH --- current_mem: {current_mem() / (1024*1024)} mb --- len_inv_idx: {len(self.inv_idx)}')
+            debug_logger.debug(f'AFTER FLUSH --- current_mem: {current_mem() / (1024*1024)} mb')
     
-    def _flush_inv_idx(self):
-        with open(f'{self.index_dir}/{self.inv_idx_prefix}_{self.seq:03d}', 'w') as f:
-            for key, values in self.inv_idx.items():
-                # word -> [(id, freq), ..., (id, freq)] 
-                # word id:freq id:freq
-                doc_freq = " ".join(f"{doc_id}:{freq}" for doc_id, freq in values)
-                f.write(f"{key} {doc_freq}\n")
-        
+    def _flush_inv_idx(self) -> None:
+        path = f"{self.index_dir}/{self.inv_idx_prefix}_{self.seq:03d}"
+        with open(path, "w", encoding="utf-8") as f:
+
+            # sort alphabetically
+            for term in sorted(self.inv_idx.keys()):
+                postings = self.inv_idx[term]
+
+                # sort doc_id
+                postings.sort(key=lambda pair: pair[0])
+
+                doc_freq_str = " ".join(
+                    f"{doc_id}:{freq}" for doc_id, freq in postings
+                )
+                f.write(f"{term} {doc_freq_str}\n")
+
         self.inv_idx.clear()
     
     def _flush_doc_idx(self) -> None:
@@ -158,10 +169,15 @@ class MemHandler:
         self.doc_idx.clear()
                 
                 
-    def _flush_lexicon(self):
-        with open(f'{self.index_dir}/lexicon_{self.seq:03d}.jsonl', "w", encoding="utf-8") as f:
-            for key, values in self.lexicon.items():
-                json.dump({key: values}, f, ensure_ascii=False)
+    def _flush_lexicon(self) -> None:
+        path = f"{self.index_dir}/lexicon_{self.seq:03d}.jsonl"
+        with open(path, "w", encoding="utf-8") as f:
+
+            # sort alphabetically
+            for term in sorted(self.lexicon):
+                entry = self.lexicon[term]
+
+                json.dump({term: entry}, f, ensure_ascii=False)
                 f.write("\n")
-                
+
         self.lexicon.clear()
