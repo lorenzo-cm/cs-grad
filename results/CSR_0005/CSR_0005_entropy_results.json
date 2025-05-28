@@ -1,0 +1,26 @@
+{
+  "Sturges": {
+    "mean": 0.8408,
+    "sd": 0.0171,
+    "cv": 0.0203,
+    "ci_lower": 0.8393,
+    "ci_upper": 0.8423,
+    "pattern": "CSR_0005",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 500,
+    "additional_info": "1000x1000, lambda = 0.0005"
+  },
+  "Unique": {
+    "mean": 0.8226,
+    "sd": 0.015,
+    "cv": 0.0182,
+    "ci_lower": 0.8212,
+    "ci_upper": 0.8239,
+    "pattern": "CSR_0005",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 500,
+    "additional_info": "1000x1000, lambda = 0.0005"
+  }
+}
