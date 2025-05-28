@@ -1,0 +1,26 @@
+{
+  "Sturges": {
+    "mean": 0.7735,
+    "sd": 0.0131,
+    "cv": 0.0169,
+    "ci_lower": 0.7724,
+    "ci_upper": 0.7747,
+    "pattern": "COMPLEX_MULTI",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 500,
+    "additional_info": "1000x1000, Complex pattern with: Thomas (kappa=0.00003, scale=50, mu=25), Matérn (kappa=0.0001, scale=20, mu=12), SSI (r=35, n=150), Gradient Poisson (radial, center=(500,500)), Hardcore corner (beta=0.005, R=12, region=700-1000)"
+  },
+  "Unique": {
+    "mean": 0.9175,
+    "sd": 0.0055,
+    "cv": 0.006,
+    "ci_lower": 0.9171,
+    "ci_upper": 0.918,
+    "pattern": "COMPLEX_MULTI",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 500,
+    "additional_info": "1000x1000, Complex pattern with: Thomas (kappa=0.00003, scale=50, mu=25), Matérn (kappa=0.0001, scale=20, mu=12), SSI (r=35, n=150), Gradient Poisson (radial, center=(500,500)), Hardcore corner (beta=0.005, R=12, region=700-1000)"
+  }
+}
