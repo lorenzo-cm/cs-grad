@@ -5,8 +5,8 @@ def main():
     indexer = Indexer(mem_limit=args.m, 
                       corpus_path=args.c, 
                       index_dir=args.i, 
-                      num_threads=16,
-                      lines_limit=1_000_000)
+                      num_threads=1, 
+                      lines_limit=100_000)
     
     indexer.run()
 

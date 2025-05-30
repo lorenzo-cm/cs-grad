@@ -9,7 +9,8 @@ def print_json_indexer(index_size, elapsed_time, number_of_lists, average_list_s
     }
     print(json.dumps(data, indent=4))
 
-def print_json_processor(query, ids, results):
+def print_json_processor(query, results):
+    ids, results = zip(*results) if results else ([], [])
     data = {
         "Query": query,
         "Results": [

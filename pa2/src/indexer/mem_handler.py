@@ -65,7 +65,7 @@ class MemHandler:
         
         # 1000 docs a mais -> upper bound = 24 mb
         self.len_to_save = 1000 * (self.PERCENT_ALLOCATED * 0.9) * mem_limit / 24
-        self.increase_len_to_save = 500 # upper bound = 12 mb
+        self.increase_len_to_save = 2000 # upper bound = 48 mb
         debug_logger.debug(f'INIT - Len to save: {self.len_to_save}')
 
         # Locks
@@ -128,8 +128,8 @@ class MemHandler:
                 debug_logger.debug(f'UPDATE - UP - Len to save: {self.len_to_save}, Increase len to save: {self.increase_len_to_save}')
             
             else:
-                self.len_to_save -= 100 # upper bound = 2.4 mb
-                self.increase_len_to_save -= 50
+                self.len_to_save -= 400 # upper bound = 8.4 mb
+                self.increase_len_to_save -= 200
                 debug_logger.debug(f'UPDATE - UP - Len to save: {self.len_to_save}, Increase len to save: {self.increase_len_to_save}')
                         
             self._flush_inv_idx()

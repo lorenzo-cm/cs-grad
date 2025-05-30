@@ -1,1 +1,0 @@
-python3 indexer.py -m 1024 -i ./index -c ./data/corpus.jsonl

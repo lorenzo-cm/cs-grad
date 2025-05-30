@@ -6,7 +6,7 @@ import re
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 stemmer = PorterStemmer()
-tokenizer = re.compile(r"[A-Za-z0-9]+")
+tokenizer = re.compile(r"[A-Za-z]+")
 
 def preprocess(text: str) -> list[str]:
     """
