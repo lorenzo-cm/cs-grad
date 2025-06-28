@@ -4,24 +4,6 @@ library(pbapply)
 # Entropy-based robustness score
 #
 
-calculate_stats <- function(values) {
-    mean_entropy <- mean(values, na.rm = TRUE)
-    sd_entropy <- sd(values, na.rm = TRUE)
-    cv_entropy <- sd_entropy / mean_entropy
-    se_entropy <- sd_entropy / sqrt(nruns)
-    ci_lower <- mean_entropy - 1.96 * se_entropy
-    ci_upper <- mean_entropy + 1.96 * se_entropy
-    
-    return(list(
-        mean_entropy = mean_entropy,
-        std_entropy = sd_entropy,
-        cv_entropy = cv_entropy,
-        confidence_interval = c(ci_lower, ci_upper),
-        raw_values = values,
-        n_runs = nruns
-    ))
-}
-
 bootstrapped_entropy_score <- function(pp, g, nsamples=500, nruns=100, run_both = FALSE) {
     # Runs a bootstrap over entropy_score
 
@@ -61,6 +43,26 @@ bootstrapped_entropy_score <- function(pp, g, nsamples=500, nruns=100, run_both 
         return(calculate_stats(entropy_values))
     }
 }
+
+
+calculate_stats <- function(values) {
+    mean_entropy <- mean(values, na.rm = TRUE)
+    sd_entropy <- sd(values, na.rm = TRUE)
+    cv_entropy <- sd_entropy / mean_entropy
+    se_entropy <- sd_entropy / sqrt(nruns)
+    ci_lower <- mean_entropy - 1.96 * se_entropy
+    ci_upper <- mean_entropy + 1.96 * se_entropy
+    
+    return(list(
+        mean_entropy = mean_entropy,
+        std_entropy = sd_entropy,
+        cv_entropy = cv_entropy,
+        confidence_interval = c(ci_lower, ci_upper),
+        raw_values = values,
+        n_runs = nruns
+    ))
+}
+
 
 # Randomly sample quadrats and obtain a count distribution. Next,
 # obtain the relative entropy
@@ -141,4 +143,5 @@ estimate_entropy <- function(x, breaks = "sturges") {
         relative_entropy = relative_entropy
     ))
 }
+
 ###########################################################################
