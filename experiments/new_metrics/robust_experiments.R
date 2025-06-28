@@ -4,8 +4,8 @@ library(gridExtra)
 library(extraDistr)
 library(dplyr)
 
-source("./experiments/robust_functions.R")
-source("./experiments/robust_utils.R")
+source("./experiments/new_metrics/robust_functions.R")
+source("./experiments/new_metrics/robust_utils.R")
 
 set.seed(123)
 
@@ -39,29 +39,29 @@ win <- owin(c(0, 1000), c(0, 1000))
 # pattern <- superimpose(p1, p2)
 # details <- "1000x1000, Thomas1: kappa = 0.00005, scale = 30, mu = 15; Thomas2: kappa = 0.0001, scale = 10, mu = 10"
 
-pattern_name <- "COMPLEX_MULTI"
-p1 <- rThomas(kappa = 0.00003, scale = 50, mu = 25, win = win)
-p2 <- rMatClust(kappa = 0.0001, scale = 20, mu = 12, win = win)
-p3 <- rSSI(r = 35, n = 150, win = win)
-lambda_gradient <- function(x, y) {
-    cx <- 500; cy <- 500
-    r <- sqrt((x - cx)^2 + (y - cy)^2)
-    base <- 0.0001
-    peak <- 0.0008
-    return(base + peak * exp(-r/200))
-}
-p4 <- rpoispp(lambda_gradient, win = win)
-win_corner <- owin(c(700, 1000), c(700, 1000))
-p5 <- rHardcore(beta = 0.005, R = 12, W = win_corner)
-pattern <- superimpose(p1, p2, p3, p4, p5)
-details <- paste(
-    "1000x1000, Complex pattern with:",
-    "Thomas (kappa=0.00003, scale=50, mu=25),",
-    "Matérn (kappa=0.0001, scale=20, mu=12),",
-    "SSI (r=35, n=150),",
-    "Gradient Poisson (radial, center=(500,500)),",
-    "Hardcore corner (beta=0.005, R=12, region=700-1000)"
-)
+# pattern_name <- "COMPLEX_MULTI"
+# p1 <- rThomas(kappa = 0.00003, scale = 50, mu = 25, win = win)
+# p2 <- rMatClust(kappa = 0.0001, scale = 20, mu = 12, win = win)
+# p3 <- rSSI(r = 35, n = 150, win = win)
+# lambda_gradient <- function(x, y) {
+#     cx <- 500; cy <- 500
+#     r <- sqrt((x - cx)^2 + (y - cy)^2)
+#     base <- 0.0001
+#     peak <- 0.0008
+#     return(base + peak * exp(-r/200))
+# }
+# p4 <- rpoispp(lambda_gradient, win = win)
+# win_corner <- owin(c(700, 1000), c(700, 1000))
+# p5 <- rHardcore(beta = 0.005, R = 12, W = win_corner)
+# pattern <- superimpose(p1, p2, p3, p4, p5)
+# details <- paste(
+#     "1000x1000, Complex pattern with:",
+#     "Thomas (kappa=0.00003, scale=50, mu=25),",
+#     "Matérn (kappa=0.0001, scale=20, mu=12),",
+#     "SSI (r=35, n=150),",
+#     "Gradient Poisson (radial, center=(500,500)),",
+#     "Hardcore corner (beta=0.005, R=12, region=700-1000)"
+# )
 
 
 
@@ -69,7 +69,7 @@ details <- paste(
 # Configure output directory
 # =========================================================
 
-out_dir <- "./results"
+out_dir <- "./results-new-metrics"
 save_path <- file.path(out_dir, pattern_name)
 
 if (!dir.exists(save_path)) {
@@ -82,12 +82,12 @@ if (!dir.exists(save_path)) {
 # =========================================================
 
 # Configuration
-g <- 100
+quadrat_size <- 100
 nsamples <- 1000
-nruns <- 500
+nruns <- 200
 
 # Run the bootstrap experiment
-result <- bootstrapped_entropy_score(pattern, g, nsamples, nruns, run_both = TRUE)
+result <- bootstrapped_entropy_score(pattern, quadrat_size, nsamples, nruns, run_both = TRUE)
 
 
 # =========================================================
@@ -99,7 +99,7 @@ save_pattern_plot(pattern, pattern_name, save_path)
 
 export_entropy_results(result, out_dir = save_path, pattern_name = pattern_name,
  config = list(
-    g = g,
+    g = quadrat_size,
     nsamples = nsamples,
     nruns = nruns,
     additional_info = details

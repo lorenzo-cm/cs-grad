@@ -9,14 +9,22 @@ bootstrapped_entropy_score <- function(pp, g, nsamples=500, nruns=100, run_both 
 
     if (run_both) {
         # Run bootstrap for both methods (sturges and unique)
-        sturges_values <- numeric(nruns)
-        unique_values <- numeric(nruns)
+        sturges_relative <- numeric(nruns)
+        sturges_entropy <- numeric(nruns)
+        sturges_max <- numeric(nruns)
+        unique_relative <- numeric(nruns)
+        unique_entropy <- numeric(nruns)
+        unique_max <- numeric(nruns)
         
         pb <- txtProgressBar(min = 0, max = nruns, style = 3)
         for (i in 1:nruns) {
             result <- entropy_score(pp, g, nsamples, test_both = TRUE)
-            sturges_values[i] <- result$sturges
-            unique_values[i] <- result$unique
+            sturges_relative[i] <- result$sturges$relative_entropy
+            sturges_entropy[i] <- result$sturges$entropy
+            sturges_max[i] <- result$sturges$max_entropy
+            unique_relative[i] <- result$unique$relative_entropy
+            unique_entropy[i] <- result$unique$entropy
+            unique_max[i] <- result$unique$max_entropy
 
             setTxtProgressBar(pb, i)
         }
@@ -24,26 +32,73 @@ bootstrapped_entropy_score <- function(pp, g, nsamples=500, nruns=100, run_both 
         
         # Calculate statistics for both methods
         return(list(
-            sturges = calculate_stats(sturges_values),
-            unique = calculate_stats(unique_values)
+            sturges = calculate_stats_full(sturges_relative, sturges_entropy, sturges_max, nruns),
+            unique = calculate_stats_full(unique_relative, unique_entropy, unique_max, nruns)
         ))
         
     } else {
         # Original single method bootstrap
+        relative_values <- numeric(nruns)
         entropy_values <- numeric(nruns)
+        max_values <- numeric(nruns)
 
         pb <- txtProgressBar(min = 0, max = nruns, style = 3)
         for (i in 1:nruns) {
-            entropy_values[i] <- entropy_score(pp, g, nsamples)
+            result <- entropy_score(pp, g, nsamples)
+            relative_values[i] <- result$relative_entropy
+            entropy_values[i] <- result$entropy
+            max_values[i] <- result$max_entropy
 
             setTxtProgressBar(pb, i)
         }
         close(pb)
 
-        return(calculate_stats(entropy_values))
+        return(calculate_stats_full(relative_values, entropy_values, max_values, nruns))
     }
 }
 
+
+calculate_stats_full <- function(relative_values, entropy_values, max_values, nruns) {
+    # Calculate statistics for all three entropy measures
+    calc_measure_stats <- function(values) {
+        mean_val <- mean(values, na.rm = TRUE)
+        
+        if (nruns == 1) {
+            # When only 1 run, we can't calculate variance-based statistics
+            return(list(
+                mean = mean_val,
+                std = 0,
+                cv = 0,
+                confidence_interval = c(mean_val, mean_val)
+            ))
+        } else {
+            sd_val <- sd(values, na.rm = TRUE)
+            cv_val <- if (mean_val != 0) sd_val / mean_val else 0
+            se_val <- sd_val / sqrt(nruns)
+            ci_lower <- mean_val - 1.96 * se_val
+            ci_upper <- mean_val + 1.96 * se_val
+            
+            return(list(
+                mean = mean_val,
+                std = sd_val,
+                cv = cv_val,
+                confidence_interval = c(ci_lower, ci_upper)
+            ))
+        }
+    }
+    
+    return(list(
+        relative_entropy = calc_measure_stats(relative_values),
+        entropy = calc_measure_stats(entropy_values),
+        max_entropy = calc_measure_stats(max_values),
+        raw_values = list(
+            relative_entropy = relative_values,
+            entropy = entropy_values,
+            max_entropy = max_values
+        ),
+        n_runs = nruns
+    ))
+}
 
 calculate_stats <- function(values) {
     mean_entropy <- mean(values, na.rm = TRUE)
@@ -91,15 +146,32 @@ entropy_score <- function(pp, g, nsamples = 500, breaks = "sturges", test_both =
 
     if (test_both) {
         # if test_both, we will test both methods Sturges and unique
+        sturges_result <- estimate_entropy(counts_quadrats, "sturges")
+        unique_result <- estimate_entropy(counts_quadrats, "unique")
+
         return(
             list(
-                sturges = estimate_entropy(counts_quadrats, "sturges")$relative_entropy,
-                unique =  estimate_entropy(counts_quadrats, "unique" )$relative_entropy
+                sturges = list(
+                    relative_entropy = sturges_result$relative_entropy,
+                    entropy = sturges_result$entropy,
+                    max_entropy = sturges_result$max_entropy
+                ),
+                unique = list(
+                    relative_entropy = unique_result$relative_entropy,
+                    entropy = unique_result$entropy,
+                    max_entropy = unique_result$max_entropy
+                )
             )
         )
     }
 
-    return(estimate_entropy(counts_quadrats, breaks)$relative_entropy)
+    entropy <- estimate_entropy(counts_quadrats, breaks)
+
+    return(list(
+        relative_entropy = entropy$relative_entropy,
+        entropy = entropy$entropy,
+        max_entropy = entropy$max_entropy
+    ))
 }
 
 # Function to estimate entropy using histogram-based binning
@@ -118,7 +190,7 @@ estimate_entropy <- function(x, breaks = "sturges") {
     
     total <- sum(counts)
 
-    # Proportions
+    # Proportions -> this division is a vector division
     probs <- counts / total
 
     # Non-zero probabilities
@@ -140,6 +212,7 @@ estimate_entropy <- function(x, breaks = "sturges") {
     return(list(
         proportions = probs,
         entropy = entropy,
+        max_entropy = max_entropy,
         relative_entropy = relative_entropy
     ))
 }

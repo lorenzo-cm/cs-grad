@@ -4,30 +4,32 @@ library(dplyr)
 
 
 plot_entropy_results <- function(results, save = FALSE, out_dir = NULL) {
+    # Extract relative entropy statistics for plotting
     sturges_df <- data.frame(
-        mean = results$sturges$mean_entropy,
-        sd = results$sturges$std_entropy,
-        cv = results$sturges$cv_entropy,
-        ci_lower = results$sturges$confidence_interval[1],
-        ci_upper = results$sturges$confidence_interval[2],
+        mean = results$sturges$relative_entropy$mean,
+        sd = results$sturges$relative_entropy$std,
+        cv = results$sturges$relative_entropy$cv,
+        ci_lower = results$sturges$relative_entropy$confidence_interval[1],
+        ci_upper = results$sturges$relative_entropy$confidence_interval[2],
         method = "Sturges"
     )
     
     unique_df <- data.frame(
-        mean = results$unique$mean_entropy,
-        sd = results$unique$std_entropy,
-        cv = results$unique$cv_entropy,
-        ci_lower = results$unique$confidence_interval[1],
-        ci_upper = results$unique$confidence_interval[2],
+        mean = results$unique$relative_entropy$mean,
+        sd = results$unique$relative_entropy$std,
+        cv = results$unique$relative_entropy$cv,
+        ci_lower = results$unique$relative_entropy$confidence_interval[1],
+        ci_upper = results$unique$relative_entropy$confidence_interval[2],
         method = "Unique"
     )
     
     combined_df <- rbind(sturges_df, unique_df)
     
-    ggplot(combined_df, aes(x = method, y = mean)) +
+    # Create the plot and store it
+    p <- ggplot(combined_df, aes(x = method, y = mean)) +
         geom_bar(stat = "identity", position = position_dodge(), fill = "steelblue") +
         geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.2) +
-        labs(y = "Mean Entropy Score", x = "Method") +
+        labs(y = "Mean Relative Entropy Score", x = "Method") +
         theme_minimal()
 
     if (save) {
@@ -43,35 +45,68 @@ plot_entropy_results <- function(results, save = FALSE, out_dir = NULL) {
         # Create filename
         filename <- file.path(out_dir, "entropy_results_plot.png")
         
-        # Save the plot
-        ggsave(filename, width = 8, height = 6, bg = "white")
-
+        # Save the plot with white background
+        ggsave(filename, plot = p, width = 8, height = 6, bg = "white")
     }
+    
+    # Return the plot
+    return(p)
 }
 
 
 # Export results of sturges and proposed method to json format
 export_entropy_results <- function(results, out_dir, pattern_name, config) {
-    # Create the same dataframe structure as in plot_entropy_results
+    # Create comprehensive structure with all entropy measures
     structured_results <- list(
-        Sturges = list(
-            mean = results$sturges$mean_entropy,
-            sd = results$sturges$std_entropy,
-            cv = results$sturges$cv_entropy,
-            ci_lower = results$sturges$confidence_interval[1],
-            ci_upper = results$sturges$confidence_interval[2],
-            pattern = pattern_name,
-            g = config$g,
-            nsamples = config$nsamples,
-            nruns = config$nruns,
-            additional_info = ifelse(is.null(config$additional_info), NA, config$additional_info)
+        methods = list(
+            Sturges = list(
+                relative_entropy = list(
+                    mean = results$sturges$relative_entropy$mean,
+                    sd = results$sturges$relative_entropy$std,
+                    cv = results$sturges$relative_entropy$cv,
+                    ci_lower = results$sturges$relative_entropy$confidence_interval[1],
+                    ci_upper = results$sturges$relative_entropy$confidence_interval[2]
+                ),
+                entropy = list(
+                    mean = results$sturges$entropy$mean,
+                    sd = results$sturges$entropy$std,
+                    cv = results$sturges$entropy$cv,
+                    ci_lower = results$sturges$entropy$confidence_interval[1],
+                    ci_upper = results$sturges$entropy$confidence_interval[2]
+                ),
+                max_entropy = list(
+                    mean = results$sturges$max_entropy$mean,
+                    sd = results$sturges$max_entropy$std,
+                    cv = results$sturges$max_entropy$cv,
+                    ci_lower = results$sturges$max_entropy$confidence_interval[1],
+                    ci_upper = results$sturges$max_entropy$confidence_interval[2]
+                )
+            ),
+            Unique = list(
+                relative_entropy = list(
+                    mean = results$unique$relative_entropy$mean,
+                    sd = results$unique$relative_entropy$std,
+                    cv = results$unique$relative_entropy$cv,
+                    ci_lower = results$unique$relative_entropy$confidence_interval[1],
+                    ci_upper = results$unique$relative_entropy$confidence_interval[2]
+                ),
+                entropy = list(
+                    mean = results$unique$entropy$mean,
+                    sd = results$unique$entropy$std,
+                    cv = results$unique$entropy$cv,
+                    ci_lower = results$unique$entropy$confidence_interval[1],
+                    ci_upper = results$unique$entropy$confidence_interval[2]
+                ),
+                max_entropy = list(
+                    mean = results$unique$max_entropy$mean,
+                    sd = results$unique$max_entropy$std,
+                    cv = results$unique$max_entropy$cv,
+                    ci_lower = results$unique$max_entropy$confidence_interval[1],
+                    ci_upper = results$unique$max_entropy$confidence_interval[2]
+                )
+            )
         ),
-        Unique = list(
-            mean = results$unique$mean_entropy,
-            sd = results$unique$std_entropy,
-            cv = results$unique$cv_entropy,
-            ci_lower = results$unique$confidence_interval[1],
-            ci_upper = results$unique$confidence_interval[2],
+        config = list(
             pattern = pattern_name,
             g = config$g,
             nsamples = config$nsamples,
@@ -88,7 +123,7 @@ export_entropy_results <- function(results, out_dir, pattern_name, config) {
     # Create filename
     filename <- file.path(out_dir, paste0(pattern_name, "_entropy_results.json"))
     
-    # Export to JSON
+    # Export to JSON with auto_unbox = TRUE to avoid arrays for single values
     jsonlite::write_json(structured_results, filename, pretty = TRUE, auto_unbox = TRUE)
     
     return(filename)

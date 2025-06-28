@@ -1,26 +1,57 @@
 {
-  "Sturges": {
-    "mean": 0.4155,
-    "sd": 0.0213,
-    "cv": 0.0513,
-    "ci_lower": 0.4137,
-    "ci_upper": 0.4174,
-    "pattern": "Thomas_000025_15_20",
-    "g": 100,
-    "nsamples": 1000,
-    "nruns": 500,
-    "additional_info": "1000x1000, kappa = 0.000025, scale = 15, mu = 20"
+  "methods": {
+    "Sturges": {
+      "relative_entropy": {
+        "mean": 0.4159,
+        "sd": 0.0196,
+        "cv": 0.0472,
+        "ci_lower": 0.4132,
+        "ci_upper": 0.4186
+      },
+      "entropy": {
+        "mean": 1.2245,
+        "sd": 0.0521,
+        "cv": 0.0426,
+        "ci_lower": 1.2172,
+        "ci_upper": 1.2317
+      },
+      "max_entropy": {
+        "mean": 2.9461,
+        "sd": 0.0867,
+        "cv": 0.0294,
+        "ci_lower": 2.934,
+        "ci_upper": 2.9581
+      }
+    },
+    "Unique": {
+      "relative_entropy": {
+        "mean": 0.4979,
+        "sd": 0.0164,
+        "cv": 0.033,
+        "ci_lower": 0.4956,
+        "ci_upper": 0.5002
+      },
+      "entropy": {
+        "mean": 2.523,
+        "sd": 0.0861,
+        "cv": 0.0341,
+        "ci_lower": 2.5111,
+        "ci_upper": 2.5349
+      },
+      "max_entropy": {
+        "mean": 5.0677,
+        "sd": 0.0642,
+        "cv": 0.0127,
+        "ci_lower": 5.0588,
+        "ci_upper": 5.0766
+      }
+    }
   },
-  "Unique": {
-    "mean": 0.4977,
-    "sd": 0.0168,
-    "cv": 0.0337,
-    "ci_lower": 0.4962,
-    "ci_upper": 0.4992,
+  "config": {
     "pattern": "Thomas_000025_15_20",
     "g": 100,
     "nsamples": 1000,
-    "nruns": 500,
+    "nruns": 200,
     "additional_info": "1000x1000, kappa = 0.000025, scale = 15, mu = 20"
   }
 }

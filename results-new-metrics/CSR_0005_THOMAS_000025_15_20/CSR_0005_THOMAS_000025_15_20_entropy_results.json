@@ -1,0 +1,57 @@
+{
+  "methods": {
+    "Sturges": {
+      "relative_entropy": {
+        "mean": 0.6623,
+        "sd": 0.0156,
+        "cv": 0.0236,
+        "ci_lower": 0.6601,
+        "ci_upper": 0.6644
+      },
+      "entropy": {
+        "mean": 1.9801,
+        "sd": 0.044,
+        "cv": 0.0222,
+        "ci_lower": 1.974,
+        "ci_upper": 1.9862
+      },
+      "max_entropy": {
+        "mean": 2.9904,
+        "sd": 0.0421,
+        "cv": 0.0141,
+        "ci_lower": 2.9845,
+        "ci_upper": 2.9962
+      }
+    },
+    "Unique": {
+      "relative_entropy": {
+        "mean": 0.7913,
+        "sd": 0.0098,
+        "cv": 0.0124,
+        "ci_lower": 0.7899,
+        "ci_upper": 0.7926
+      },
+      "entropy": {
+        "mean": 4.1469,
+        "sd": 0.0486,
+        "cv": 0.0117,
+        "ci_lower": 4.1402,
+        "ci_upper": 4.1537
+      },
+      "max_entropy": {
+        "mean": 5.2411,
+        "sd": 0.0468,
+        "cv": 0.0089,
+        "ci_lower": 5.2346,
+        "ci_upper": 5.2476
+      }
+    }
+  },
+  "config": {
+    "pattern": "CSR_0005_THOMAS_000025_15_20",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 200,
+    "additional_info": "1000x1000, Thomas: kappa = 0.000025, scale = 15, mu = 20, CSR: lambda = 0.0005"
+  }
+}
