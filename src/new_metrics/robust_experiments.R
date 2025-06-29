@@ -4,8 +4,8 @@ library(gridExtra)
 library(extraDistr)
 library(dplyr)
 
-source("./experiments/new_metrics/robust_functions.R")
-source("./experiments/new_metrics/robust_utils.R")
+source("./src/new_metrics/robust_functions.R")
+source("./src/new_metrics/robust_utils.R")
 
 set.seed(123)
 
