@@ -41,7 +41,7 @@ plot(pattern_regular)
 # Experiment
 ###################################################
 
-source("robust_mapping.R")
+source("r-code/robust_mapping.R")
 
 plot_grid<-function(pattern, grid){
   plot_limit = grid$opt_granularity * (1000/grid$opt_granularity + 1)
@@ -62,44 +62,66 @@ pattern_clustered <- rThomas(kappa = 0.00001, scale = 15, mu = 30, win = win)
 plot(pattern_clustered)
 
 df_pattern_clustered <- as.data.frame(pattern_clustered)
-grid_thomas = robust.quadcount(df_pattern_clustered, verbose=TRUE)
+my_scales = c(20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 170, 180, 200, 230, 250, 280, 300)
+grid_thomas = robust.quadcount(df_pattern_clustered, verbose=TRUE, my_scales=my_scales, uniformity_method="Nearest-neighbor")
 
+print(grid_thomas)
 print(grid_thomas$opt_granularity) # 46.65672
+grid_thomas$opt_granularity <- 2
 plot_grid(pattern_clustered, grid_thomas)
+
+plot(grid_thomas$uniformity.curve)
 
 
 # Gere um processo CSR com lambda = 0.0003 (300 pontos approx)
 # Obtenha o cell size ótimo
-pattern_csr <- rpoispp(lambda = 0.0003, win = win)
-plot(pattern_csr)
+# pattern_csr <- rpoispp(lambda = 0.0003, win = win)
+# plot(pattern_csr)
 
-df_pattern_csr <- as.data.frame(pattern_csr)
-grid_csr = robust.quadcount(df_pattern_csr, verbose=TRUE)
+# df_pattern_csr <- as.data.frame(pattern_csr)
+# grid_csr = robust.quadcount(df_pattern_csr, verbose=TRUE)
 
-print(grid_csr$opt_granularity) # 99.69718
-plot_grid(pattern_csr, grid_csr)
-
-
-# Gerar um processo com rSSI com r=20 e n=300
-pattern_ssi <- rSSI(r = 20, n = 300, win = win)
-plot(pattern_ssi)
-
-df_pattern_ssi <- as.data.frame(pattern_ssi)
-grid_ssi = robust.quadcount(df_pattern_ssi, verbose=TRUE)
-
-print(grid_ssi$opt_granularity) # 99.35235
-plot_grid(pattern_ssi, grid_ssi)
+# print(grid_csr$opt_granularity) # 99.69718
+# plot_grid(pattern_csr, grid_csr)
 
 
-### MISTURE OS DOIS TIPOS DE PONTOS gerando um novo padrão espacial.
-### Obtenha o cell size ótimo desse padrão misturado.
-df_csr_thomas <- rbind(df_pattern_csr, df_pattern_clustered)
-plot(df_csr_thomas)
+# # Gerar um processo com rSSI com r=20 e n=300
+# pattern_ssi <- rSSI(r = 20, n = 300, win = win)
+# plot(pattern_ssi)
 
-grid_csr_thomas = robust.quadcount(df_csr_thomas, verbose=TRUE)
+# df_pattern_ssi <- as.data.frame(pattern_ssi)
+# grid_ssi = robust.quadcount(df_pattern_ssi, verbose=TRUE)
 
-print(grid_csr_thomas$opt_granularity) # 99.84138
-plot_grid(df_csr_thomas, grid_csr_thomas)
+# print(grid_ssi$opt_granularity) # 99.35235
+# plot_grid(pattern_ssi, grid_ssi)
+
+
+# ### MISTURE OS DOIS TIPOS DE PONTOS gerando um novo padrão espacial.
+# ### Obtenha o cell size ótimo desse padrão misturado.
+# df_csr_thomas <- rbind(df_pattern_csr, df_pattern_clustered)
+# plot(df_csr_thomas)
+
+# grid_csr_thomas = robust.quadcount(df_csr_thomas, verbose=TRUE)
+
+# print(grid_csr_thomas$opt_granularity) # 99.84138
+# plot_grid(df_csr_thomas, grid_csr_thomas)
+
+
+# Testing
+
+data <- read.csv("samples/MULTI_THOMAS.csv")
+
+point_set <- data.frame(x = data[,1], y = data[,2])
+
+plot(point_set)
+
+result = robust.quadcount(point_set, verbose=TRUE, uniformity_method="Nearest-neighbor")
+
+print(result)
+
+result2 = robust.quadcount(point_set, verbose=TRUE, uniformity_method="Quadratcount")
+
+print(result2)
 
 
 ### Como os três cell sizes se relacionam?

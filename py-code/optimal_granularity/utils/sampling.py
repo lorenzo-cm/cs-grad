@@ -1,15 +1,15 @@
 import numpy as np
 from numpy.typing import NDArray
-from .bounding_box import BoundingSquare
+from .bounding_box import BoundingBox
 
 def create_random_points(
-    bbox: BoundingSquare,
+    bbox: BoundingBox,
     n_points: int) -> NDArray[np.float64]:
     """
     Generate random points within the bounding box.
     
     Args:
-        bbox: BoundingSquare object defining the sampling area
+        bbox: BoundingBox object defining the sampling area
         n_points: Number of points to generate
         
     Returns:
@@ -29,18 +29,18 @@ def create_random_points(
 
 def create_random_quadrats(
     quadrat_size: float,
-    bbox: BoundingSquare,
-    n_quadrats: int = 500) -> NDArray[np.float64]:
+    bbox: BoundingBox,
+    n_quadrats: int = 500) -> list[BoundingBox]:
     """
     Generate random quadrat positions for sampling within the bounding box.
     
     Args:
         quadrat_size: Size of the quadrat (assuming square quadrats)
-        bbox: BoundingSquare object defining the sampling area
+        bbox: BoundingBox object defining the sampling area
         n_quadrats: Number of random quadrats to generate
         
     Returns:
-        Array of shape (n_quadrats, 2) with bottom-left corner coordinates of quadrats
+        List of BoundingBox objects representing the quadrats
     """
     # Calculate available space for quadrat placement
     # Quadrat must fit entirely within the bounding box
@@ -54,25 +54,39 @@ def create_random_quadrats(
     offset_x = np.random.uniform(bbox.minx, max_x, n_quadrats)
     offset_y = np.random.uniform(bbox.miny, max_y, n_quadrats)
     
-    # Stack into (n_quadrats, 2) array
-    quadrat_positions = np.column_stack((offset_x, offset_y))
+    # Create list of BoundingBox objects for each quadrat
+    quadrat_bboxes = []
+    for i in range(n_quadrats):
+        minx = offset_x[i]
+        miny = offset_y[i]
+        maxx = minx + quadrat_size
+        maxy = miny + quadrat_size
+        area = quadrat_size * quadrat_size
+        
+        quadrat_bbox = BoundingBox(
+            minx=minx,
+            miny=miny,
+            maxx=maxx,
+            maxy=maxy,
+            area=area
+        )
+        quadrat_bboxes.append(quadrat_bbox)
     
-    return quadrat_positions
+    return quadrat_bboxes
 
 
 def create_contiguous_quadrats(
     quadrat_size: float,
-    bbox: BoundingSquare) -> NDArray[np.float64]:
+    bbox: BoundingBox) -> list[BoundingBox]:
     """
     Generate contiguous (regular grid) quadrat positions within the bounding box.
     
     Args:
         quadrat_size: Size of the quadrat (assuming square quadrats)
-        bbox: BoundingSquare object defining the sampling area
+        bbox: BoundingBox object defining the sampling area
         
     Returns:
-        Array of shape (nx*ny, 2) with bottom-left corner coordinates of quadrats
-        where nx, ny are the number of quadrats that fit in each dimension
+        List of BoundingBox objects representing the quadrats in a regular grid
     """
     width = bbox.maxx - bbox.minx
     height = bbox.maxy - bbox.miny
@@ -88,10 +102,23 @@ def create_contiguous_quadrats(
     x_positions = bbox.minx + np.arange(nx) * quadrat_size
     y_positions = bbox.miny + np.arange(ny) * quadrat_size
     
-    # Create meshgrid to get all combinations
-    x_grid, y_grid = np.meshgrid(x_positions, y_positions)
+    # Create list of BoundingBox objects for each quadrat
+    quadrat_bboxes = []
+    for i in range(nx):
+        for j in range(ny):
+            minx = x_positions[i]
+            miny = y_positions[j]
+            maxx = minx + quadrat_size
+            maxy = miny + quadrat_size
+            area = quadrat_size * quadrat_size
+            
+            quadrat_bbox = BoundingBox(
+                minx=minx,
+                miny=miny,
+                maxx=maxx,
+                maxy=maxy,
+                area=area
+            )
+            quadrat_bboxes.append(quadrat_bbox)
     
-    # Flatten and stack into (nx*ny, 2) array
-    quadrat_positions = np.column_stack((x_grid.flatten(), y_grid.flatten()))
-    
-    return quadrat_positions
+    return quadrat_bboxes
