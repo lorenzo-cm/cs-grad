@@ -3,6 +3,7 @@ from numpy.typing import NDArray
 from typing import Literal
 
 from utils import BoundingBox, gen_scales_from_bbox
+from .uniformity import uniformity as calculate_uniformity
 
 def get_optimal_granularity(
     points: NDArray[np.float64], # (num_points, 2)
@@ -26,7 +27,16 @@ def get_optimal_granularity(
     bbox: BoundingBox = BoundingBox.from_points(points) # not a square bounding box
     scales = gen_scales_from_bbox(bbox, size=10)
 
-    # uniformity =
+    uniformity = calculate_uniformity(
+        points=points,
+        scales=scales,
+        num_random_quadrats=num_random_quadrats,
+        bbox=bbox,
+        signif=signif,
+        method = "quadrat_count",
+        verbose = True,
+    )
+    
     # robustness =
     
     # optimal_scale = optimizer(scales, uniformity, robustness, tradeoff_method)
