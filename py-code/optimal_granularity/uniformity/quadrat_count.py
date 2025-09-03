@@ -7,7 +7,8 @@ from ..utils import BoundingBox, PointsInside, create_random_points
 def quadrat_count_csr_vectorized(
     points: NDArray[np.float64],
     list_bboxes: list[BoundingBox],
-    signif=0.95,
+    signif: float,
+    num_simulations: int,
     ) -> NDArray[np.bool_]:
     
     list_passed = []
@@ -24,7 +25,7 @@ def quadrat_count_csr_vectorized(
             bbox=bbox,
             signif=signif,
             number_of_quadrats_per_side=5,
-            num_simulations=200,
+            num_simulations=num_simulations,
         )
         
         list_passed.append(passed)
@@ -35,9 +36,9 @@ def quadrat_count_csr_vectorized(
 def quadrat_count_monte_carlo_csr(
     points: NDArray[np.float64],
     bbox: BoundingBox,
-    signif=0.95,
+    signif,
+    num_simulations,
     number_of_quadrats_per_side: int = 5,
-    num_simulations: int = 200,
 ) -> bool | None:
     """
     Monte Carlo quadrat count CSR test.

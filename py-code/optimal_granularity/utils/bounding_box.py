@@ -11,6 +11,35 @@ class BoundingBox:
     maxy: float
     area: float
 
+
+    @classmethod
+    def from_coords(
+        cls,
+        minx: float,
+        miny: float,
+        maxx: float,
+        maxy: float,
+        eps: float = 1e-12,
+        margin: float = 1e-6,
+    ) -> "BoundingBox":
+        minx -= margin
+        maxx += margin
+        miny -= margin
+        maxy += margin
+
+        range_x = maxx - minx
+        range_y = maxy - miny
+
+        if range_x < eps or range_y < eps:
+            raise ValueError(
+                "Bounding box has zero area. Points may be too close or identical."
+            )
+
+        area = range_x * range_y
+
+        return cls(minx=minx, miny=miny, maxx=maxx, maxy=maxy, area=area)
+
+
     @classmethod
     def from_points(
         cls, points: np.ndarray, eps: float = 1e-12, margin: float = 1e-6
@@ -49,7 +78,6 @@ class BoundingBox:
 
         return cls(minx=minx, miny=miny, maxx=maxx, maxy=maxy, area=area)
 
-
     def points_inside(self, points: NDArray[np.float64]):
         """
         Check which points are inside the bounding box.
@@ -61,5 +89,5 @@ class BoundingBox:
             PointsInside object with boolean mask and count of points inside
         """
         from .points_inside import points_in_quadrat
-        return points_in_quadrat(points, self)
 
+        return points_in_quadrat(points, self)

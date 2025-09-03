@@ -30,7 +30,7 @@ def create_random_points(
 def create_random_quadrats(
     quadrat_size: float,
     bbox: BoundingBox,
-    n_quadrats: int = 500) -> list[BoundingBox]:
+    n_quadrats: int) -> list[BoundingBox]:
     """
     Generate random quadrat positions for sampling within the bounding box.
     
