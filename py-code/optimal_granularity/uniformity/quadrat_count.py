@@ -69,15 +69,14 @@ def quadrat_count_monte_carlo_csr(
 
     # Get the number of points
     points_inside: PointsInside = bbox.points_inside(points)
+    
+    # If number of pointes is less than 5, we cannot perform the test reliably
+    if points_inside.count < 5:
+        return True
 
     # Calculate the expected number of points per quadrat
     expected_count = (points_inside.count / (number_of_quadrats_per_side ** 2))
-    
-    # Prevent test if expected count is too low -> not enough data for meaningful analysis
-    #! check if it is correct to add a small value instead of returning None
-    if expected_count < 1:
-        expected_count += 0.001
-    
+
     # Divide in quadrats
     bboxes = _divide_into_quadrats(bbox, number_of_quadrats_per_side)
     
