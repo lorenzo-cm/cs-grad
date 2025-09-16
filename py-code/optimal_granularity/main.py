@@ -10,6 +10,20 @@ from .uniformity import uniformity as calculate_uniformity
 from .utils import BoundingBox, gen_scales_from_bbox
 
 
+def normalize_points_to_positive(points: NDArray[np.float64]) -> NDArray[np.float64]:
+    min_x = points[:, 0].min()
+    min_y = points[:, 1].min()
+    
+    offset_x = abs(min_x) if min_x < 0 else 0
+    offset_y = abs(min_y) if min_y < 0 else 0
+    
+    normalized_points = points.copy()
+    normalized_points[:, 0] += offset_x
+    normalized_points[:, 1] += offset_y
+    
+    return normalized_points
+
+
 def get_optimal_granularity(
     points: NDArray[np.float64],  # (num_points, 2)
     tradeoff_method: Literal["sum", "product"],
@@ -22,6 +36,10 @@ def get_optimal_granularity(
 ) -> float:
     """
     Get the optimal granularity
+    
+    It normalizes points to positive coordinates, computes bounding box,
+    generates scales, calculates uniformity and robustness, and optimizes
+    to find the optimal granularity.
 
     Args:
         points: Array of shape (n_points, 2) with point coordinates
@@ -32,8 +50,16 @@ def get_optimal_granularity(
     Returns:
         Optimal granularity
     """
+    if verbose:
+        print('-' * 40)
+        print('Optimal Granularity Calculation')
+        print('-' * 40)
+        
+        print("Normalizing points to positive coordinates...")
+    
+    normalized_points = normalize_points_to_positive(points)
 
-    bbox: BoundingBox = BoundingBox.from_points(points)  # not a square bounding box
+    bbox: BoundingBox = BoundingBox.from_points(normalized_points)
     scales = gen_scales_from_bbox(bbox, size=size_scale)
 
     if verbose:
@@ -41,7 +67,7 @@ def get_optimal_granularity(
         time_init_unif = perf_counter()
 
     uniformity = calculate_uniformity(
-        points=points,
+        points=normalized_points,
         scales=scales,
         num_random_quadrats=uniformity_num_random_quadrats_per_scale,
         bbox=bbox,
@@ -57,7 +83,7 @@ def get_optimal_granularity(
         time_init_robust = perf_counter()
 
     robustness = calculate_robustness(
-        points=points,
+        points=normalized_points,
         scales=scales,
         bbox=bbox,
         signif=signif,

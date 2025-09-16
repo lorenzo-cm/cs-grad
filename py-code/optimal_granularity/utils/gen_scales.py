@@ -5,7 +5,7 @@ from .bounding_box import BoundingBox
 def gen_scales_from_bbox(
     bbox: BoundingBox,
     size: int = 10,
-    as_int: bool = True) -> NDArray:
+    as_int: bool = False) -> NDArray:
     """
     Generate a range of scales for spatial analysis based on bounding box.
     
