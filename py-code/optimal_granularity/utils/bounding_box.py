@@ -11,6 +11,8 @@ class BoundingBox:
     maxy: float
     area: float
 
+    def __str__(self):
+        return f"BoundingBox(minx={self.minx}, miny={self.miny}, maxx={self.maxx}, maxy={self.maxy}, area={self.area}, width={self.maxx - self.minx}, height={self.maxy - self.miny})"
 
     @classmethod
     def from_coords(

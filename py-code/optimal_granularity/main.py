@@ -29,11 +29,12 @@ def get_optimal_granularity(
     tradeoff_method: Literal["sum", "product"],
     size_scale: int = 10,
     signif: float = 0.99,
+    uniformity_method: Literal["clark_evans", "quadrat_count"] = "quadrat_count",
     uniformity_num_random_quadrats_per_scale: int = 200,
     robustness_num_simulations: int = 200,
     robustness_num_bootstrap: int = 100,
-    verbose: bool = True,
-) -> float:
+    verbose: bool = False,
+) -> OptimizeReturn:
     """
     Get the optimal granularity
     
@@ -63,6 +64,7 @@ def get_optimal_granularity(
     scales = gen_scales_from_bbox(bbox, size=size_scale)
 
     if verbose:
+        print("Bounding box:", bbox)
         print(f"Starting calculating uniformity")
         time_init_unif = perf_counter()
 
@@ -72,7 +74,7 @@ def get_optimal_granularity(
         num_random_quadrats=uniformity_num_random_quadrats_per_scale,
         bbox=bbox,
         signif=signif,
-        method="quadrat_count",
+        method=uniformity_method,
         verbose=verbose,
     )
 
@@ -108,9 +110,9 @@ def get_optimal_granularity(
 
     if verbose:
         print(f"Optimal scale: {optimal_scale.optimal_scale}")
-        print(f"Optimal granularity: {optimal_scale.optimal_granularity}")
+        print(f"Optimal granularity: {optimal_scale.optimal_tradeoff}")
         
         for scale, values in optimal_scale.tradeoff_values.items():
             print(f"Scale: {scale}, Uniformity: {values.uniformity}, Robustness: {values.robustness}, Tradeoff: {values.tradeoff}")
 
-    return optimal_scale.optimal_scale
+    return optimal_scale

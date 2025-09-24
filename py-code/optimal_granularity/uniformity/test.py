@@ -17,7 +17,7 @@ verbose = True
 # Define paths
 root_folder = Path(__file__).parent.parent.parent.parent  # Navigate to tcc folder
 samples_folder = root_folder / "samples"
-output_folder = Path(__file__).parent.parent.parent / "test" / "uniformity" / method  # py-code/test/
+output_folder = Path(__file__).parent.parent.parent / "results" / "uniformity" / method  # py-code/results/
 
 csv_files = list(samples_folder.glob("*.csv"))
 

@@ -2,14 +2,17 @@ import geopandas as gpd
 import numpy as np
 
 
-def load_shapefile_points(shapefile_path):
+def load_shapefile_points(
+    shapefile_path, epsg=3857
+) -> tuple[np.ndarray, gpd.GeoDataFrame]:
     gdf = gpd.read_file(shapefile_path)
+
     gdf = gdf[gdf.geometry.notna()]
-    
-    if len(gdf) == 0:
-        raise ValueError("Nenhum registro válido encontrado no shapefile")
-    
-    point_gdf = gdf[gdf.geometry.geom_type == 'Point']
-    coords = np.array([[geom.x, geom.y] for geom in point_gdf.geometry if geom is not None])
-    
-    return coords
+    if gdf.empty:
+        raise ValueError("No valid geometries found in the shapefile.")
+
+    gdf = gdf.to_crs(epsg=epsg)
+
+    coords = np.array(gdf.get_coordinates())
+
+    return coords, gdf

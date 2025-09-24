@@ -14,7 +14,7 @@ class OptimizeDictReturn:
 
 @dataclass
 class OptimizeReturn:
-    optimal_granularity: float
+    optimal_tradeoff: float
     optimal_scale: float
     tradeoff_values: dict[str, OptimizeDictReturn]
 
@@ -36,7 +36,7 @@ def optimize(
         raise ValueError(f"Unknown method: {method}")
 
     optimal_index = np.argmax(tradeoff)
-    optimal_granularity = tradeoff[optimal_index]
+    optimal_tradeoff = tradeoff[optimal_index]
     optimal_scale = scales[optimal_index]
 
     tradeoff_values = {}
@@ -47,7 +47,7 @@ def optimize(
         )
 
     result = OptimizeReturn(
-        optimal_granularity,
+        optimal_tradeoff,
         optimal_scale,
         tradeoff_values,
     )
