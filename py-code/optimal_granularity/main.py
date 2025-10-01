@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 from .optimizer import OptimizeReturn, optimize
 from .robustness import robustness as calculate_robustness
 from .uniformity import uniformity as calculate_uniformity
-from .utils import BoundingBox, gen_scales_from_bbox
+from .utils import BoundingBox
 
 
 def normalize_points_to_positive(points: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -61,7 +61,7 @@ def get_optimal_granularity(
     normalized_points = normalize_points_to_positive(points)
 
     bbox: BoundingBox = BoundingBox.from_points(normalized_points)
-    scales = gen_scales_from_bbox(bbox, size=size_scale)
+    scales = bbox.gen_scales_from_bbox(size=size_scale)
 
     if verbose:
         print("Bounding box:", bbox)

@@ -3,7 +3,7 @@ from typing import Literal
 import numpy as np
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox, create_random_quadrats
+from ..utils import BoundingBox
 from .clark_evans import clark_evans_csr_vectorized
 from .quadrat_count import quadrat_count_csr_vectorized
 
@@ -32,8 +32,8 @@ def uniformity(
     uniformity_values = np.zeros(len(scales))
 
     for idx, scale in enumerate(scales):
-        quadrats: list[BoundingBox] = create_random_quadrats(
-            quadrat_size=scale, bbox=bbox, n_quadrats=num_random_quadrats
+        quadrats: list[BoundingBox] = bbox.create_random_quadrats(
+            quadrat_size=scale, n_quadrats=num_random_quadrats
         )
 
         csr_passed: NDArray[np.bool_]

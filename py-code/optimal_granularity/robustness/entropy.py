@@ -1,8 +1,8 @@
 import numpy as np
-from attr import dataclass
+from dataclasses import dataclass
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox, create_random_quadrats
+from ..utils import BoundingBox
 
 
 @dataclass
@@ -28,8 +28,8 @@ def entropy_score(
 ) -> EntropyResult:
 
     counts = []
-    bboxes = create_random_quadrats(
-        quadrat_size=quadrat_size, bbox=bbox, n_quadrats=num_simulations
+    bboxes = bbox.create_random_quadrats(
+        quadrat_size=quadrat_size, n_quadrats=num_simulations
     )
 
     for bbox in bboxes:

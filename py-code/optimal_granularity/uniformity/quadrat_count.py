@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox, PointsInside, create_random_points
+from ..utils import BoundingBox, PointsInside
 
 
 def quadrat_count_csr_vectorized(
@@ -94,7 +94,7 @@ def quadrat_count_monte_carlo_csr(
     # Monte Carlo simulations
     chi_squares_sims = []
     for i in range(num_simulations):
-        points_random = create_random_points(bbox, points_inside.count)
+        points_random = bbox.create_random_points(points_inside.count)
         counts_random = []
         for quadrat in bboxes:
             points_in_random: PointsInside = quadrat.points_inside(points_random)
