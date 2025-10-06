@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 
 from .main import uniformity
-from ..utils import BoundingBox 
+from ..utils import BoundingBox2d
 
 
 # Parameters for uniformity calculation
@@ -31,7 +31,7 @@ for csv_file in csv_files:
     # Extract points (assuming columns are 'x' and 'y')
     points = df[['x', 'y']].values
     
-    bbox = BoundingBox.from_points(points)
+    bbox = BoundingBox2d.from_points(points)
     scales = bbox.gen_scales_from_bbox(size=40)
     
     # Calculate uniformity

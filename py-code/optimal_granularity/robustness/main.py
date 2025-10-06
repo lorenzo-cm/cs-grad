@@ -3,13 +3,13 @@ from numpy.typing import NDArray
 from scipy.stats import norm
 
 from .entropy import entropy_score
-from ..utils import BoundingBox
+from ..utils import BoundingBox2d
 
 
 def robustness(
     points: NDArray[np.float64],
     scales: NDArray[np.float64],
-    bbox: BoundingBox,
+    bbox: BoundingBox2d,
     num_simulations: int = 200,
     num_bootstrap: int = 50,
     signif: float = 0.99,

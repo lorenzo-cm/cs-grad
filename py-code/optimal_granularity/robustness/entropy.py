@@ -2,7 +2,7 @@ import numpy as np
 from dataclasses import dataclass
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox
+from ..utils import BoundingBox2d
 
 
 @dataclass
@@ -23,7 +23,7 @@ class EntropyResult:
 def entropy_score(
     points: NDArray[np.float64],
     quadrat_size: float,
-    bbox: BoundingBox,
+    bbox: BoundingBox2d,
     num_simulations: int,
 ) -> EntropyResult:
 

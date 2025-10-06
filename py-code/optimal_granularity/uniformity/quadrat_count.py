@@ -1,12 +1,12 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox, PointsInside
+from ..utils import BoundingBox2d
 
 
 def quadrat_count_csr_vectorized(
     points: NDArray[np.float64],
-    list_bboxes: list[BoundingBox],
+    list_bboxes: list[BoundingBox2d],
     signif: float,
     num_simulations: int,
     ) -> NDArray[np.bool_]:
@@ -35,7 +35,7 @@ def quadrat_count_csr_vectorized(
 
 def quadrat_count_monte_carlo_csr(
     points: NDArray[np.float64],
-    bbox: BoundingBox,
+    bbox: BoundingBox2d,
     signif,
     num_simulations,
     number_of_quadrats_per_side: int = 5,
@@ -66,9 +66,11 @@ def quadrat_count_monte_carlo_csr(
     Returns:
         True if the point pattern is consistent with CSR (p-value >= signif), False otherwise
     """
+    
+    #TODO if is instance of bbox spatio temporal, convert number of quadrats per side to 2 or 3
 
     # Get the number of points
-    points_inside: PointsInside = bbox.points_inside(points)
+    points_inside: BoundingBox2d.PointsInside = bbox.points_inside(points)
     
     # If number of pointes is less than 5, we cannot perform the test reliably
     if points_inside.count < 5:
@@ -83,7 +85,7 @@ def quadrat_count_monte_carlo_csr(
     # Count points in each quadrat
     observed_counts = []
     for quadrat in bboxes:
-        points_in_input: PointsInside = quadrat.points_inside(points)
+        points_in_input: BoundingBox2d.PointsInside = quadrat.points_inside(points)
         observed_counts.append(points_in_input.count)
     
     observed_counts_np = np.array(observed_counts)
@@ -97,7 +99,7 @@ def quadrat_count_monte_carlo_csr(
         points_random = bbox.create_random_points(points_inside.count)
         counts_random = []
         for quadrat in bboxes:
-            points_in_random: PointsInside = quadrat.points_inside(points_random)
+            points_in_random: BoundingBox2d.PointsInside = quadrat.points_inside(points_random)
             counts_random.append(points_in_random.count)
         counts_random_np = np.array(counts_random)
         chi_square_sim = np.sum((counts_random_np - expected_count) ** 2 / expected_count)
@@ -113,8 +115,8 @@ def quadrat_count_monte_carlo_csr(
 
 
 def _divide_into_quadrats(
-    bbox: BoundingBox, number_of_quadrats_per_side: int
-) -> list[BoundingBox]:
+    bbox: BoundingBox2d, number_of_quadrats_per_side: int
+) -> list[BoundingBox2d]:
     """
     Divide the bounding box into a grid of quadrats.
 
@@ -131,12 +133,12 @@ def _divide_into_quadrats(
     quadrats = []
     for row in range(number_of_quadrats_per_side):
         for col in range(number_of_quadrats_per_side):
-            temp_bbox = BoundingBox(
+            temp_bbox = BoundingBox2d(
                 minx=bbox.minx + col * quadrat_size,
                 miny=bbox.miny + row * quadrat_size,
                 maxx=bbox.minx + (col + 1) * quadrat_size,
                 maxy=bbox.miny + (row + 1) * quadrat_size,
-                area=quadrat_size * quadrat_size,
+                _area=quadrat_size * quadrat_size,
             )
             quadrats.append(temp_bbox)
 

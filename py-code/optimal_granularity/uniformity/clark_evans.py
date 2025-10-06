@@ -4,12 +4,12 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.spatial import cKDTree
 
-from ..utils import BoundingBox
+from ..utils import BoundingBox2d
 
 
 def clark_evans_csr_vectorized(
     points: NDArray[np.float64],
-    list_bboxes: list[BoundingBox],
+    list_bboxes: list[BoundingBox2d],
     signif=0.95,
 ) -> NDArray[np.bool_]:
     """
@@ -50,10 +50,11 @@ def clark_evans_csr_vectorized(
 
 
 def clark_evans_csr(
-    points: NDArray[np.float64], bbox: BoundingBox, signif=0.95
+    points: NDArray[np.float64], bbox: BoundingBox2d, signif=0.95
 ) -> bool | None:
     """
     Test if point pattern follows Complete Spatial Randomness (CSR) using Clark-Evans test.
+    Assuming the points are alredy inside the bounding box.
 
     Args:
         points: Array of shape (n_points, 2) with point coordinates
@@ -72,11 +73,17 @@ def clark_evans_csr(
     if num_points < 20:
         return clark_evans_csr_monte_carlo(points, bbox, signif)
 
+    # Calculate observed mean nearest neighbor distance (empirical)
     r_observed = _mean_nearest_neighbor_distance(points)
-
+    
+    # Now, calculate expected mean nearest neighbor distance under CSR
+    # Applying some maths, we find the distance is only dependent on point intensity
+    # Expected mean nearest neighbor under CSR is 1 / (2 * sqrt(intensity))
     points_intensity = num_points / bbox.area
     r_expected = 0.5 / np.sqrt(points_intensity)
 
+    # Theoretically, the variance under CSR is: 4 - pi / (4 * pi * points_intensity)
+    # Std deviation is (sqrt(4 - pi) / 2 * sqrt(pi)) * (sqrt(area) / num_points)
     std_dev = 0.26136 * np.sqrt(bbox.area) / num_points
     z = (r_observed - r_expected) / std_dev
 
@@ -86,7 +93,7 @@ def clark_evans_csr(
 
 
 def clark_evans_csr_monte_carlo(
-    points: NDArray[np.float64], bbox: BoundingBox,
+    points: NDArray[np.float64], bbox: BoundingBox2d,
     signif: float = 0.95, num_simulations: int = 100
 ) -> bool:
     """
