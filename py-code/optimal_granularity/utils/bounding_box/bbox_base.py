@@ -7,6 +7,9 @@ from numpy.typing import NDArray
 
 
 class BoundingBoxBase(ABC):
+    _maxs: Sequence[float]
+    _mins: Sequence[float]
+    _volume: float
     
     # ------------------------------
     # Properties
@@ -36,15 +39,6 @@ class BoundingBoxBase(ABC):
           - 2D: area
           - 3D: volume
         """
-        
-    @property
-    def area(self) -> float:
-        """
-        Hypervolume measure:
-          - 2D: area
-          - 3D: volume
-        """
-        return self.volume
 
     @property
     def ndim(self) -> int:
@@ -53,7 +47,7 @@ class BoundingBoxBase(ABC):
     
     
     # ------------------------------
-    # Constructors
+    # Factory methods
     # ------------------------------
     
     @classmethod
@@ -64,8 +58,25 @@ class BoundingBoxBase(ABC):
         maxs: Sequence[float],
         eps: float = 1e-12,
         margin: float = 1e-6,
-    ) -> Self:
-        """Create the bounding box from explicit coordinates."""
+    ) -> "BoundingBoxBase":
+        """
+        Create the bounding box from explicit coordinates.
+        
+        It automatically return the appropriate subclass based on the dimensionality of mins/maxs.
+        """
+        ndim = len(mins)
+        
+        if ndim == 2:
+            from .spatio import BoundingBox2d
+            return BoundingBox2d.from_coords(mins, maxs, eps=eps, margin=margin)
+        
+        elif ndim == 3:
+            from .spatiotemporal import BoundingBoxSpatioTemporal
+            return BoundingBoxSpatioTemporal.from_coords(mins, maxs, eps=eps, margin=margin)
+        
+        else:
+            raise ValueError(f"Unsupported dimensionality: {ndim}. Only 2D and 3D are supported.")
+            
 
     @classmethod
     @abstractmethod
@@ -74,8 +85,26 @@ class BoundingBoxBase(ABC):
         points: np.ndarray,
         eps: float = 1e-12,
         margin: float = 1e-6,
-    ) -> Self:
-        """Create the bounding box from a set of points in nD."""
+    ) -> "BoundingBoxBase":
+        """
+        Create the bounding box from a set of points in nD.
+        
+        Points must be of shape (n_points, ndim)
+        
+        It automatically return the appropriate subclass based on the dimensionality of mins/maxs.
+        """
+        ndim = points.shape[1]
+        
+        if ndim == 2:
+            from .spatio import BoundingBox2d
+            return BoundingBox2d.from_points(points, eps=eps, margin=margin)
+        
+        elif ndim == 3:
+            from .spatiotemporal import BoundingBoxSpatioTemporal
+            return BoundingBoxSpatioTemporal.from_points(points, eps=eps, margin=margin)
+        
+        else:
+            raise ValueError(f"Unsupported dimensionality: {ndim}. Only 2D and 3D are supported.")
         
         
     # ------------------------------
@@ -106,5 +135,18 @@ class BoundingBoxBase(ABC):
     @abstractmethod
     def gen_scales_from_bbox(self, size: int = 10, as_int: bool = False) -> NDArray:
         """Generate spatial analysis scales from the bounding box dimensions."""
+
+    @abstractmethod
+    def divide_into_quadrats(self, number_of_quadrats_per_side: int) -> list[Self]:
+        """
+        Divide the bounding box into a regular grid of bboxes.
+        It preserves the dimensionality of the original bbox.
+        
+        Args:
+            number_of_quadrats_per_side: Number of bboxes along each side
+            
+        Returns:
+            List of BoundingBox objects representing the quadrats
+        """
 
 

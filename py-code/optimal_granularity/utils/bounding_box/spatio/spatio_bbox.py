@@ -15,12 +15,13 @@ class BoundingBox2d(BoundingBoxBase):
     _area: float
 
     def __str__(self):
-        return f"BoundingBox(minx={self.minx}, miny={self.miny}, maxx={self.maxx}, maxy={self.maxy}, area={self.area}, width={self.maxx - self.minx}, height={self.maxy - self.miny})"
+        return f"BoundingBox(minx={self.mins[0]}, miny={self.mins[1]}, maxx={self.maxs[0]}, maxy={self.maxs[1]}, area={self._area}, width={self.maxs[0] - self.mins[0]}, height={self.maxs[1] - self.mins[1]})"
 
     # ------------------------------
     # Properties exigidas pela base
     # ------------------------------
 
+    @property
     def mins(self):
         return (self.minx, self.miny)
 
@@ -31,10 +32,7 @@ class BoundingBox2d(BoundingBoxBase):
     @property
     def volume(self) -> float:
         return self._area
-
-    @property
-    def area(self) -> float:
-        return self._area
+    
 
     # ------------------------------
     # Construtores
@@ -82,7 +80,7 @@ class BoundingBox2d(BoundingBoxBase):
         Returns BoundingBox2d with coordinates and area.
 
         Args:
-            points: Array of shape (n_points, 2) with point coordinates
+            points: Array of shape (n_points, n_dims)
             eps: Minimum dimension to avoid zero-area box
             margin: Small increment added to extremes to avoid boundary conflicts
 
@@ -118,13 +116,13 @@ class BoundingBox2d(BoundingBoxBase):
         Check which points are inside the bounding box.
 
         Args:
-            points: Array of shape (n_points, 2) with point coordinates
+            points: Array of shape (n_points, n_dims)
 
         Returns:
             PointsInside object with boolean mask and count of points inside
         """
-        inside_x = (points[:, 0] >= self.minx) & (points[:, 0] < self.maxx)
-        inside_y = (points[:, 1] >= self.miny) & (points[:, 1] < self.maxy)
+        inside_x = (points[:, 0] >= self.mins[0]) & (points[:, 0] < self.maxs[0])
+        inside_y = (points[:, 1] >= self.mins[1]) & (points[:, 1] < self.maxs[1])
         inside_quadrat = inside_x & inside_y
 
         points_inside = points[inside_quadrat]
@@ -141,13 +139,13 @@ class BoundingBox2d(BoundingBoxBase):
             n_points: Number of points to generate
 
         Returns:
-            Array of shape (n_points, 2) with x, y coordinates
+            Array of shape (n_points, ndims) with x, y coordinates
         """
         # Generate random x coordinates within bbox
-        x_coords = np.random.uniform(self.minx, self.maxx, n_points)
+        x_coords = np.random.uniform(self.mins[0], self.maxs[0], n_points)
 
         # Generate random y coordinates within bbox
-        y_coords = np.random.uniform(self.miny, self.maxy, n_points)
+        y_coords = np.random.uniform(self.mins[1], self.maxs[1], n_points)
 
         # Stack coordinates into (n_points, 2) array
         points = np.column_stack((x_coords, y_coords))
@@ -170,15 +168,15 @@ class BoundingBox2d(BoundingBoxBase):
         """
         # Calculate available space for quadrat placement
         # Quadrat must fit entirely within the bounding box
-        max_x = self.maxx - quadrat_size
-        max_y = self.maxy - quadrat_size
+        max_x = self.maxs[0] - quadrat_size
+        max_y = self.maxs[1] - quadrat_size
 
-        if max_x < self.minx or max_y < self.miny:
+        if max_x < self.mins[0] or max_y < self.mins[1]:
             raise ValueError("Quadrat size is too large for the bounding box")
 
         # Generate random bottom-left corner positions
-        offset_x = np.random.uniform(self.minx, max_x, n_quadrats)
-        offset_y = np.random.uniform(self.miny, max_y, n_quadrats)
+        offset_x = np.random.uniform(self.mins[0], max_x, n_quadrats)
+        offset_y = np.random.uniform(self.mins[1], max_y, n_quadrats)
 
         # Create list of BoundingBox objects for each quadrat
         quadrat_bboxes: list[BoundingBox2d] = []
@@ -216,7 +214,7 @@ class BoundingBox2d(BoundingBoxBase):
         # stop = 1000 * 0.35 = 350
         # start = 350 * 0.1 = 35
 
-        min_side = min(self.maxx - self.minx, self.maxy - self.miny)
+        min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
         stop = 0.5 * min_side
         start = 0.025 * stop
         scales = np.linspace(start, stop, size)
@@ -226,3 +224,32 @@ class BoundingBox2d(BoundingBoxBase):
             scales = np.unique(scales)
 
         return scales
+
+    def divide_into_quadrats(self, number_of_quadrats_per_side: int) -> list["BoundingBox2d"]:
+        """
+        Divide the 2D bounding box into a regular grid of quadrats.
+        
+        Args:
+            number_of_quadrats_per_side: Number of quadrats along each side
+            
+        Returns:
+            List of BoundingBox2d objects representing the quadrats
+        """
+        side = self.maxs[0] - self.mins[0]  # assuming square bounding box
+        quadrat_size: float = side / number_of_quadrats_per_side
+
+        quadrats = []
+        for row in range(number_of_quadrats_per_side):
+            for col in range(number_of_quadrats_per_side):
+                mins = (
+                    self.mins[0] + col * quadrat_size,
+                    self.mins[1] + row * quadrat_size,
+                )
+                maxs = (
+                    self.mins[0] + (col + 1) * quadrat_size,
+                    self.mins[1] + (row + 1) * quadrat_size,
+                )
+                temp_bbox = self.from_coords(mins, maxs)
+                quadrats.append(temp_bbox)
+
+        return quadrats

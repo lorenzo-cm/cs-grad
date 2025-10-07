@@ -2,7 +2,7 @@ import numpy as np
 from dataclasses import dataclass
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox2d
+from ..utils import BoundingBoxBase
 
 
 @dataclass
@@ -23,9 +23,15 @@ class EntropyResult:
 def entropy_score(
     points: NDArray[np.float64],
     quadrat_size: float,
-    bbox: BoundingBox2d,
+    bbox: BoundingBoxBase,
     num_simulations: int,
 ) -> EntropyResult:
+    """
+    Calculate entropy score for shapefile point pattern robustness analysis.
+    
+    Args:
+        points: Array of shape (n_points, n_dims)
+    """
 
     counts = []
     bboxes = bbox.create_random_quadrats(

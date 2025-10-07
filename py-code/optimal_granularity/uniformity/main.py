@@ -3,7 +3,7 @@ from typing import Literal
 import numpy as np
 from numpy.typing import NDArray
 
-from ..utils import BoundingBox2d, BoundingBoxBase
+from ..utils import BoundingBoxBase
 from .clark_evans import clark_evans_csr_vectorized
 from .quadrat_count import quadrat_count_csr_vectorized
 
@@ -11,7 +11,7 @@ from .quadrat_count import quadrat_count_csr_vectorized
 def uniformity(
     points: NDArray[np.float64],
     scales: NDArray[np.float64],
-    bbox: BoundingBox2d,
+    bbox: BoundingBoxBase,
     num_random_quadrats: int = 200,
     method: Literal["clark_evans", "quadrat_count"] = "quadrat_count",
     signif: float = 0.99,
@@ -22,7 +22,7 @@ def uniformity(
     Calculate uniformity for each scale.
 
     Args:
-        points: Array of shape (n_points, 2) with point coordinates
+        points: Array of shape (n_points, n_dims)
         scales: Array of scales to evaluate
         num_random_quadrats: Number of random quadrats to generate for each scale
 
@@ -32,7 +32,7 @@ def uniformity(
     uniformity_values = np.zeros(len(scales))
 
     for idx, scale in enumerate(scales):
-        quadrats: list[BoundingBox2d] = bbox.create_random_quadrats(
+        quadrats: list[BoundingBoxBase] = bbox.create_random_quadrats(
             quadrat_size=scale, n_quadrats=num_random_quadrats
         )
 

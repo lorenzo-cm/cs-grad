@@ -1,16 +1,15 @@
 from datetime import datetime
 
 
-#! converter para ao inves de UNIX time 1970 para menor data do dataset
+def convert_time_to_scalar(date: datetime, min_date: datetime) -> int:
+    """
+    Convert time to scalar (seconds since min_date).
 
-def convert_time_to_scalar(date: str, format: str, min_date: str) -> int:
+    Args:
+        date: Input date as datetime object
+        min_date: Minimum date as datetime object
+
+    Returns:
+        Number of seconds between date and min_date
     """
-    Possible formats:
-    - 'YYYY-MM-DD HH:MM:SS'
-    - 'YYYY-MM-DD'
-    - 'YYYY/MM/DD HH:MM:SS'
-    - 'YYYY/MM/DD'
-    - 'DD-MM-YYYY HH:MM:SS'
-    """
-    dt = datetime.strptime(date, format)
-    return int(dt.timestamp())
+    return int((date - min_date).total_seconds())

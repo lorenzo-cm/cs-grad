@@ -7,20 +7,24 @@ from numpy.typing import NDArray
 from .optimizer import OptimizeReturn, optimize
 from .robustness import robustness as calculate_robustness
 from .uniformity import uniformity as calculate_uniformity
-from .utils import BoundingBox2d, BoundingBoxSpatioTemporal
+from .utils import BoundingBoxBase
 
 
 def normalize_points_to_positive(points: NDArray[np.float64]) -> NDArray[np.float64]:
-    min_x = points[:, 0].min()
-    min_y = points[:, 1].min()
-    
-    offset_x = abs(min_x) if min_x < 0 else 0
-    offset_y = abs(min_y) if min_y < 0 else 0
-    
-    normalized_points = points.copy()
-    normalized_points[:, 0] += offset_x
-    normalized_points[:, 1] += offset_y
-    
+    """
+    Normalize point coordinates from shapefile to positive values.
+
+    Args:
+        points: Array of shape (n_points, n_dims) where n_dims can be any number of dimensions
+
+    Returns:
+        Normalized points with all positive coordinates
+    """
+    min_coords = points.min(axis=0)
+    offsets = np.where(min_coords < 0, np.abs(min_coords), 0)
+
+    normalized_points = points + offsets
+
     return normalized_points
 
 
@@ -37,13 +41,13 @@ def get_optimal_granularity(
 ) -> OptimizeReturn:
     """
     Get the optimal granularity
-    
+
     It normalizes points to positive coordinates, computes bounding box,
     generates scales, calculates uniformity and robustness, and optimizes
     to find the optimal granularity.
 
     Args:
-        points: Array of shape (n_points, 2) with point coordinates
+        points: Array of shape (n_points, n_dims)
         tradeoff_method: Method for calculating tradeoff between robustness and uniformity
         signif: Significance level
         num_random_quadrats: Number of random quadrats generated to calculate uniformity
@@ -52,15 +56,15 @@ def get_optimal_granularity(
         Optimal granularity
     """
     if verbose:
-        print('-' * 40)
-        print('Optimal Granularity Calculation')
-        print('-' * 40)
-        
+        print("-" * 40)
+        print("Optimal Granularity Calculation")
+        print("-" * 40)
+
         print("Normalizing points to positive coordinates...")
-    
+
     normalized_points = normalize_points_to_positive(points)
 
-    bbox: BoundingBox2d = BoundingBox2d.from_points(normalized_points)
+    bbox: BoundingBoxBase = BoundingBoxBase.from_points(normalized_points)
     scales = bbox.gen_scales_from_bbox(size=size_scale)
 
     if verbose:
@@ -105,14 +109,16 @@ def get_optimal_granularity(
         scales=scales,
         uniformity=uniformity,
         robustness=robustness,
-        method=tradeoff_method
+        method=tradeoff_method,
     )
 
     if verbose:
         print(f"Optimal scale: {optimal_scale.optimal_scale}")
         print(f"Optimal granularity: {optimal_scale.optimal_tradeoff}")
-        
+
         for scale, values in optimal_scale.tradeoff_values.items():
-            print(f"Scale: {scale}, Uniformity: {values.uniformity}, Robustness: {values.robustness}, Tradeoff: {values.tradeoff}")
+            print(
+                f"Scale: {scale}, Uniformity: {values.uniformity}, Robustness: {values.robustness}, Tradeoff: {values.tradeoff}"
+            )
 
     return optimal_scale
