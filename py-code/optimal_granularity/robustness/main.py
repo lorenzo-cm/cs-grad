@@ -61,7 +61,7 @@ def robustness(
 
         if verbose:
             print(
-                f"Scale: {scale}, Robustness: {robustness_value:.4f}"
+                f"Scale: {scale}, Robustness: {robustness_value:.4f}\n"
                 f"95% CI: ({ci_lower:.4f}, {ci_upper:.4f})"
             )
 
