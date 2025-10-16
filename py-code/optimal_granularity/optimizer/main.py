@@ -1,22 +1,19 @@
+import itertools
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
 
 
 @dataclass
-class OptimizeDictReturn:
-    uniformity: float
-    robustness: float
-    tradeoff: float
-
-
-@dataclass
 class OptimizeReturn:
     optimal_tradeoff: float
-    optimal_scale: float
-    tradeoff_values: dict[str, OptimizeDictReturn]
+    optimal_scale: Sequence[float]
+    tradeoff_values: NDArray[np.float64]
+    uniformity_values: NDArray[np.float64]
+    robustness_values: NDArray[np.float64]
+    scales: NDArray[np.float64] # (num_scales_combinations, num_dimensions)
 
 
 def optimize(
@@ -25,7 +22,6 @@ def optimize(
     robustness: NDArray[np.float64],
     method: Literal["sum", "product"],
 ) -> OptimizeReturn:
-
     if method == "sum":
         tradeoff = uniformity + robustness
 
@@ -34,22 +30,21 @@ def optimize(
 
     else:
         raise ValueError(f"Unknown method: {method}")
+    
+    scales_list = [dim_scales for dim_scales in scales]
+    scales_combos = list(itertools.product(*scales_list))
 
     optimal_index = np.argmax(tradeoff)
     optimal_tradeoff = tradeoff[optimal_index]
-    optimal_scale = scales[optimal_index]
-
-    tradeoff_values = {}
-
-    for i, scale in enumerate(scales):
-        tradeoff_values[str(scale)] = OptimizeDictReturn(
-            uniformity[i], robustness[i], tradeoff[i]
-        )
+    optimal_scale = scales_combos[optimal_index]
 
     result = OptimizeReturn(
         optimal_tradeoff,
         optimal_scale,
-        tradeoff_values,
+        tradeoff,
+        uniformity,
+        robustness,
+        np.array(scales_combos)
     )
 
     return result

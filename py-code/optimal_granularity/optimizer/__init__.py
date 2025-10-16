@@ -1,1 +1,1 @@
-from .main import optimize, OptimizeReturn, OptimizeDictReturn
+from .main import optimize, OptimizeReturn

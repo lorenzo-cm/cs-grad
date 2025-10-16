@@ -151,7 +151,7 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
     ) -> BoundingBoxBase.PointsInside:
         """
         Return points inside spatiotemporal box (x in [minx,maxx), y in [miny,maxy), t in [mint,maxt)).
-        
+
         Args:
             points: Array of shape (n_points, n_dims) with shapefile point coordinates where:
                    - n_points: number of geographic features from shapefile
@@ -178,21 +178,22 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
         t = np.random.uniform(self.mins[2], self.maxs[2], n_points)
         return np.column_stack((x, y, t)).astype(np.float64)
 
-    def create_random_quadrats(
+    def create_random_bboxes(
         self,
-        quadrat_size: float,
+        bbox_scales: Sequence[float],
         n_quadrats: int,
     ) -> list["BoundingBoxSpatioTemporal"]:
         """
-        Generate cubic sub-boxes (voxels) with edge `quadrat_size` inside AABB (x, y, t).
-
-        Note: To match 2D signature, the same `quadrat_size`
-        is used for all 3 dimensions (x, y, t). For different sizes,
-        a variant method could be added with (sx, sy, st).
+        Generate random spatiotemporal boxes (voxels) within the bounding box.
+        
+        Scales: bbox_scales = [spatial_scale, temporal_scale]
         """
-        max_x = self.maxs[0] - quadrat_size
-        max_y = self.maxs[1] - quadrat_size
-        max_t = self.maxs[2] - quadrat_size
+        if len(bbox_scales) != 2:
+            raise ValueError("For spatiotemporal bbox: bbox_scales must be a sequence of two floats [spatial, temporal].")
+        
+        max_x = self.maxs[0] - bbox_scales[0]
+        max_y = self.maxs[1] - bbox_scales[0]
+        max_t = self.maxs[2] - bbox_scales[1]
 
         if (max_x < self.mins[0]) or (max_y < self.mins[1]) or (max_t < self.mins[2]):
             raise ValueError("Quadrat size too large for 3D bounding box.")
@@ -207,11 +208,11 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
             miny = float(off_y[i])
             mint = float(off_t[i])
 
-            maxx = minx + quadrat_size
-            maxy = miny + quadrat_size
-            maxt = mint + quadrat_size
+            maxx = minx + bbox_scales[0]
+            maxy = miny + bbox_scales[0]
+            maxt = mint + bbox_scales[1]
 
-            vol = quadrat_size * quadrat_size * quadrat_size
+            vol = bbox_scales[0] * bbox_scales[0] * bbox_scales[1]
 
             voxel = BoundingBoxSpatioTemporal(
                 minx=minx,
@@ -226,7 +227,7 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
 
         return voxels
 
-    def gen_scales_from_bbox(self, size: int = 10, as_int: bool = False) -> NDArray:
+    def gen_scales_from_bbox(self, size: int = 10) -> NDArray:
         """
         Generate analysis scales based ONLY on spatial dimensions (x,y),
         same as 2D. Useful when grid is spatial and time is a separate window.
@@ -234,52 +235,54 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
         stop = 0.5 * min_side
         start = 0.025 * stop
         """
-        side_x = self.maxs[0] - self.mins[0]
-        side_y = self.maxs[1] - self.mins[1]
-        min_side = min(side_x, side_y)
-
+        min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
         stop = 0.5 * min_side
         start = 0.025 * stop
-        scales = np.linspace(start, stop, size)
+        geo_scales = np.linspace(start, stop, size)
 
-        if as_int:
-            scales = np.round(scales).astype(int)
-            scales = np.unique(scales)
+        time_scales = [(self.maxs[2] - self.mins[2]) / (i + 2) for i in np.arange(size)]
+
+        scales = np.vstack((geo_scales, time_scales))
 
         return scales
 
-    def divide_into_quadrats(self, number_of_quadrats_per_side: int) -> list["BoundingBoxSpatioTemporal"]:
+    def divide_into_quadrats(
+        self, number_of_quadrats_per_side: int
+    ) -> list["BoundingBoxSpatioTemporal"]:
         """
-        Divide the 3D spatiotemporal bounding box into a regular grid of cubic voxels.
-        
-        Creates number_of_quadrats_per_side³ cubes. For example, if number_of_quadrats_per_side=3,
-        it creates 3x3x3 = 27 cubes that completely fill the original bounding box.
-        
-        Args:
-            number_of_quadrats_per_side: Number of quadrats along each dimension (x, y, t)
-            
-        Returns:
-            List of BoundingBoxSpatioTemporal objects representing the cubic voxels
-        """
-        # Calculate the side length (assuming cubic bounding box)
-        side = self.maxs[0] - self.mins[0]  # All dimensions have same size
-        quadrat_size = side / number_of_quadrats_per_side
+        Divide the 3D spatiotemporal bounding box into a regular grid of voxels.
 
-        bboxes = []
+        Creates ``number_of_quadrats_per_side``^3 boxes. For example, if
+        ``number_of_quadrats_per_side=3``, it creates 3x3x3 = 27 boxes that
+        completely fill the original bounding box. Voxels are axis-aligned
+        rectangular cuboids; they are not forced to be cubes
+        (x, y are in the same scale but t is nopt).
+
+        Args:
+            number_of_quadrats_per_side: Number of quadrats along each dimension (x, y, t). Must be >= 1.
+
+        Returns:
+            List of BoundingBoxSpatioTemporal objects representing the voxels.
+        """
+        if number_of_quadrats_per_side < 1:
+            raise ValueError("number_of_quadrats_per_side must be >= 1")
+
+        # Use linspace to avoid floating accumulation error and ensure exact coverage.
+        xs = np.linspace(self.mins[0], self.maxs[0], number_of_quadrats_per_side + 1)
+        ys = np.linspace(self.mins[1], self.maxs[1], number_of_quadrats_per_side + 1)
+        ts = np.linspace(self.mins[2], self.maxs[2], number_of_quadrats_per_side + 1)
+
+        bboxes: list[BoundingBoxSpatioTemporal] = []
         for t_idx in range(number_of_quadrats_per_side):
             for y_idx in range(number_of_quadrats_per_side):
                 for x_idx in range(number_of_quadrats_per_side):
-                    mins = (
-                        self.mins[0] + x_idx * quadrat_size,
-                        self.mins[1] + y_idx * quadrat_size,
-                        self.mins[2] + t_idx * quadrat_size,
-                    )
+                    mins = (float(xs[x_idx]), float(ys[y_idx]), float(ts[t_idx]))
                     maxs = (
-                        self.mins[0] + (x_idx + 1) * quadrat_size,
-                        self.mins[1] + (y_idx + 1) * quadrat_size,
-                        self.mins[2] + (t_idx + 1) * quadrat_size,
+                        float(xs[x_idx + 1]),
+                        float(ys[y_idx + 1]),
+                        float(ts[t_idx + 1]),
                     )
-                    temp_bbox = self.from_coords(mins, maxs)
+                    temp_bbox = self.from_coords(mins, maxs, margin=0.0)
                     bboxes.append(temp_bbox)
 
         return bboxes

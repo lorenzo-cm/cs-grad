@@ -14,6 +14,8 @@ def clark_evans_csr_vectorized(
 ) -> NDArray[np.bool_]:
     """
     Vectorized Clark-Evans CSR test for multiple quadrats.
+    
+    Only works in 2D.
 
     Args:
         points: Array of shape (n_points, n_dims)
@@ -24,6 +26,12 @@ def clark_evans_csr_vectorized(
         Array of shape (n_quadrats,) with boolean values indicating CSR test results
         True if pattern is consistent with CSR (p-value >= alpha), False otherwise
     """
+    
+    # Only works in 2d
+    if points.shape[1] != 2:
+        raise ValueError("clark_evans only works in 2D.")
+    
+    
     n_quadrats = len(list_bboxes)
     results = np.zeros(n_quadrats, dtype=bool)
 
@@ -33,11 +41,6 @@ def clark_evans_csr_vectorized(
 
         points_inside: BoundingBoxBase.PointsInside = quadrat_bbox.points_inside(points)
         quadrat_points = points_inside.points
-
-        # Skip if too few points for meaningful analysis
-        if quadrat_points.shape[0] < 3:
-            results[i] = False
-            continue
 
         # Perform Clark-Evans test using the existing bounding box
         results[i] = clark_evans_csr(quadrat_points, quadrat_bbox, signif)
@@ -63,10 +66,14 @@ def clark_evans_csr(
         True if pattern is consistent with CSR (p-value >= alpha), False otherwise
         None if there are fewer than 3 points (test not applicable)
     """
+    # Only works in 2d
+    if points.shape[1] != 2:
+        raise ValueError("clark_evans only works in 2D.")
+    
     num_points = points.shape[0]
 
     if num_points < 3:
-        return None
+        return True
 
     if num_points < 20:
         return clark_evans_csr_monte_carlo(points, bbox, signif)
@@ -95,7 +102,6 @@ def clark_evans_csr_monte_carlo(
     bbox: BoundingBoxBase,
     signif: float = 0.95,
     num_simulations: int = 100,
-    verbose: bool = False,
 ) -> bool:
     """
     Two-sided Monte Carlo Clark-Evans test (binomial CSR, conditional on n).

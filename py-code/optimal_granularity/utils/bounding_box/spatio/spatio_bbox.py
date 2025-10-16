@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -32,7 +33,6 @@ class BoundingBox2d(BoundingBoxBase):
     @property
     def volume(self) -> float:
         return self._area
-    
 
     # ------------------------------
     # Construtores
@@ -152,8 +152,8 @@ class BoundingBox2d(BoundingBoxBase):
 
         return points
 
-    def create_random_quadrats(
-        self, quadrat_size: float, n_quadrats: int
+    def create_random_bboxes(
+        self, bbox_scales: Sequence[float], n_quadrats: int
     ) -> list["BoundingBox2d"]:
         """
         Generate random quadrat positions for sampling within the bounding box.
@@ -166,8 +166,12 @@ class BoundingBox2d(BoundingBoxBase):
         Returns:
             List of BoundingBox objects representing the quadrats
         """
+        if len(bbox_scales) != 1:
+            raise ValueError("For 2D bbox: bbox_scales must be a sequence of one float [spatial].")
+        
         # Calculate available space for quadrat placement
         # Quadrat must fit entirely within the bounding box
+        quadrat_size = bbox_scales[0]
         max_x = self.maxs[0] - quadrat_size
         max_y = self.maxs[1] - quadrat_size
 
@@ -194,7 +198,7 @@ class BoundingBox2d(BoundingBoxBase):
 
         return quadrat_bboxes
 
-    def gen_scales_from_bbox(self, size: int = 10, as_int: bool = False) -> NDArray:
+    def gen_scales_from_bbox(self, size: int = 10) -> NDArray:
         """
         Generate a range of scales for spatial analysis based on bounding box.
 
@@ -219,37 +223,32 @@ class BoundingBox2d(BoundingBoxBase):
         start = 0.025 * stop
         scales = np.linspace(start, stop, size)
 
-        if as_int:
-            scales = np.round(scales).astype(int)
-            scales = np.unique(scales)
+        return scales.reshape(1, -1)
 
-        return scales
-
-    def divide_into_quadrats(self, number_of_quadrats_per_side: int) -> list["BoundingBox2d"]:
+    def divide_into_quadrats(
+        self, number_of_quadrats_per_side: int
+    ) -> list["BoundingBox2d"]:
         """
-        Divide the 2D bounding box into a regular grid of quadrats.
-        
+        Divide the 2D bounding box into a regular grid of axis-aligned rectangles.
+
+        Creates ``number_of_quadrats_per_side``^2 boxes that exactly tile the
+        original bounding box without gaps or overlaps.
+
         Args:
             number_of_quadrats_per_side: Number of quadrats along each side
-            
+
         Returns:
             List of BoundingBox2d objects representing the quadrats
         """
-        side = self.maxs[0] - self.mins[0]  # assuming square bounding box
-        quadrat_size: float = side / number_of_quadrats_per_side
+        xs = np.linspace(self.mins[0], self.maxs[0], number_of_quadrats_per_side + 1)
+        ys = np.linspace(self.mins[1], self.maxs[1], number_of_quadrats_per_side + 1)
 
-        quadrats = []
+        quadrats: list[BoundingBox2d] = []
         for row in range(number_of_quadrats_per_side):
             for col in range(number_of_quadrats_per_side):
-                mins = (
-                    self.mins[0] + col * quadrat_size,
-                    self.mins[1] + row * quadrat_size,
-                )
-                maxs = (
-                    self.mins[0] + (col + 1) * quadrat_size,
-                    self.mins[1] + (row + 1) * quadrat_size,
-                )
-                temp_bbox = self.from_coords(mins, maxs)
+                mins = (float(xs[col]), float(ys[row]))
+                maxs = (float(xs[col + 1]), float(ys[row + 1]))
+                temp_bbox = self.from_coords(mins, maxs, margin=0.0)
                 quadrats.append(temp_bbox)
 
         return quadrats

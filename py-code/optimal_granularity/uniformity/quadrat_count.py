@@ -1,4 +1,3 @@
-from tabnanny import verbose
 import numpy as np
 from numpy.typing import NDArray
 
@@ -10,13 +9,16 @@ def quadrat_count_csr_vectorized(
     list_bboxes: list[BoundingBoxBase],
     signif: float,
     num_simulations: int,
-    number_of_quadrats_per_side=5,
 ) -> NDArray[np.bool_]:
     """
-    Vectorized quadrat count CSR test for multiple quadrats using shapefile point data.
+    Vectorized quadrat count CSR test for multiple regions.
     
     Args:
         points: Array of shape (n_points, n_dims)
+        list_bboxes: List of quadrat bboxes (each can be 2D, 3D, ...)
+        signif: Significance level (e.g., 0.95)
+        num_simulations: Number of Monte Carlo simulations
+        number_of_quadrats_per_side: Subdivisions per axis for each bbox grid
     """
 
     list_passed = []
@@ -30,7 +32,6 @@ def quadrat_count_csr_vectorized(
             bbox=bbox,
             signif=signif,
             num_simulations=num_simulations,
-            number_of_quadrats_per_side=number_of_quadrats_per_side,
         )
 
         list_passed.append(passed)
@@ -49,8 +50,8 @@ def quadrat_count_monte_carlo_csr(
     Monte Carlo quadrat count CSR test.
 
     Method Idea:
-    - We want to check if the spatial distribution of points is consistent with Complete Spatial Randomness (CSR).
-    - In this method, we divide the bounding box into a grid of quadrats
+    - We want to check if the point distribution is consistent with Complete Spatial Randomness (CSR).
+    - Divide the bbox into a regular grid of quadrats (voxels in 3D, hyper-rectangles in nD)
     - We expect, under CSR, that points are uniformly distributed across these quadrats
     - Hence, the number of points in each quadrat should be TOTAL_POINTS / TOTAL_QUADRATS
     - We then compare the point counts in each quadrat to this expected count using a chi-square statistic.
@@ -62,16 +63,17 @@ def quadrat_count_monte_carlo_csr(
         - Otherwise, if the new chi-squares are rarely larger, we reject the null hypothesis of CSR
 
     Args:
-        points: Array of shape (n_points, n_dims)
-        bbox: BoundingBox defining the study area
+    points: Array of shape (n_points, n_dims)
+    bbox: BoundingBox defining the study region (2D, 3D, ...)
         signif: Significance level for the hypothesis test (default 0.95)
-        number_of_quadrats_per_side: Number of quadrats along each side of the bounding box (default 5)
+    number_of_quadrats_per_side: Number of quadrats along each axis of the bounding box (default 5)
         num_simulations: Number of Monte Carlo simulations to perform (default 999)
 
     Returns:
         True if the point pattern is consistent with CSR (p-value >= signif), False otherwise
     """
-    if bbox.ndim == 3:
+    if bbox.ndim >= 3:
+        # Keep grids modest in higher dimensions to combat combinatorial explosion
         number_of_quadrats_per_side = 2
 
     # Get the number of points
@@ -81,8 +83,9 @@ def quadrat_count_monte_carlo_csr(
     if points_inside.count < 5:
         return True
 
-    # Calculate the expected number of points per quadrat
-    expected_count = points_inside.count / (number_of_quadrats_per_side**2)
+    # Calculate the expected number of points per quadrat in nD
+    total_quadrats = number_of_quadrats_per_side ** bbox.ndim
+    expected_count = points_inside.count / total_quadrats
 
     # Divide in quadrats
     bboxes = bbox.divide_into_quadrats(number_of_quadrats_per_side)

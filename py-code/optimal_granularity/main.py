@@ -116,9 +116,4 @@ def get_optimal_granularity(
         print(f"Optimal scale: {optimal_scale.optimal_scale}")
         print(f"Optimal granularity: {optimal_scale.optimal_tradeoff}")
 
-        for scale, values in optimal_scale.tradeoff_values.items():
-            print(
-                f"Scale: {scale}, Uniformity: {values.uniformity}, Robustness: {values.robustness}, Tradeoff: {values.tradeoff}"
-            )
-
     return optimal_scale

@@ -1,3 +1,4 @@
+import itertools
 from typing import Literal
 
 import numpy as np
@@ -23,26 +24,29 @@ def uniformity(
 
     Args:
         points: Array of shape (n_points, n_dims)
-        scales: Array of scales to evaluate
+        scales: Array of scales to evaluate (n_dims, scale_size)
         num_random_quadrats: Number of random quadrats to generate for each scale
 
     Returns:
         Array of uniformity values for each scale
     """
-    uniformity_values = np.zeros(len(scales))
+    scales_list = [dim_scales for dim_scales in scales]
+    uniformity_values = np.zeros(len(list(itertools.product(*scales_list))))
 
-    for idx, scale in enumerate(scales):
-        quadrats: list[BoundingBoxBase] = bbox.create_random_quadrats(
-            quadrat_size=scale, n_quadrats=num_random_quadrats
+    for idx, scale_combo in enumerate(itertools.product(*scales_list)):
+        random_bboxes: list[BoundingBoxBase] = bbox.create_random_bboxes(
+            bbox_scales=scale_combo, n_quadrats=num_random_quadrats
         )
 
         csr_passed: NDArray[np.bool_]
 
         if method == "clark_evans":
-            csr_passed = clark_evans_csr_vectorized(points, quadrats, signif)
+            csr_passed = clark_evans_csr_vectorized(points, random_bboxes, signif)
 
         elif method == "quadrat_count":
-            csr_passed = quadrat_count_csr_vectorized(points, quadrats, signif, quadrat_count_num_simulations)
+            csr_passed = quadrat_count_csr_vectorized(
+                points, random_bboxes, signif, quadrat_count_num_simulations
+            )
 
         else:
             raise ValueError(f"Unknown method: {method}")
@@ -56,7 +60,9 @@ def uniformity(
             uniformity_value = np.sum(csr_passed) / len(csr_passed)
 
             if verbose:
-                print(f"Scale: {scale}, Uniformity: {uniformity_value}, Passed: {np.sum(csr_passed)}, Total: {len(csr_passed)}")
+                print(
+                    f"Scale: {scale_combo}, Uniformity: {uniformity_value}, Passed: {np.sum(csr_passed)}, Total: {len(csr_passed)}"
+                )
 
         uniformity_values[idx] = uniformity_value
 

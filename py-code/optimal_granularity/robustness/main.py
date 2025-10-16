@@ -1,3 +1,5 @@
+import itertools
+
 import numpy as np
 from numpy.typing import NDArray
 from scipy.stats import norm
@@ -29,15 +31,16 @@ def robustness(
     Returns:
         List of robustness values (relative entropy) for each scale
     """
-    robustness_values = []
+    scales_list = [dim_scales for dim_scales in scales]
+    robustness_values = np.zeros(len(list(itertools.product(*scales_list))))
 
-    for scale in scales:
+    for idx, scale_combo in enumerate(itertools.product(*scales_list)):
         relative_entropies = []
 
         for _ in range(num_bootstrap):
             entropy = entropy_score(
                 points=points,
-                quadrat_size=scale,
+                bbox_scales=scale_combo,
                 bbox=bbox,
                 num_simulations=num_simulations,
             )
@@ -61,10 +64,10 @@ def robustness(
 
         if verbose:
             print(
-                f"Scale: {scale}, Robustness: {robustness_value:.4f}\n"
+                f"Scale: {scale_combo}, Robustness: {robustness_value:.4f}\n"
                 f"95% CI: ({ci_lower:.4f}, {ci_upper:.4f})"
             )
 
-        robustness_values.append(robustness_value)
+        robustness_values[idx] = robustness_value
 
     return np.array(robustness_values)

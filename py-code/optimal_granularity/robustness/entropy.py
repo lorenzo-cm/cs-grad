@@ -1,3 +1,4 @@
+from typing import Sequence
 import numpy as np
 from dataclasses import dataclass
 from numpy.typing import NDArray
@@ -22,23 +23,23 @@ class EntropyResult:
 
 def entropy_score(
     points: NDArray[np.float64],
-    quadrat_size: float,
+    bbox_scales: Sequence[float],
     bbox: BoundingBoxBase,
     num_simulations: int,
 ) -> EntropyResult:
     """
     Calculate entropy score for shapefile point pattern robustness analysis.
-    
+
     Args:
         points: Array of shape (n_points, n_dims)
     """
 
     counts = []
-    bboxes = bbox.create_random_quadrats(
-        quadrat_size=quadrat_size, n_quadrats=num_simulations
+    random_bboxes = bbox.create_random_bboxes(
+        bbox_scales=bbox_scales, n_quadrats=num_simulations
     )
 
-    for bbox in bboxes:
+    for bbox in random_bboxes:
         points_in_bbox = bbox.points_inside(points)
         counts.append(points_in_bbox.count)
 
