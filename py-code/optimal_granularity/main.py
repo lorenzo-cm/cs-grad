@@ -7,25 +7,7 @@ from numpy.typing import NDArray
 from .optimizer import OptimizeReturn, optimize
 from .robustness import robustness as calculate_robustness
 from .uniformity import uniformity as calculate_uniformity
-from .utils import BoundingBoxBase
-
-
-def normalize_points_to_positive(points: NDArray[np.float64]) -> NDArray[np.float64]:
-    """
-    Normalize point coordinates from shapefile to positive values.
-
-    Args:
-        points: Array of shape (n_points, n_dims) where n_dims can be any number of dimensions
-
-    Returns:
-        Normalized points with all positive coordinates
-    """
-    min_coords = points.min(axis=0)
-    offsets = np.where(min_coords < 0, np.abs(min_coords), 0)
-
-    normalized_points = points + offsets
-
-    return normalized_points
+from .utils import BoundingBoxBase, normalize_points_to_positive
 
 
 def get_optimal_granularity(
@@ -37,6 +19,10 @@ def get_optimal_granularity(
     uniformity_num_random_quadrats_per_scale: int = 200,
     robustness_num_simulations: int = 200,
     robustness_num_bootstrap: int = 100,
+    robustness_binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"] = "auto",
+    scales_method: Literal["side", "density"] = "density",
+    scales_min_points_per_square: int = 1,
+    scales_max_percentage_points_per_square: int = 20,
     verbose: bool = False,
 ) -> OptimizeReturn:
     """
@@ -65,11 +51,15 @@ def get_optimal_granularity(
     normalized_points = normalize_points_to_positive(points)
 
     bbox: BoundingBoxBase = BoundingBoxBase.from_points(normalized_points)
-    scales = bbox.gen_scales_from_bbox(size=size_scale)
+    scales = bbox.gen_scales_from_bbox(size=size_scale,
+                                       num_points=len(normalized_points),
+                                       min_points_per_square=scales_min_points_per_square,
+                                       max_percentage_points_per_square=scales_max_percentage_points_per_square,
+                                       method=scales_method)
 
     if verbose:
         print("Bounding box:", bbox)
-        print(f"Starting calculating uniformity")
+        print("Starting calculating uniformity")
         time_init_unif = perf_counter()
 
     uniformity = calculate_uniformity(
@@ -85,7 +75,7 @@ def get_optimal_granularity(
     if verbose:
         print(f"Uniformity calculated in {perf_counter() - time_init_unif:.2f} seconds")
 
-        print(f"Starting calculating robustness")
+        print("Starting calculating robustness")
         time_init_robust = perf_counter()
 
     robustness = calculate_robustness(
@@ -95,6 +85,7 @@ def get_optimal_granularity(
         signif=signif,
         num_simulations=robustness_num_simulations,
         num_bootstrap=robustness_num_bootstrap,
+        binning_method=robustness_binning_method,
         verbose=verbose,
     )
 
@@ -103,7 +94,7 @@ def get_optimal_granularity(
             f"Robustness calculated in {perf_counter() - time_init_robust:.2f} seconds"
         )
 
-        print(f"Starting optimization")
+        print("Starting optimization")
 
     optimal_scale: OptimizeReturn = optimize(
         scales=scales,

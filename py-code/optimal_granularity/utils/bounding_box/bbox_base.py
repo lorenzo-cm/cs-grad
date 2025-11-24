@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Sequence, Self
+from typing import Literal, Optional, Sequence, Self
 from dataclasses import dataclass
 
 import numpy as np
@@ -144,13 +144,18 @@ class BoundingBoxBase(ABC):
         """
 
     @abstractmethod
-    def gen_scales_from_bbox(self, size: int = 10) -> NDArray:
+    def gen_scales_from_bbox(self,
+                             size: int = 10,
+                             num_points: Optional[int] = None,
+                             min_points_per_square=1,
+                             max_percentage_points_per_square=20,
+                             method: Literal["side", "density"] = "density") -> NDArray:
         """
         Generate spatial analysis scales from the bounding box dimensions.
 
         Since the scales can difer in each dimension, the return array can be multidimensional:
-        - 2D: (1, n_scales) with (scale_geo,)
-        - 3D: (2, n_scales) with (scale_geo, scale_time)
+        - 2D: (1, n_scales) with [[scale_geo]]
+        - 3D: (2, n_scales) with [[scale_geo], [scale_time]]
         """
 
     @abstractmethod

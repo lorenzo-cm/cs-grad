@@ -33,3 +33,11 @@ The scales are interpreted in the following way:
 - ...
 
 To evaluate the uniformity and robustness tests, we test each scale and compare the results to find the optimal granularity. The comparison is based on the p-values of the tests and optimized by the sum or product of the robustness and uniformity scores.
+
+## Scales
+
+The scales are generated using the `gen_scales_from_bbox` method of the bounding box. The method is implemented in the `utils/bounding_box/bbox_base.py` file.
+
+It generates the scales for each dimension, but not the permutations of the scales.
+
+The permutations of the scales are generated using the `itertools.product` function

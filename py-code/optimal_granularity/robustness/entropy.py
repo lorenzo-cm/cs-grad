@@ -1,6 +1,7 @@
 from typing import Sequence
 import numpy as np
 from dataclasses import dataclass
+from typing import Literal
 from numpy.typing import NDArray
 
 from ..utils import BoundingBoxBase
@@ -26,6 +27,7 @@ def entropy_score(
     bbox_scales: Sequence[float],
     bbox: BoundingBoxBase,
     num_simulations: int,
+    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"],
 ) -> EntropyResult:
     """
     Calculate entropy score for shapefile point pattern robustness analysis.
@@ -43,13 +45,14 @@ def entropy_score(
         points_in_bbox = bbox.points_inside(points)
         counts.append(points_in_bbox.count)
 
-    entropy: EntropyResult = calculate_entropy(counts)
+    entropy: EntropyResult = calculate_entropy(counts, binning_method)
 
     return entropy
 
 
 def calculate_entropy(
     count_in_quadrats: list[int],
+    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"],
 ) -> EntropyResult:
     """
     Calculate the entropy of a counts distribution.
@@ -72,7 +75,7 @@ def calculate_entropy(
     # "stone": minimizes the integrated mean squared error
     # "doane": modification of sturges, works better for non-normal data
     # OBS: edges are [min, max), then size of edges is len(hist) + 1 -> The last edge is [min, max]
-    hist, edges = np.histogram(count_in_quadrats, "auto")
+    hist, edges = np.histogram(count_in_quadrats, binning_method)
 
     # Probability of each bin
     probabilities = hist / sum(hist)

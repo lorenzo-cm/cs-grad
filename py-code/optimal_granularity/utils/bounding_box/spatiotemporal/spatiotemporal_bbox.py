@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Literal, Optional, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -227,19 +227,37 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
 
         return voxels
 
-    def gen_scales_from_bbox(self, size: int = 10) -> NDArray:
+    def gen_scales_from_bbox(self,
+                             size: int = 10,
+                             num_points: Optional[int] = None,
+                             min_points_per_square=1,
+                             max_percentage_points_per_square=20,
+                             method: Literal["side", "density"] = "density") -> NDArray:
         """
         Generate analysis scales based ONLY on spatial dimensions (x,y),
         same as 2D. Useful when grid is spatial and time is a separate window.
-
-        stop = 0.5 * min_side
-        start = 0.025 * stop
         """
-        min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
-        stop = 0.5 * min_side
-        start = 0.025 * stop
-        geo_scales = np.linspace(start, stop, size)
+        if method == "density":
+            if num_points is None or num_points <= 0:
+                raise ValueError("num_points must be greater than 0 when method is 'density'")
+            area = (self.maxs[0] - self.mins[0]) * (self.maxs[1] - self.mins[1])
+            points_density = num_points / area
+            inv_points_density = 1 / points_density
+            s_min = np.sqrt(min_points_per_square * inv_points_density)
+            max_points = num_points * max_percentage_points_per_square / 100
+            s_max = np.sqrt(max_points * inv_points_density)
+            geo_scales = np.linspace(s_min, s_max, size)
+            
+        elif method == "side":
+            min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
+            stop = 0.5 * min_side
+            start = 0.025 * stop
+            geo_scales = np.linspace(start, stop, size)
 
+        # max_t - min_t = D_t
+        # time_scale[0] = Division of D_t in two parts
+        # time_scale[1] = Division of D_t in three parts
+        # ...
         time_scales = [(self.maxs[2] - self.mins[2]) / (i + 2) for i in np.arange(size)]
 
         scales = np.vstack((geo_scales, time_scales))

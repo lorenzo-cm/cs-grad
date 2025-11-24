@@ -1,10 +1,9 @@
-import itertools
 from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
 
-from ..utils import BoundingBoxBase
+from ..utils import BoundingBoxBase, scales_permutation
 from .clark_evans import clark_evans_csr_vectorized
 from .quadrat_count import quadrat_count_csr_vectorized
 
@@ -30,10 +29,9 @@ def uniformity(
     Returns:
         Array of uniformity values for each scale
     """
-    scales_list = [dim_scales for dim_scales in scales]
-    uniformity_values = np.zeros(len(list(itertools.product(*scales_list))))
+    uniformity_values, iter_product = scales_permutation(scales)
 
-    for idx, scale_combo in enumerate(itertools.product(*scales_list)):
+    for idx, scale_combo in enumerate(iter_product):
         random_bboxes: list[BoundingBoxBase] = bbox.create_random_bboxes(
             bbox_scales=scale_combo, n_quadrats=num_random_quadrats
         )

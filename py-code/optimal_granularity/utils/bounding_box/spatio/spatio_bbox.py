@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Literal, Optional, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -198,33 +198,39 @@ class BoundingBox2d(BoundingBoxBase):
 
         return quadrat_bboxes
 
-    def gen_scales_from_bbox(self, size: int = 10) -> NDArray:
+    def gen_scales_from_bbox(self,
+                             size: int = 10,
+                             num_points: Optional[int] = None,
+                             min_points_per_square=1,
+                             max_percentage_points_per_square=20,
+                             method: Literal["side", "density"] = "density") -> NDArray:
         """
         Generate a range of scales for spatial analysis based on bounding box.
 
-        Args:
-            bbox: BoundingBox object containing the study area bounds
-            size: Number of scales to generate
-            as_int: If True, round scales to integers; if False, keep as floats
-
-        Returns:
-            Array of scales ranging from start to stop values
+        Returns an Array of scales with shape (1, n_scales) -> [[scale_geo]]
 
         Notes:
             - stop = 0.5 * min_side: Maximum scale at 50% of study min side to ensure coverage
             - start = 0.05 * stop: Minimum scale at 5% of maximum to avoid overly fine granularity
         """
-        # 1000x1000 = 1_000_000
-        # stop = 1000 * 0.35 = 350
-        # start = 350 * 0.1 = 35
-
-        min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
-        stop = 0.5 * min_side
-        start = 0.025 * stop
-        scales = np.linspace(start, stop, size)
-
-        return scales.reshape(1, -1)
-
+        if method == "density":
+            if num_points is None or num_points <= 0:
+                raise ValueError("num_points must be greater than 0 when method is 'density'")
+            points_density = num_points / self.volume
+            inv_points_density = 1 / points_density
+            s_min = np.sqrt(min_points_per_square * inv_points_density)
+            max_points = num_points * max_percentage_points_per_square / 100
+            s_max = np.sqrt(max_points * inv_points_density)
+            scales = np.linspace(s_min, s_max, size)
+            return scales.reshape(1, -1)
+            
+        elif method == "side":
+            min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])
+            stop = 0.5 * min_side
+            start = 0.025 * stop
+            scales = np.linspace(start, stop, size)
+            return scales.reshape(1, -1)
+        
     def divide_into_quadrats(
         self, number_of_quadrats_per_side: int
     ) -> list["BoundingBox2d"]:
