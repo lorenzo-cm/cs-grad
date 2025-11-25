@@ -13,7 +13,7 @@ def robustness(
     bbox: BoundingBoxBase,
     num_simulations: int = 200,
     num_bootstrap: int = 50,
-    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"] = "auto",
+    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane", "unique"] = "auto",
     signif: float = 0.99,
     verbose: bool = False,
 ) -> NDArray[np.float64]:
@@ -41,7 +41,7 @@ def robustness(
         for _ in range(num_bootstrap):
             entropy = entropy_score(
                 points=points,
-                bbox_scales=scale_combo,
+                bbox_sizes=scale_combo,
                 bbox=bbox,
                 num_simulations=num_simulations,
                 binning_method=binning_method,

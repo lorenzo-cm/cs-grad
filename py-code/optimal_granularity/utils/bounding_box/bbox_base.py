@@ -134,13 +134,13 @@ class BoundingBoxBase(ABC):
     @abstractmethod
     def create_random_bboxes(
         self,
-        bbox_scales: Sequence[float],
+        bbox_sizes: Sequence[float],
         n_quadrats: int,
     ) -> list[Self]:
         """
         Generate random sub-bounding boxes inside the bounding box.
         
-        It accept multiple scales for the quadrats, assuming the first dimension is spatial.
+        It accept multiple sizes for the quadrats, assuming the first dimension is spatial.
         """
 
     @abstractmethod

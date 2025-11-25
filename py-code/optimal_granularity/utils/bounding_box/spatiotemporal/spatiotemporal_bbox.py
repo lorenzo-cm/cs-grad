@@ -180,20 +180,20 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
 
     def create_random_bboxes(
         self,
-        bbox_scales: Sequence[float],
+        bbox_sizes: Sequence[float],
         n_quadrats: int,
     ) -> list["BoundingBoxSpatioTemporal"]:
         """
         Generate random spatiotemporal boxes (voxels) within the bounding box.
         
-        Scales: bbox_scales = [spatial_scale, temporal_scale]
+        bbox_sizes = [spatial_scale, temporal_scale]
         """
-        if len(bbox_scales) != 2:
-            raise ValueError("For spatiotemporal bbox: bbox_scales must be a sequence of two floats [spatial, temporal].")
+        if len(bbox_sizes) != 2:
+            raise ValueError("For spatiotemporal bbox: bbox_sizes must be a sequence of two floats [spatial, temporal].")
         
-        max_x = self.maxs[0] - bbox_scales[0]
-        max_y = self.maxs[1] - bbox_scales[0]
-        max_t = self.maxs[2] - bbox_scales[1]
+        max_x = self.maxs[0] - bbox_sizes[0]
+        max_y = self.maxs[1] - bbox_sizes[0]
+        max_t = self.maxs[2] - bbox_sizes[1]
 
         if (max_x < self.mins[0]) or (max_y < self.mins[1]) or (max_t < self.mins[2]):
             raise ValueError("Quadrat size too large for 3D bounding box.")
@@ -208,11 +208,11 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
             miny = float(off_y[i])
             mint = float(off_t[i])
 
-            maxx = minx + bbox_scales[0]
-            maxy = miny + bbox_scales[0]
-            maxt = mint + bbox_scales[1]
+            maxx = minx + bbox_sizes[0]
+            maxy = miny + bbox_sizes[0]
+            maxt = mint + bbox_sizes[1]
 
-            vol = bbox_scales[0] * bbox_scales[0] * bbox_scales[1]
+            vol = bbox_sizes[0] * bbox_sizes[0] * bbox_sizes[1]
 
             voxel = BoundingBoxSpatioTemporal(
                 minx=minx,

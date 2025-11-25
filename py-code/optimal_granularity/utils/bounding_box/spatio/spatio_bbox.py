@@ -153,25 +153,19 @@ class BoundingBox2d(BoundingBoxBase):
         return points
 
     def create_random_bboxes(
-        self, bbox_scales: Sequence[float], n_quadrats: int
+        self, bbox_sizes: Sequence[float], n_quadrats: int
     ) -> list["BoundingBox2d"]:
         """
-        Generate random quadrat positions for sampling within the bounding box.
-
-        Args:
-            quadrat_size: Size of the quadrat (assuming square quadrats)
-            bbox: BoundingBox object defining the sampling area
-            n_quadrats: Number of random quadrats to generate
-
-        Returns:
-            List of BoundingBox objects representing the quadrats
+        Generate random sub-bounding boxes inside the bounding box.
+        
+        It accept multiple sizes for the quadrats, assuming the first dimension is spatial.
         """
-        if len(bbox_scales) != 1:
-            raise ValueError("For 2D bbox: bbox_scales must be a sequence of one float [spatial].")
+        if len(bbox_sizes) != 1:
+            raise ValueError("For 2D bbox: bbox_sizes must be a sequence of one float [spatial].")
         
         # Calculate available space for quadrat placement
         # Quadrat must fit entirely within the bounding box
-        quadrat_size = bbox_scales[0]
+        quadrat_size = bbox_sizes[0]
         max_x = self.maxs[0] - quadrat_size
         max_y = self.maxs[1] - quadrat_size
 

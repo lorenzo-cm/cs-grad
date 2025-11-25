@@ -19,7 +19,7 @@ def get_optimal_granularity(
     uniformity_num_random_quadrats_per_scale: int = 200,
     robustness_num_simulations: int = 200,
     robustness_num_bootstrap: int = 100,
-    robustness_binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"] = "auto",
+    robustness_binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane", "unique"] = "auto",
     scales_method: Literal["side", "density"] = "density",
     scales_min_points_per_square: int = 1,
     scales_max_percentage_points_per_square: int = 20,

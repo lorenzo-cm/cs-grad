@@ -3,6 +3,7 @@ import numpy as np
 from dataclasses import dataclass
 from typing import Literal
 from numpy.typing import NDArray
+from collections import Counter
 
 from ..utils import BoundingBoxBase
 
@@ -24,28 +25,38 @@ class EntropyResult:
 
 def entropy_score(
     points: NDArray[np.float64],
-    bbox_scales: Sequence[float],
+    bbox_sizes: Sequence[float],
     bbox: BoundingBoxBase,
     num_simulations: int,
-    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane"],
+    binning_method: Literal["auto", "sturges", "fd", "scott", "rice", "sqrt", "stone", "doane", "unique"],
 ) -> EntropyResult:
     """
     Calculate entropy score for shapefile point pattern robustness analysis.
 
     Args:
         points: Array of shape (n_points, n_dims)
-    """
+        bbox_scales: List of quadrat sizes, can be multidimensional, it will create a bbox respecting the sizes
+        bbox: Bounding box defining the study area
+        num_simulations: Number of random quadrats to generate for each scale
+        binning_method: Method for binning the counts
 
+    Returns:
+        EntropyResult: Dataclass containing relative_entropy, uniform_entropy, and points_entropy.
+    """
     counts = []
     random_bboxes = bbox.create_random_bboxes(
-        bbox_scales=bbox_scales, n_quadrats=num_simulations
+        bbox_sizes=bbox_sizes, n_quadrats=num_simulations
     )
 
     for bbox in random_bboxes:
         points_in_bbox = bbox.points_inside(points)
         counts.append(points_in_bbox.count)
 
-    entropy: EntropyResult = calculate_entropy(counts, binning_method)
+    entropy: EntropyResult
+    if binning_method == "unique":
+        entropy = calculate_entropy_unique(counts)
+    else:
+        entropy = calculate_entropy(counts, binning_method)
 
     return entropy
 
@@ -98,3 +109,39 @@ def calculate_entropy(
         uniform_entropy=uniform_entropy,
         points_entropy=points_entropy,
     )
+    
+    
+def calculate_entropy_unique(
+    count_in_quadrats: list[int],
+) -> EntropyResult:
+    """
+    Entropy of the distribution of counts divided by the uniform entropy calculated from the number of quadrats, not binned.
+    """
+    counter = Counter(count_in_quadrats)
+    distribution = np.array(list(counter.values()), dtype=float)
+    
+    if len(distribution) == 0:
+        return EntropyResult(
+            relative_entropy=1.0,
+            uniform_entropy=0.0,
+            points_entropy=0.0,
+        )
+    
+    num_quadrats = len(count_in_quadrats)
+
+    probabilities = distribution / num_quadrats
+    probabilities = probabilities[probabilities > 0]
+    points_entropy = -np.sum(probabilities * np.log2(probabilities)) 
+    
+    num_bins_distribution = len(distribution)
+
+    uniform_entropy: float = np.log2(num_bins_distribution)
+    
+    relative_entropy = points_entropy / uniform_entropy if uniform_entropy > 0 else 1.0
+    
+    return EntropyResult(
+        relative_entropy=relative_entropy,
+        uniform_entropy=uniform_entropy,
+        points_entropy=points_entropy,
+    )
+
