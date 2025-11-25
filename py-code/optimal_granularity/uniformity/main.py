@@ -46,10 +46,7 @@ def uniformity(
                 points, random_bboxes, signif, quadrat_count_num_simulations
             )
 
-        else:
-            raise ValueError(f"Unknown method: {method}")
-
-        csr_passed_filtered = csr_passed[csr_passed != None]
+        csr_passed_filtered = csr_passed[csr_passed is not None]
 
         if len(csr_passed_filtered) == 0:
             uniformity_value = 0.0
