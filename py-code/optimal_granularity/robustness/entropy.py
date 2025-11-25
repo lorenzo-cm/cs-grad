@@ -118,7 +118,9 @@ def calculate_entropy_unique(
     Entropy of the distribution of counts divided by the uniform entropy calculated from the number of quadrats, not binned.
     """
     counter = Counter(count_in_quadrats)
-    distribution = np.array(list(counter.values()), dtype=float)
+    
+    # equivalent to hist in hist, edges = np.histogram()
+    distribution = np.array(list(counter.values()), dtype=float) 
     
     if len(distribution) == 0:
         return EntropyResult(
