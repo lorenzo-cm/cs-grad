@@ -232,11 +232,14 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
                              num_points: Optional[int] = None,
                              min_points_per_square=1,
                              max_percentage_points_per_square=20,
-                             method: Literal["side", "density"] = "density") -> NDArray:
+                             method: Literal["side", "density"] = "density",
+                             scales_distribution: Literal["linear", "slow_start_exponential"] = "linear",
+                             slow_start_exponential_k: float = 1.5,
+        ) -> NDArray:
         """
         Generate analysis scales based ONLY on spatial dimensions (x,y),
         same as 2D. Useful when grid is spatial and time is a separate window.
-        """
+        """        
         if method == "density":
             if num_points is None or num_points <= 0:
                 raise ValueError("num_points must be greater than 0 when method is 'density'")
@@ -246,7 +249,11 @@ class BoundingBoxSpatioTemporal(BoundingBoxBase):
             s_min = np.sqrt(min_points_per_square * inv_points_density)
             max_points = num_points * max_percentage_points_per_square / 100
             s_max = np.sqrt(max_points * inv_points_density)
-            geo_scales = np.linspace(s_min, s_max, size)
+            
+            if scales_distribution == "linear":
+                geo_scales = np.linspace(s_min, s_max, size)
+            elif scales_distribution == "slow_start_exponential":
+                geo_scales = self.slow_start_exponential(s_min, s_max, size, slow_start_exponential_k)
             
         elif method == "side":
             min_side = min(self.maxs[0] - self.mins[0], self.maxs[1] - self.mins[1])

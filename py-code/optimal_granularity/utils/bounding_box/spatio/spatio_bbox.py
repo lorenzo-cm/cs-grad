@@ -203,7 +203,10 @@ class BoundingBox2d(BoundingBoxBase):
                              num_points: Optional[int] = None,
                              min_points_per_square=1,
                              max_percentage_points_per_square=20,
-                             method: Literal["side", "density"] = "density") -> NDArray:
+                             method: Literal["side", "density"] = "density",
+                             scales_distribution: Literal["linear", "slow_start_exponential"] = "linear",
+                             slow_start_exponential_k: float = 1.5,
+        ) -> NDArray:
         """
         Generate a range of scales for spatial analysis based on bounding box.
 
@@ -221,7 +224,10 @@ class BoundingBox2d(BoundingBoxBase):
             s_min = np.sqrt(min_points_per_square * inv_points_density)
             max_points = num_points * max_percentage_points_per_square / 100
             s_max = np.sqrt(max_points * inv_points_density)
-            scales = np.linspace(s_min, s_max, size)
+            if scales_distribution == "linear":
+                scales = np.linspace(s_min, s_max, size)
+            elif scales_distribution == "slow_start_exponential":
+                scales = self.slow_start_exponential(s_min, s_max, size, slow_start_exponential_k)
             return scales.reshape(1, -1)
             
         elif method == "side":

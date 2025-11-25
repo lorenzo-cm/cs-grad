@@ -149,7 +149,10 @@ class BoundingBoxBase(ABC):
                              num_points: Optional[int] = None,
                              min_points_per_square=1,
                              max_percentage_points_per_square=20,
-                             method: Literal["side", "density"] = "density") -> NDArray:
+                             method: Literal["side", "density"] = "density",
+                             scales_distribution: Literal["linear", "slow_start_exponential"] = "linear",
+                             slow_start_exponential_k: float = 1.5,
+        ) -> NDArray:
         """
         Generate spatial analysis scales from the bounding box dimensions.
 
@@ -170,3 +173,21 @@ class BoundingBoxBase(ABC):
         Returns:
             List of BoundingBox objects representing the quadrats
         """
+    
+    def slow_start_exponential(self, s_min, s_max, size, k=1.5):
+        """
+        Generate scales with a slow start exponential distribution.
+
+        Args:
+            s_min: Minimum scale
+            s_max: Maximum scale
+            size: Number of scales
+            k: Parameter for the slow tail distribution
+
+        Returns:
+            Array of scales
+        """
+        x = np.linspace(0, 1, size)
+        curve = x**k
+        return s_min + (s_max - s_min) * curve
+
