@@ -33,7 +33,7 @@ def uniformity(
 
     for idx, scale_combo in enumerate(iter_product):
         random_bboxes: list[BoundingBoxBase] = bbox.create_random_bboxes(
-            bbox_scales=scale_combo, n_quadrats=num_random_quadrats
+            bbox_sizes=scale_combo, n_quadrats=num_random_quadrats
         )
 
         csr_passed: NDArray[np.bool_]
