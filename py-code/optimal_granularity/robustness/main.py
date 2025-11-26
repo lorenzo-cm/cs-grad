@@ -66,7 +66,8 @@ def robustness(
 
         if verbose:
             print(f"Scale: {scale_combo}, Robustness: {robustness_value:.4f}")
-            print(f"95% CI: ({ci_lower:.4f}, {ci_upper:.4f})")
+            print(f"{signif*100}% CI: ({ci_lower:.4f}, {ci_upper:.4f})")
+            print(f"{signif * 100}% CI: {robustness_value:.4f} ± {margin_error:.4f}")
 
         robustness_values[idx] = robustness_value
 
