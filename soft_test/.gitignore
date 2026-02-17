@@ -1,0 +1,16 @@
+# Pytest files
+.pytest
+.cov*
+coverage.xml
+
+# Python files
+__pycache__
+
+# Vscode files
+.vscode
+.Dstore
+
+# Frontend test files
+.v8coverage
+.next
+test-results/

@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pytest
+pytest-cov
+pydantic
+pytest-mock
+httpx # necessary for tests
+requests
+pydantic-settings

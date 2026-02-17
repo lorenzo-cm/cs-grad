@@ -1,0 +1,76 @@
+name: Run tests and upload coverage
+
+on: 
+  push
+
+jobs:
+  test:
+    name: Run tests and collect coverage
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run backend tests
+        run: pytest --cov=backend --cov-branch --cov-report=xml backend/
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Start Next.js fast (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          cd frontend
+          nohup npm run dev & sleep 5
+        
+      - name: Start Next.js fast (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd frontend
+          Start-Process "npm" "run dev"
+          ping -n 5 -w 1000 localhost
+          
+      - name: Start backend for E2E tests (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          cd backend
+          nohup python run_server.py & sleep 5
+        
+      - name: Start backend for E2E tests (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd backend
+          start python run_server.py
+          ping -n 5 -w 1000 localhost
+        
+      - name: Set up Playwright
+        run: |
+          cd frontend
+          npx playwright install
+
+      - name: Run Playwright tests (e2e)
+        run: |
+          cd frontend
+          npx playwright test --config=playwright.config.ts
+  
+      - name: Upload results to Codecov
+        if: env.ACT != 'true'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
