@@ -1,0 +1,110 @@
+name: Build
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        if: github.event_name == 'pull_request'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install deps
+        if: github.event_name == 'pull_request'
+        run: |
+          pip install -r tool/requirements.txt
+
+      # ---------- Generate diff ----------
+      - name: Generate diff
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          git diff --unified=0 "$BASE_SHA" "$HEAD_SHA" > diff.patch
+
+      # ---------- Run LLM reviewer ----------
+      - name: Run analyzer with diff
+        if: github.event_name == 'pull_request'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python tool/generate_review.py diff.patch
+
+      - name: Comment on PR with analysis
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: review.md
+
+      # ---------- SonarQube Scan ----------
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # ---------- Wait for SonarQube analysis ----------
+      - name: Wait for SonarQube analysis
+        run: sleep 30
+
+      # ---------- Fetch Sonar issues ONLY from today ----------
+      - name: Fetch Sonar issues for this PR
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          PR="${{ github.event.pull_request.number }}"
+          echo "Fetching issues for PR $PR"
+
+          # Use proper authorization header instead of basic auth
+          HTTP_CODE=$(curl -s -w "%{http_code}" \
+            -H "Authorization: Bearer ${SONAR_TOKEN}" \
+            -H "Accept: application/json" \
+            "https://sonarcloud.io/api/issues/search?componentKeys=lorenzo-cm_MES-UFMG&pullRequest=${PR}&types=CODE_SMELL&resolved=false" \
+            -o sonar_pr_${PR}.json)
+
+          echo "HTTP Status Code: $HTTP_CODE"
+
+          # Check if request was successful
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Error: SonarCloud API returned status $HTTP_CODE"
+            cat sonar_pr_${PR}.json
+            exit 1
+          fi
+
+          # Verify JSON is not empty
+          if [ ! -s sonar_pr_${PR}.json ]; then
+            echo "Error: Empty response from SonarCloud"
+            exit 1
+          fi
+
+          echo "Successfully fetched SonarCloud issues:"
+          cat sonar_pr_${PR}.json | jq '.total'
+
+      # ---------- Build unified dataset entry ----------
+      - name: Build dataset JSON
+        run: |
+          mkdir -p dataset
+          python tool/build_log.py "$GITHUB_EVENT_PATH"
+
+      # ---------- Upload dataset entry ----------
+      - name: Upload dataset artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataset-pr-${{ github.event.pull_request.number }}
+          path: dataset/pr_${{ github.event.pull_request.number }}.json
