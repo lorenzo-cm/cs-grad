@@ -1,0 +1,57 @@
+{
+  "methods": {
+    "Sturges": {
+      "relative_entropy": {
+        "mean": 0.8422,
+        "sd": 0.0172,
+        "cv": 0.0204,
+        "ci_lower": 0.8399,
+        "ci_upper": 0.8446
+      },
+      "entropy": {
+        "mean": 3.1057,
+        "sd": 0.0364,
+        "cv": 0.0117,
+        "ci_lower": 3.1006,
+        "ci_upper": 3.1107
+      },
+      "max_entropy": {
+        "mean": 3.6886,
+        "sd": 0.073,
+        "cv": 0.0198,
+        "ci_lower": 3.6785,
+        "ci_upper": 3.6987
+      }
+    },
+    "Unique": {
+      "relative_entropy": {
+        "mean": 0.8239,
+        "sd": 0.0148,
+        "cv": 0.018,
+        "ci_lower": 0.8219,
+        "ci_upper": 0.826
+      },
+      "entropy": {
+        "mean": 3.1236,
+        "sd": 0.034,
+        "cv": 0.0109,
+        "ci_lower": 3.1189,
+        "ci_upper": 3.1283
+      },
+      "max_entropy": {
+        "mean": 3.792,
+        "sd": 0.0634,
+        "cv": 0.0167,
+        "ci_lower": 3.7832,
+        "ci_upper": 3.8008
+      }
+    }
+  },
+  "config": {
+    "pattern": "CSR_0005",
+    "g": 100,
+    "nsamples": 1000,
+    "nruns": 200,
+    "additional_info": "1000x1000, lambda = 0.0005"
+  }
+}
