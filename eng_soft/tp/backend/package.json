@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "start",
+    "start": "node --env-file .env server.js"
+  },
+  "author": "lorascombos",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13",
+    "pg": "^8.11.3",
+    "tailwind-scrollbar-hide": "^1.1.7",
+    "uuid": "^9.0.1"
+  }
+}
