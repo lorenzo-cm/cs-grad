@@ -1,0 +1,6 @@
+*.tsp
+__pycache__
+*.txt
+*.csv
+*.tex
+*.png
