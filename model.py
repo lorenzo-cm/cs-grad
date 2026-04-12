@@ -5,42 +5,22 @@ class Book:
     CHILDREN: int = 2
 
     def __init__(self, title: str, price_code: int):
-        self._title = title
-        self._price_code = price_code
-
-    @property
-    def title(self) -> str:
-        return self._title
-
-    @property
-    def price_code(self) -> int:
-        return self._price_code
+        self.title = title
+        self.price_code = price_code
 
 class Rental:
     def __init__(self, book: Book, days_rented: int):
-        self._book = book
-        self._days_rented = days_rented
-
-    @property
-    def book(self) -> Book:
-        return self._book
-
-    @property
-    def days_rented(self) -> int:
-        return self._days_rented
+        self.book = book
+        self.days_rented = days_rented
 
 class Client:
 
     def __init__(self, name: str):
-        self._name = name
-        self._rentals = []
+        self.name = name
+        self.rentals = []
 
     def add_rental(self, rental: Rental):
-        self._rentals.append(rental)
-
-    @property
-    def name(self) -> str:
-        return self._name
+        self.rentals.append(rental)
 
     def statement(self) -> str:
 
@@ -48,7 +28,7 @@ class Client:
         frequent_renter_points = 0
         result = f"Rental summary for {self.name}\n"
         
-        for rental in self._rentals:
+        for rental in self.rentals:
             amount = 0
             
             # determine amounts for each line
