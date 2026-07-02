@@ -59,12 +59,12 @@ Copie `.env.example` para `.env` e ajuste os valores.
 cp .env.example .env
 ```
 
-O arquivo de exemplo já está organizado por blocos. As variáveis principais que você está usando hoje são:
+O arquivo de exemplo já está organizado por blocos. As variáveis principais são:
 
-- `ENVIRONMENT`
-- `SECRET_KEY`
-- `JWT_SECRET_KEY`
-- `DATABASE_URL`
+- `ENVIRONMENT` -> Obrigatório (`local` ou `prod`)
+- `SECRET_KEY` -> Obrigatório
+- `JWT_SECRET_KEY` -> Obrigatório
+- `DATABASE_URL` -> Obrigatório
 - `R2_ENDPOINT_URL`
 - `R2_ACCESS_KEY_ID`
 - `R2_SECRET_ACCESS_KEY`
@@ -76,12 +76,11 @@ O arquivo de exemplo já está organizado por blocos. As variáveis principais q
 - `CHATWOOT_INBOX_ID`
 - `REDIS_HOST`
 - `REDIS_PORT`
-- `DOCUMENT_PROCESSOR_TYPE`
 - `NSFW_PROVIDER`
 - `QDRANT_URL`
-- `OPENAI_API_KEY`
+- `OPENAI_API_KEY` -> Obrigatório (ou usar a chave da Anthropic)
 
-As demais variáveis no `.env.example` também são válidas e podem ser ativadas quando você quiser usar agente Anthropic, transcrição via ElevenLabs, ajuste fino do RAG ou Celery.
+As demais variáveis no `.env.example` também são válidas e podem ser ativadas para outras configurações ou funcionalidades, como valores da Anthropic, transcrição via ElevenLabs, ajustes do RAG ou Celery. O principal é configurar o banco de dados e acesso a alguma LLM. Embora seja recomendado a configuração do Chatwoot, o sistema funciona sem ele, mas não é possível receber mensagens de WhatsApp.
 
 ### 4. Executar a aplicação
 
