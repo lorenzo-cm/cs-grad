@@ -22,3 +22,6 @@ htmlcov
 
 # python envs
 .venv
+
+metrics/
+*.json

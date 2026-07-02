@@ -19,7 +19,7 @@ def _build_celery_app() -> Any:
 
     settings = get_settings()
     return Celery(
-        "template_fastapi",
+        "real_estate_rag",
         broker=settings.CELERY_BROKER_URL,
         backend=settings.CELERY_RESULT_BACKEND,
         include=[__name__],
@@ -49,7 +49,7 @@ def _run_reindex(building_payload: dict[str, Any]) -> int:
 
 if celery_app is not None:  # pragma: no cover - requires celery in environment
     reindex_building_catalog = celery_app.task(
-        name="template_fastapi.reindex_building_catalog"
+        name="real_estate_rag.reindex_building_catalog"
     )(_run_reindex)
 else:
 

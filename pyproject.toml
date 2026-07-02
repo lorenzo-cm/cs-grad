@@ -1,7 +1,7 @@
 [project]
-name = "fastapi-template"
+name = "trabalho-pratico-agentes-ia"
 version = "0.1.0"
-description = "FastAPI template"
+description = "Trabalho Prático - Disciplina Agentes de IA"
 readme = "README.md"
 requires-python = ">=3.14,<4.0"
 dependencies = [
@@ -24,7 +24,6 @@ dependencies = [
     "anthropic>=0.42.0",
     "elevenlabs>=2.45.0",
     "docling>=2.91.0",
-    "modal>=1.4.2",
     "celery>=5.4.0",
     "qdrant-client>=1.15.0",
     "bm25s>=0.3.9",
@@ -33,9 +32,6 @@ dependencies = [
 [project.optional-dependencies]
 docling = [
     "docling>=2.30.0",
-]
-modal = [
-    "modal>=0.65.0",
 ]
 
 [dependency-groups]
@@ -91,7 +87,7 @@ keep-runtime-typing = true
 mypy_path = ["app"]
 ignore_missing_imports = true
 plugins = ["pydantic.mypy"]
-exclude = ["venv", ".venv", "alembic", "modal_docling_app.py"]
+exclude = ["venv", ".venv", "alembic"]
 strict = true
 
 [tool.coverage.run]

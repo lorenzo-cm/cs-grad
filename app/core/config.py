@@ -84,15 +84,13 @@ class Settings(BaseSettings):
     # Attachments
     MAX_ATTACHMENT_BYTES: int = 25 * 1024 * 1024  # 25 MiB
 
-    # Document extraction (Fase 2 — see Obsidian task chatwoot webhook pipeline)
-    # `None` (omitted from .env) and `"disabled"` both mean "processor off".
-    DOCUMENT_PROCESSOR_TYPE: Literal["docling_local", "docling_modal", "disabled"] | None = (
-        "docling_local"
-    )
-    
+    # Document extraction
+    # `None` (omitted from .env) and `"disabled"` mean "processor off".
+    DOCUMENT_PROCESSOR_TYPE: Literal["docling_local", "disabled"] | None = "docling_local"
+
     MAX_DOCUMENT_BYTES: int = 50 * 1024 * 1024  # 50 MiB
 
-    # NSFW moderation (Phase 01 — see Obsidian task nsfw_moderation)
+    # NSFW moderation
     # `None` (omitted from .env) and `""` both mean "moderation off".
     NSFW_PROVIDER: Literal["openai_moderation"] | None = "openai_moderation"
 
@@ -102,12 +100,6 @@ class Settings(BaseSettings):
         if isinstance(v, str) and v == "":
             return None
         return v
-
-    # Modal docling
-    MODAL_APP_NAME: str = "template-document-processor"
-    MODAL_FUNCTION_NAME: str = "extract_markdown"
-    MODAL_TOKEN_ID: str | None = None
-    MODAL_TOKEN_SECRET: str | None = None
 
 
 @lru_cache(maxsize=1)
